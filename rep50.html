@@ -1,0 +1,58 @@
+<pre><center><font size="10" color="blue"> ----- NODE REPORT FOR GROUP 004 ------ </font></center><br><br><center><font size="5" color="blue"> EVENTS IN NODE WITH SERVER PORT: 58129 (request from 178.166.51.165) </font></center><br><br>Report date: Sat, 16 Mar 2024 14:11:19 GMT, Setup type: A<br><br><br><br> --COR--> jointo 004 50 10 at 16MAR2024 13:57:31
+  [INFO]: Contact node 10 to enter ring
+[ACTION]: Connect to 192.168.1.1:58128
+  [INFO]: Connect ok. I am client at desc: 6
+[ACTION]: Send to desc 6: ENTRY 50 192.168.1.1 58129
+  [INFO]:   Resp from desc 6: SUCC 50 192.168.1.1 58129
+ [EVENT]: Accepted connect req - expect ingress PRED at desc: 7
+  [INFO]: From predecessor: PRED 10
+[ACTION]: Send to 192.168.1.1:58125: REG 004 50 192.168.1.1 58129
+  [INFO]: Registered (004.50)
+ 004.50 > show topology at 16MAR2024 13:57:31
+
+================================================================================
+  [INFO]: TOPOLOGY 16MAR2024 13:57:31, NS at: 192.168.1.1 / 58125
+================================================================================
+Net ID: 004, Node ID: 50, at 192.168.1.1 / 58129  Two nodes in ring
+--------------------------------------------------------------------------------
+
+      Unit                                         Descriptor
+
+  TCP listen channel                                   5
+  UDP server                                           3
+  Predecessor ID: 10                                   7 private
+           My ID: 50 IP: 192.168.1.1, port: 58129
+    Successor ID: 10 IP: 192.168.1.1, port: 58128     6
+2nd successor ID: 50 IP: 192.168.1.1, port: 58129
+--------------------------------------------------------------------------------
+
+ [EVENT]: Activity detected - successor (ch: 6) at 16MAR2024 14:05:23
+  [INFO]: 30 bytes read from socket
+  [INFO]: 1 message(s) at successor ID: 10, ch: 6
+  [INFO]: Recv msg: ENTRY 20 193.136.128.104 6000
+[ACTION]: Connect to 193.136.128.104:6000
+  [INFO]: Connect ok. I am client at desc: 6
+[ACTION]: Send to desc 6: PRED 50
+[ACTION]: Send to desc 7: SUCC 20 193.136.128.104 6000
+
+ [EVENT]: Activity detected - successor (ch: 6) at 16MAR2024 14:05:23
+  [INFO]: 30 bytes read from socket
+  [INFO]: 1 message(s) at successor ID: 20, ch: 6
+  [INFO]: Recv msg: SUCC 50 193.136.138.142 52350
+ 004.50 > st at 16MAR2024 14:11:12
+
+================================================================================
+  [INFO]: TOPOLOGY 16MAR2024 14:11:12, NS at: 192.168.1.1 / 58125
+================================================================================
+Net ID: 004, Node ID: 50, at 192.168.1.1 / 58129  Net ID: 004, Node ID: 50, at 192.168.1.1 / 58129  --------------------------------------------------------------------------------
+
+      Unit                                         Descriptor
+
+  TCP listen channel                                   5
+  UDP server                                           3
+  Predecessor ID: 10                                   7 private
+           My ID: 50 IP: 192.168.1.1, port: 58129
+    Successor ID: 20 IP: 193.136.128.104, port:  6000     6
+2nd successor ID: 50 IP: 192.168.1.1, port: 52350
+--------------------------------------------------------------------------------
+</pre><br><br>

@@ -1,7 +1,7 @@
 #include "camada_topologica_tcp.h"
 
 
-void cliente_tcp(Node* node, char* succTCP) {
+int cliente_tcp(Node* node,char* j_ip,char* j_port) {
     int fd;
     struct addrinfo hints, *res;
 
@@ -16,7 +16,7 @@ void cliente_tcp(Node* node, char* succTCP) {
     hints.ai_family = AF_INET;
     hints.ai_socktype = SOCK_STREAM;
 
-    int errcode = getaddrinfo(node->ip, succTCP, &hints, &res);
+    int errcode = getaddrinfo(j_ip, j_port, &hints, &res);
     if (errcode != 0) {
         fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(errcode));
         exit(EXIT_FAILURE);
@@ -30,51 +30,15 @@ void cliente_tcp(Node* node, char* succTCP) {
     // Conectado ao servidor.
     printf("Conectado ao servidor.\n");
 
-    // Envia a mensagem "READY" para o servidor
-    char* readyMsg = "READY";
-    send(fd, readyMsg, strlen(readyMsg), 0);
-    printf("Mensagem READY enviada.\n");
-
-    // Adiciona um atraso antes de enviar a mensagem "ENTRY"
-    sleep(4);
-
-    // Em seguida, envia a mensagem "ENTRY"
-    send_entry(fd, node);
-
-
-    /*// Código para receber e processar a resposta do servidor
-    char response[1024];
-    int valread = read(fd, response, 1024);
-    if (valread > 0) {
-        response[valread] = '\0';
-        printf("Resposta recebida: %s\n", response);
-
-        // Código para processar a resposta
-        // Se a resposta for "SUCC", atualizar o sucessor do nó
-        char command[5];
-        int id;
-        char ip[16];
-        char tcp[6];
-        sscanf(response, "%s %d %s %s", command, &id, ip, tcp);
-        if (strcmp(command, "SUCC") == 0) {
-            // Atualiza o sucessor do nó
-            node->sucessor = createNode(id, ip, tcp);
-            printf("Sucessor atualizado: %d %s %s\n", node->sucessor->id, node->sucessor->ip, node->sucessor->tcp);
-        }
-    } else if (valread == -1) {
-        perror("read");
-        exit(EXIT_FAILURE);
-    }*/
-
     freeaddrinfo(res);
-    close(fd);
+    return fd;
 }
 
 void send_entry(int fd, Node* node){
     char buffer[1024];
-    sprintf(buffer, "ENTRY %02d %s %s", node->id, node->ip, node->tcp);
+    sprintf(buffer, "ENTRY %02d %s %s\n", node->id, node->ip, node->tcp);
     // Imprime a mensagem que será enviada
-    printf("Mensagem a ser enviada: %s\n", buffer);
+    printf("Mensagem a ser enviada para o socket %d: %s\n",fd, buffer);
     int n = send(fd, buffer, strlen(buffer), 0);
     if (n == -1) {
         perror("send");
@@ -85,7 +49,7 @@ void send_entry(int fd, Node* node){
 
 void send_succ(int fd, Node* node){
     char buffer[1024];
-    sprintf(buffer, "SUCC %02d %s %s", node->id, node->ip, node->tcp);
+    sprintf(buffer, "SUCC %02d %s %s\n", node->id, node->ip, node->tcp);
     // Imprime a mensagem que será enviada
     printf("Mensagem a ser enviada: %s\n", buffer);
     int n = send(fd, buffer, strlen(buffer), 0);
@@ -94,6 +58,44 @@ void send_succ(int fd, Node* node){
         exit(EXIT_FAILURE);
     }
     printf("Mensagem enviada!\n");
-};
+}
 
+void send_pred(char fd, Node* node){
+    char buffer[1024];
+    sprintf(buffer, "PRED %02d\n", node->id);
+    // Imprime a mensagem que será enviada
+    printf("Mensagem a ser enviada: %s\n", buffer);
+    int n = send(fd, buffer, strlen(buffer), 0);
+    if (n == -1) {
+        perror("send");
+        exit(EXIT_FAILURE);
+    }
+    printf("Mensagem enviada.\n");
+}
 
+void removeNode(Node** node_to_remove_ptr) {
+    Node* node_to_remove = *node_to_remove_ptr;
+
+    // Verifica se o nó a remover é válido
+    if (node_to_remove != NULL) {
+        Node* successor = node_to_remove->sucessor;
+        Node* second_successor = node_to_remove->second_successor;
+        Node* predecessor = node_to_remove->predecessor;
+
+        // Atualiza os ponteiros dos nós vizinhos
+        if (predecessor != NULL) {
+            predecessor->sucessor = successor;
+            predecessor->second_successor = second_successor;
+        }
+
+        if (successor != NULL) {
+            successor->predecessor = predecessor;
+        }
+
+        // Liberta a memória do nó a remover
+        free(node_to_remove);
+
+        // Atualiza o ponteiro para o nó a remover
+        *node_to_remove_ptr = NULL;
+    }
+}

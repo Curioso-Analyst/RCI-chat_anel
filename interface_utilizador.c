@@ -1,7 +1,6 @@
 // interface_utilizador.c
 #include "interface_utilizador.h"
 #include "camada_topologica.h"
-#include "tcpcom.h"
 #include "camada_topologica_tcp.h"
 
 
@@ -13,9 +12,6 @@ Node* join(int ring, int id, char* IP, char* TCP) {
     char user_input[1024];
     sprintf(user_input, "REG %03d %02d %s %s", ring, id, IP, TCP);
     registerNode(node, ring, IP, TCP, user_input);
-
-    // Iniciar o cliente TCP
-    // cliente_tcp(node, succTCP);
 
     return node;
 }
@@ -29,8 +25,8 @@ Node* direct_join(int id, int succId, char* succIP, char* succTCP) {
         node->sucessor = node;
         node->predecessor = node;
     } else {
-        // Conecta-se ao nó sucessor e informa-o sobre a entrada do novo nó no anel
-        cliente_tcp(node, succTCP);
+         // Conecta-se ao nó sucessor e informa-o sobre a entrada do novo nó no anel
+         cliente_tcp(node, succIP, succTCP);
 
     }
 
