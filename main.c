@@ -108,6 +108,7 @@ int main(int argc, char *argv[]) {
         if(global_variable!=-1){
             new_socket_suc=global_variable;
             global_variable=-1;
+            temos_suc=1;
         }
         // Limpa o conjunto de sockets
         FD_ZERO(&readfds); 
@@ -140,12 +141,7 @@ int main(int argc, char *argv[]) {
             max_sd = new_socket_suc;
 
         // Espera por uma atividade em um dos sockets, o timeout é NULL, então espera indefinidamente
-
-        printf("\n---------------ANTES DO SELECT\n----------------------\n");
-
         activity = select(max_sd + 1, &readfds, &writefds, NULL, NULL);
-
-        printf("\n---------------passou do select\n----------------------\n");
 
         if ((activity < 0) && (errno!=EINTR)) {
             printf("select error");
@@ -252,6 +248,7 @@ int main(int argc, char *argv[]) {
                         printf("----ESTAVA SOZINHO---");
 
                         node->predecessor = createNode(new_id, new_ip, new_port);
+                        node->sucessor = createNode(new_id, new_ip, new_port);
 
                         // Envia uma mensagem a informar ao novo nó do seu segundo-sucessor
                         send_succ(new_socket, node->sucessor);
@@ -265,7 +262,7 @@ int main(int argc, char *argv[]) {
                         send_pred(new_socket_tcp, node);
 
                         // Atualizar o show topology
-                        node->sucessor = createNode(new_id, new_ip, new_port);
+                        //node->sucessor = createNode(new_id, new_ip, new_port);
 
                         // Define como a socket com o predecessor a new_socket_tcp
                         new_socket_suc = new_socket_tcp;
@@ -388,7 +385,8 @@ int main(int argc, char *argv[]) {
                 printf("\n----------------ENTROU AQUI NO FD ISSET DO SUCESSOR---------------------\n");
                 char buffer[1024];
                 int valread;
-                if ((valread = recv(new_socket_suc, buffer, sizeof(buffer), 0)) > 0) {
+                if ((valread = read(new_socket_suc, buffer,1024 - 1)) > 0) { // subtract 1 for the null terminator at the end
+                              
                     buffer[valread] = '\0';
                     printf("Mensagem recebida: %s\n", buffer);  // Imprime a mensagem recebida
 
@@ -419,7 +417,7 @@ int main(int argc, char *argv[]) {
                         int new_socket_tcp = cliente_tcp(node, new_ip, new_port);
 
                         // Envia uma mensagem PRED para a nova porta tcp estabelecida
-                        send_pred(new_socket_tcp, node->predecessor);
+                        send_pred(new_socket_tcp, node);
 
                         // Define como a socket com o sucessor a new_socket_tcp
                         new_socket_suc = new_socket_tcp;
