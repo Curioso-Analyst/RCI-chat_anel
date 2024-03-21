@@ -254,16 +254,14 @@ int main(int argc, char *argv[]) {
                     // Imprime as informações do novo nó
                     printf("Informações de uma nova corda: id=%02d, ip=%s, port=%s\n", new_id, inet_ntoa(address.sin_addr), port_char);
 
-                    //Criar um novo nó
+                    // Criar um novo nó, desta maneira vai gravar sempre por cima do nó anterior e não armazena uma lista de cordas
                     node->corda = createNode(new_id, inet_ntoa(address.sin_addr), port_char);
 
                     /*//Criar um novo nó
                     Node* new_node = createNode(new_id, inet_ntoa(address.sin_addr), ntohs(address.sin_port));
 
                     // Adiciona o novo nó à lista de cordas
-                    addNodeToList(node->cordas, new_node);*/
-
-                    
+                    addNodeToList(node->cordas, new_node);*/   
                 }
 
 
@@ -281,8 +279,6 @@ int main(int argc, char *argv[]) {
 
                     //Se está a entrar o segundo nó
                     if(node->sucessor==node){
-
-                        printf("----ESTAVA SOZINHO---");
 
                         node->predecessor = createNode(new_id, new_ip, new_port);
                         node->sucessor = createNode(new_id, new_ip, new_port);
@@ -309,8 +305,6 @@ int main(int argc, char *argv[]) {
 
                     }else if((node->sucessor!=node) && (node->second_successor==node)){
 
-                        printf("----ESTAMOS DOIS---\n");
-                        
                         // Envia uma mensagem a informar ao novo nó do seu segundo-sucessor
                         send_succ(new_socket, node->sucessor);
 
@@ -318,7 +312,6 @@ int main(int argc, char *argv[]) {
                         node->predecessor = createNode(new_id, new_ip, new_port);
 
                         //Envia para o predecessor o Entry
-                        printf("\nO MEU SOCKET PRED É: %d\n",new_socket_pred);
                         send_entry(new_socket_pred, node->predecessor);
 
                         //Atualiza a nova socket com o predecessor
@@ -419,7 +412,6 @@ int main(int argc, char *argv[]) {
         if(temos_suc==1){
 
             if (FD_ISSET(new_socket_suc, &readfds)){
-                printf("\n----------------ENTROU AQUI NO FD ISSET DO SUCESSOR---------------------\n");
                 char buffer[1024];
                 int valread;
                 if ((valread = read(new_socket_suc, buffer,1024 - 1)) > 0) { // subtract 1 for the null terminator at the end
