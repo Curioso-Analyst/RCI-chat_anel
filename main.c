@@ -92,7 +92,7 @@ int main(int argc, char *argv[]) {
     int ring, id;
     char command[1024];
     int PORT = atoi(TCP_escolhido);
-    int tcp_socket, udp_socket, addrlen, activity, max_sd, new_socket_pred, new_socket_suc; 
+    int tcp_socket, addrlen, activity, max_sd, new_socket_pred, new_socket_suc; 
     int temos_pred = -1, temos_suc =-1, pred_saiu = -1;
     int new_socket = -1;
     struct sockaddr_in address;
