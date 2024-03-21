@@ -27,7 +27,8 @@ typedef struct Node {
     char ip[16];
     char tcp[6];
     int ring;
-    int corda_socket_fd;
+    int corda_socket_fd; // File descriptor do socket de comunicação com o nó(cliente)
+    int corda_socket_recebidas_fd; // File descriptor do socket de comunicação com o nó que enviou a corda (servidor)
     int pred_socket_fd; // File descriptor do socket de comunicação com o predecessor
     int suc_socket_fd; // File descriptor do socket de comunicação com o sucessor
     struct Node* sucessor;

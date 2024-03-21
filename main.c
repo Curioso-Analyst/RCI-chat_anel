@@ -285,6 +285,9 @@ int main(int argc, char *argv[]) {
                         // Cria um novo nó
                         Node* new_node = createNode(new_id, inet_ntoa(address.sin_addr), port_char);
 
+                        // Armazena o file descriptor do socket na estrutura do nó
+                        new_node->corda_socket_recebidas_fd = new_socket;
+
                         // Adiciona a nova corda à lista de cordas
                         if (node->num_cordas < MAX_CORDAS) {
                             node->cordas[node->num_cordas] = new_node;
@@ -396,7 +399,7 @@ int main(int argc, char *argv[]) {
 
                 // Procura a corda que perdeu a conexão
                 for (int i = 0; i < node->num_cordas; i++) {
-                    if (node->cordas[i]->corda_socket_fd == new_socket) {
+                    if (node->cordas[i]->corda_socket_recebidas_fd == new_socket) {
                         printf("A corda com o nó %d perdeu a conexão.\n", node->cordas[i]->id);
 
                         // Remove a corda da lista de cordas

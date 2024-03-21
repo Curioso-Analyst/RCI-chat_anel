@@ -15,6 +15,7 @@ Node* createNode(int id, char* ip, char* tcp) {
     node->second_successor = node;
     node->corda = NULL;
     node->corda_socket_fd = -1; // Incializa o socket da corda como -1
+    node->corda_socket_recebidas_fd = -1; // Incializa o socket da corda como -1
     node->num_cordas = 0; // Inicializa o número de cordas como 0
     for (int i = 0; i < MAX_CORDAS; i++) {
         node->cordas[i] = NULL; // Inicializa a lista de cordas como NULL
