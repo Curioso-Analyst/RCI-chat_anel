@@ -144,7 +144,7 @@ int main(int argc, char *argv[]) {
         activity = select(max_sd + 1, &readfds, &writefds, NULL, NULL);
 
         if ((activity < 0) && (errno!=EINTR)) {
-            printf("select error");
+            printf("select error\n");
         }
 
         // Se algo aconteceu no teclado, então é uma entrada do utilizador
