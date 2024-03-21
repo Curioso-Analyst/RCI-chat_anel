@@ -149,6 +149,12 @@ int main(int argc, char *argv[]) {
         // Espera por uma atividade em um dos sockets, o timeout é NULL, então espera indefinidamente
         activity = select(max_sd + 1, &readfds, &writefds, NULL, NULL);
 
+        // Imprime o valor de new_socket_corda
+        printf("new_socket_corda após select(): %d\n", new_socket_corda);
+
+        // Imprime o valor de retorno de select()
+        printf("Valor de retorno de select(): %d\n", activity);
+
         // Verifica se algo aconteceu no select
         if ((activity < 0) && (errno != EINTR)) {
             printf("select error: %s\n", strerror(errno));
@@ -306,6 +312,7 @@ int main(int argc, char *argv[]) {
                         }
                         
                         temos_corda=1;
+                        printf("Corda estabelecida com sucesso no socket: %d\n", new_socket_corda);
                     }
                 
 
