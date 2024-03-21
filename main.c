@@ -442,7 +442,7 @@ int main(int argc, char *argv[]) {
                             new_socket_corda = -1;
                         }
                     } else {
-                        printf("\nO ponteiro do nó é nulo.\n");
+                        temos_corda = -1;
                     }
                 }
             }
