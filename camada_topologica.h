@@ -29,6 +29,9 @@ typedef struct Node {
     struct Node* predecessor;
     struct Node* second_successor;
     struct Node* corda;
+    struct Node* cordas;
+    int ring;
+    
 } Node;
 
 Node* createNode(int id, char* ip, char* tcp);
@@ -37,5 +40,7 @@ void regservidornos(Node* node,int fd, char* user_input, char* nodes_list, struc
 void unregisterNode(Node* node, char* user_input);
 int getUniqueIdentifier(char* nodes_list);
 void getNodes(int ring, char* user_input);
+void getNodescorda(Node* node, char* buffer);
+void establishChord(Node* node);
 
 #endif // CAMADA_TOPOLOGICA_H;

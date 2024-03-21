@@ -196,3 +196,43 @@ void getNodes(int ring, char* user_input) {
     freeaddrinfo(res); //libertar a memoria alocada
     close(fd); //fechar o socket
 }
+
+void getNodescorda(Node* node) {
+    int fd,errcode;
+    ssize_t n;
+    socklen_t addrlen;
+    struct addrinfo hints, *res;
+    struct sockaddr_in addr;
+    char buffer[1024];
+
+    fd=socket(AF_INET,SOCK_DGRAM,0); //UDP socket
+    if (fd==-1) /*error*/ exit (1);
+
+    memset(&hints,0,sizeof hints);
+    hints.ai_family=AF_INET; //IPv4
+    hints.ai_socktype=SOCK_DGRAM;  //UDP socket
+    errcode=getaddrinfo (SERVER_IP, PORT, &hints, &res);
+    if(errcode!=0) /*error*/ exit(1);
+
+    // Envia a mensagem de pedido da lista de nós
+    char message[1024];
+    sprintf(message, "NODES %03d", node->ring);
+
+    // Imprime a mensagem que será enviada
+    printf("Sending message: %s\n", message);
+    fflush(stdout); // Força a liberação do fluxo de saída padrão
+
+    n=sendto(fd, message, strlen(message), 0, res->ai_addr, res->ai_addrlen);
+    if (n==-1) /*error*/ exit(1);
+
+    // Recebe a resposta
+    addrlen=sizeof(addr);
+    n=recvfrom(fd,buffer,1024,0,(struct sockaddr*) &addr,&addrlen);
+    if(n==-1) /*error*/ exit(1);
+
+    // Escreve no ecra a resposta do servidor
+    write(1, "Resposta do servidor: ", 22); write(1,buffer,n); write(1, "\n", 1);
+
+    freeaddrinfo(res); //libertar a memoria alocada
+    close(fd); //fechar o socket
+}

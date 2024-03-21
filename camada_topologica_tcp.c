@@ -51,7 +51,7 @@ void send_succ(int fd, Node* node){
     char buffer[1024];
     sprintf(buffer, "SUCC %02d %s %s\n", node->id, node->ip, node->tcp);
     // Imprime a mensagem que será enviada
-    printf("Mensagem a ser enviada: %s\n", buffer);
+    printf("Mensagem a ser enviada para o socket %d: %s\n",fd, buffer);
     int n = send(fd, buffer, strlen(buffer), 0);
     if (n == -1) {
         perror("send");
@@ -64,7 +64,7 @@ void send_pred(char fd, Node* node){
     char buffer[1024];
     sprintf(buffer, "PRED %02d\n", node->id);
     // Imprime a mensagem que será enviada
-    printf("Mensagem a ser enviada: %s\n", buffer);
+    printf("Mensagem a ser enviada para o socket %d: %s\n",fd, buffer);
     int n = send(fd, buffer, strlen(buffer), 0);
     if (n == -1) {
         perror("send");
@@ -72,6 +72,20 @@ void send_pred(char fd, Node* node){
     }
     printf("Mensagem enviada.\n");
 }
+
+void send_chord(int fd, Node* node){
+    char buffer[1024];
+    sprintf(buffer, "CHORD %02d\n", node->id);
+    // Imprime a mensagem que será enviada
+    printf("Mensagem a ser enviada para o socket %d: %s\n",fd, buffer);
+    int n = send(fd, buffer, strlen(buffer), 0);
+    if (n == -1) {
+        perror("send");
+        exit(EXIT_FAILURE);
+    }
+    printf("Mensagem enviada.\n");
+}
+
 
 void removeNode(Node** node_to_remove_ptr) {
     Node* node_to_remove = *node_to_remove_ptr;

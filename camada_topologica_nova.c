@@ -260,3 +260,82 @@ void getNodes(int ring, char* user_input) {
     freeaddrinfo(res); //libertar a memoria alocada
     close(fd); //fechar o socket
 }
+
+void getNodescorda(Node* node, char* buffer) {
+    int fd,errcode;
+    ssize_t n;
+    socklen_t addrlen;
+    struct addrinfo hints, *res;
+    struct sockaddr_in addr;
+
+    fd=socket(AF_INET,SOCK_DGRAM,0); //UDP socket
+    if (fd==-1) /*error*/ exit (1);
+
+    memset(&hints,0,sizeof hints);
+    hints.ai_family=AF_INET; //IPv4
+    hints.ai_socktype=SOCK_DGRAM;  //UDP socket
+    errcode=getaddrinfo (SERVER_IP, PORT, &hints, &res);
+    if(errcode!=0) /*error*/ exit(1);
+
+    // Envia a mensagem de pedido da lista de nós
+    char message[1024];
+    sprintf(message, "NODES %03d", node->ring);
+
+    // Imprime a mensagem que será enviada
+    printf("Sending message: %s\n", message);
+    fflush(stdout); // Força a liberação do fluxo de saída padrão
+
+    n=sendto(fd, message, strlen(message), 0, res->ai_addr, res->ai_addrlen);
+    if (n==-1) /*error*/ exit(1);
+
+    // Recebe a resposta
+    addrlen=sizeof(addr);
+    n=recvfrom(fd,buffer,1024,0,(struct sockaddr*) &addr,&addrlen);
+    if(n==-1) /*error*/ exit(1);
+
+    // Escreve no ecra a resposta do servidor
+    write(1, "Resposta do servidor: ", 22); write(1,buffer,n); write(1, "\n", 1);
+
+    freeaddrinfo(res); //libertar a memoria alocada
+    close(fd); //fechar o socket
+}
+
+void establishChord(Node* node) {
+    char buffer[1024];
+    // Pede ao servidor de nós o identificador e respetivos contactos dos nós existentes no anel
+    getNodescorda(node, buffer);
+
+    // Percorre a lista de nós
+    char* line = strtok(buffer, "\n");
+    Node* other_node = NULL;
+    while (line != NULL) {
+        int id;
+        char ip[16], tcp[6];
+
+        // Extrai o id, ip e tcp de cada linha
+        sscanf(line, "%d %s %s", &id, ip, tcp);
+
+        // Verifica se o nó não é o sucessor ou o predecessor
+        if (id != node->sucessor->id && id != node->predecessor->id) {
+            other_node = createNode(id, ip, tcp);  // Criar um nó com o id, ip e tcp
+            // Estabelece a corda
+            // Conecta-se ao nó escolhido
+            int porta_tcp = cliente_tcp(other_node, ip, tcp);
+            printf("Olá cliente, o meu fd é: %d\n", porta_tcp);
+            // Estabeleceu a corda, envia mensagem 
+            send_chord(porta_tcp, node);
+
+            // Guarda o nó escolhido
+            node->corda = other_node;
+            break;
+        }
+
+        line = strtok(NULL, "\n");
+    }
+
+    // Se other_node ainda é NULL, então nenhum nó adequado foi encontrado
+    if (other_node == NULL) {
+        printf("Não foram encontrados nós adequados para estabelecer uma corda.\n");
+    }
+}
+

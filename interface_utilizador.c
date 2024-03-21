@@ -121,4 +121,5 @@ void show_topology(Node* node) {
     }
 }
 
+
 // Implementar as outras funções aqui
