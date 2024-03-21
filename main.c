@@ -255,7 +255,7 @@ int main(int argc, char *argv[]) {
             // Lê uma mensagem do socket
             char buffer[1024];
             int valread;
-            if ((valread = read(new_socket, buffer, sizeof(buffer))) > 0) {
+            if ((valread = recv(new_socket, buffer, sizeof(buffer), 0)) > 0) {
                 buffer[valread] = '\0';
                 printf("Mensagem recebida: %s\n", buffer);  // Imprime a mensagem recebida
 
