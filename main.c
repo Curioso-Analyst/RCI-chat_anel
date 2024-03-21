@@ -92,8 +92,8 @@ int main(int argc, char *argv[]) {
     int ring, id;
     char command[1024];
     int PORT = atoi(TCP_escolhido);
-    int tcp_socket, udp_socket, addrlen, activity, max_sd, new_socket_pred, new_socket_suc; 
-    int temos_pred = -1, temos_suc =-1;
+    int tcp_socket, addrlen, activity, max_sd, new_socket_pred, new_socket_suc; 
+    int temos_pred = -1, temos_suc =-1, pred_saiu =-1;
     int new_socket = -1;
     struct sockaddr_in address;
     fd_set readfds, writefds;
@@ -157,6 +157,12 @@ int main(int argc, char *argv[]) {
             sscanf(command, "l %d", &ring);
             if (node != NULL) {
                 leave(node, ring);
+                close(new_socket_pred);
+                close(new_socket_suc);
+                new_socket_pred=-1;
+                new_socket_suc=-1;
+                temos_pred=-1;
+                temos_suc=-1;
             } else {
                 printf("Nó não inicializado.\n");
             }
@@ -327,6 +333,10 @@ int main(int argc, char *argv[]) {
                     //atualiza o socket do predecessor
                     new_socket_pred = new_socket;
                     temos_pred=1;
+                    if(pred_saiu==1){
+                        send_succ(new_socket_pred, node->sucessor);
+                        pred_saiu=-1;
+                    }
 
                 }
             }
@@ -337,7 +347,7 @@ int main(int argc, char *argv[]) {
             if (FD_ISSET(new_socket_pred, &readfds)){
                 char buffer[1024];
                 int valread;
-                if ((valread = recv(new_socket_pred, buffer, sizeof(buffer), 0)) > 0) {
+                if ((valread = read(new_socket_pred, buffer,1024 - 1)) > 0) {
                     buffer[valread] = '\0';
                     printf("Mensagem recebida: %s\n", buffer);  // Imprime a mensagem recebida
 
@@ -375,6 +385,17 @@ int main(int argc, char *argv[]) {
 
 
                     }*/
+                }else{
+                    printf("\nO meu predecessor saiu\n");
+                    pred_saiu=1;
+                    close(new_socket_pred);
+                    temos_pred=-1;
+                    new_socket_pred=-1;
+
+                    //ele aqui pode sempre definir o predecessor como ele propria porque caso havia 2 nós, fica certo
+                    //caso havia mais que 2 nós ele há de receber um pred e atualizar
+                    node->predecessor=node;
+
                 }
             }
         }
@@ -441,11 +462,36 @@ int main(int argc, char *argv[]) {
                         node->second_successor = createNode(new_id, new_ip, new_port);
 
                     }
+                }else{
+                    printf("\nO meu sucessor saiu\n");
+                    //fecha a adjacencia
+                    close(new_socket_suc);
+                    temos_suc=-1;
+                    new_socket_suc=-1;
+
+                    //define o novo sucessor como o antigo segundo sucessor
+                    node->sucessor=node->second_successor;
+
+                    if(node!=node->sucessor){
+                        //envia SUCC para o predecessor
+                        send_succ(new_socket_pred, node->sucessor);
+
+                        int new_socket_tcp = cliente_tcp(node, node->sucessor->ip, node->sucessor->tcp);
+
+                        // Envia uma mensagem PRED para a nova porta tcp estabelecida
+                        send_pred(new_socket_tcp, node);
+
+                        // Define como a socket com o sucessor a new_socket_tcp
+                        new_socket_suc = new_socket_tcp;
+                        temos_suc=1;
+
+                    }
+
                 }     
             }
         }
     }
-    //close(udp_socket);
+    
     close(tcp_socket);
     return 0;
 }
