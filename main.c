@@ -143,8 +143,9 @@ int main(int argc, char *argv[]) {
         // Espera por uma atividade em um dos sockets, o timeout é NULL, então espera indefinidamente
         activity = select(max_sd + 1, &readfds, &writefds, NULL, NULL);
 
-        if ((activity < 0) && (errno!=EINTR)) {
-            printf("select error\n");
+        // Verifica se algo aconteceu no select
+        if ((activity < 0) && (errno != EINTR)) {
+            printf("select error: %s\n", strerror(errno));
         }
 
         // Se algo aconteceu no teclado, então é uma entrada do utilizador
@@ -158,11 +159,13 @@ int main(int argc, char *argv[]) {
             if (node != NULL) {
                 leave(node, ring);
                 close(new_socket_pred);
-                close(new_socket_suc);
+                //close(new_socket_suc);
                 new_socket_pred=-1;
                 new_socket_suc=-1;
                 temos_pred=-1;
                 temos_suc=-1;
+                free(node);
+                node = NULL;
             } else {
                 printf("Nó não inicializado.\n");
             }
