@@ -168,8 +168,15 @@ int main(int argc, char *argv[]) {
         } else if (strncmp(command, "dj", 2) == 0) {
             int id, succid;
             char succIP[16], succTCP[6];
-            sscanf(command, "dj %d %d %s %s", &id, &succid, succIP, succTCP);
-            node = direct_join(id, succid, succIP, succTCP);
+            int num_args = sscanf(command, "dj %d %d %s %s", &id, &succid, succIP, succTCP);
+
+            // Verifica se todos os 4 parâmetros foram fornecidos
+            if (num_args < 4) {
+                printf("Erro: Não foram fornecidos argumentos suficientes para o comando 'dj'.\n");
+                printf("Uso: dj <id> <succid> <succIP> <succTCP>\n");
+            } else {
+                node = direct_join(id, succid, succIP, succTCP);
+            }
         } else if (strncmp(command, "c", 1) == 0) {
         // Implementação do comando 'c'
         } else if (strncmp(command, "rc", 2) == 0) {

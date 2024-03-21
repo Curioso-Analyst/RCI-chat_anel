@@ -26,8 +26,36 @@ Node* direct_join(int id, int succId, char* succIP, char* succTCP) {
         node->predecessor = node;
     } else {
          // Conecta-se ao nó sucessor e informa-o sobre a entrada do novo nó no anel
-         cliente_tcp(node, succIP, succTCP);
+        int porta_tcp = cliente_tcp(node, succIP, succTCP);
+        printf("Olá cliente, o meu fd é: %d\n", porta_tcp);
+        send_entry(porta_tcp, node);
 
+        node->sucessor=createNode(succId, succIP, succTCP);
+
+        // Lê uma mensagem do socket
+        char buffer[1024];
+        int valread;
+        if ((valread = recv(porta_tcp, buffer, sizeof(buffer), 0)) > 0) {
+            buffer[valread] = '\0';
+            printf("Mensagem recebida: %s\n", buffer);  // Imprime a mensagem recebida
+                
+            // Verifica se é uma mensagem de entrada
+            if (strncmp(buffer, "SUCC", 4) == 0) {
+                    int new_id;
+                    char new_ip[16];
+                    char new_port[6];
+                    
+                // Analisa a mensagem SUCC
+                sscanf(buffer, "SUCC %d %s %s", &new_id, new_ip, new_port);
+
+                node->second_successor=createNode(new_id, new_ip, new_port);
+
+                global_variable=porta_tcp;
+                                            
+                // Imprime as informações do novo nó
+                printf("Informações do segundo sucessor: id=%02d, ip=%s, port=%s\n", new_id, new_ip, new_port);
+            }
+        }
     }
 
     // Iniciar o servidor/cliente TCP na porta escolhida pelo usuário
