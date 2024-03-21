@@ -416,33 +416,38 @@ int main(int argc, char *argv[]) {
                     printf("Mensagem recebida: %s\n", buffer);  // Imprime a mensagem recebida
                 } else{
                     // Procura a corda que perdeu a conexão
-                    for (int i = 0; i < node->num_cordas; i++) {
-                        if (node->cordas[i]->corda_socket_recebidas_fd == new_socket_corda) {
-                            printf("A corda com o nó %d perdeu a conexão.\n", node->cordas[i]->id);
+                    if (node != NULL) {
+                        for (int i = 0; i < node->num_cordas; i++) {
+                            if (node->cordas[i] != NULL && node->cordas[i]->corda_socket_recebidas_fd == new_socket_corda) {
+                                printf("A corda com o nó %d perdeu a conexão.\n", node->cordas[i]->id);
 
-                            // Fecha o socket
-                            close(node->cordas[i]->corda_socket_recebidas_fd);
+                                // Fecha o socket
+                                close(node->cordas[i]->corda_socket_recebidas_fd);
 
-                            // Remove a corda da lista de cordas
-                            free(node->cordas[i]);
-                            for (int j = i; j < node->num_cordas - 1; j++) {
-                                node->cordas[j] = node->cordas[j + 1];
+                                // Remove a corda da lista de cordas
+                                free(node->cordas[i]);
+                                for (int j = i; j < node->num_cordas - 1; j++) {
+                                    node->cordas[j] = node->cordas[j + 1];
+                                }
+                                node->num_cordas--;
+
+                                break;
                             }
-                            node->num_cordas--;
-
-                            break;
                         }
-                    }
 
-                    // Verifica se ainda existem cordas na lista
-                    if (node->num_cordas == 0) {
-                        printf("\nNão há mais cordas na lista.\n");
-                        temos_corda = -1;
-                        new_socket_corda = -1;
+                        // Verifica se ainda existem cordas na lista
+                        if (node->num_cordas == 0) {
+                            printf("\nNão há mais cordas na lista.\n");
+                            temos_corda = -1;
+                            new_socket_corda = -1;
+                        }
+                    } else {
+                        printf("\nO ponteiro do nó é nulo.\n");
                     }
                 }
             }
         }
+
 
         if(temos_pred==1){
             if (FD_ISSET(new_socket_pred, &readfds)){
