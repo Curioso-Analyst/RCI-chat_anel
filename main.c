@@ -108,7 +108,6 @@ int main(int argc, char *argv[]) {
             new_socket_suc=global_variable;
             global_variable=-1;
             temos_suc=1;
-            temos_corda=1;
         }
         // Limpa o conjunto de sockets
         FD_ZERO(&readfds); 
