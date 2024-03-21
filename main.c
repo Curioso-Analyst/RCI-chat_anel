@@ -163,9 +163,16 @@ int main(int argc, char *argv[]) {
         } else if (strncmp(command, "help", 4) == 0) {
             print_help();
         } else if (strncmp(command, "j", 1) == 0) {
-            sscanf(command, "j %03d %02d", &ring, &id);
-            node = join(ring, id, IP, TCP_escolhido);
-            node->ring = ring; // Para depois poder usar a corda 
+            int num_args = sscanf(command, "j %03d %02d", &ring, &id);
+
+            // Verifica se ambos os parâmetros foram fornecidos
+            if (num_args < 2) {
+                printf("Erro: Não foram fornecidos argumentos suficientes para o comando 'j'.\n");
+                printf("Uso: j <ring> <id>\n");
+            } else {
+                node = join(ring, id, IP, TCP_escolhido);
+                node->ring = ring; // Para depois poder usar a corda 
+            }
         } else if (strncmp(command, "dj", 2) == 0) {
             int id, succid;
             char succIP[16], succTCP[6];
@@ -187,7 +194,12 @@ int main(int argc, char *argv[]) {
                 establishChord(node);
             }
         } else if (strncmp(command, "rc", 2) == 0) {
-        // Implementação do comando 'rc'
+            // Implementação do comando 'rc'
+            if (node != NULL) {
+                removeChord(node);
+            } else {
+                printf("Nenhum nó para remover a corda.\n");
+            }
         } else if (strncmp(command, "st", 2) == 0) {
             sscanf(command, "st");
             if (node != NULL) {
@@ -244,25 +256,20 @@ int main(int argc, char *argv[]) {
                 buffer[valread] = '\0';
                 printf("Mensagem recebida: %s\n", buffer);  // Imprime a mensagem recebida
 
-                // Verifica se é uma mensagem de corda
-                if (strncmp(buffer, "CHORD", 5) == 0) {
-                    int new_id;
-                    
-                    // Analisa a mensagem CHORD
-                    sscanf(buffer, "CHORD %d", &new_id);
-                                                        
-                    // Imprime as informações do novo nó
-                    printf("Informações de uma nova corda: id=%02d, ip=%s, port=%s\n", new_id, inet_ntoa(address.sin_addr), port_char);
+                  // Verifica se é uma mensagem de corda
+                    if (strncmp(buffer, "CHORD", 5) == 0) {
+                        int new_id;
+                        
+                        // Analisa a mensagem CHORD
+                        sscanf(buffer, "CHORD %d", &new_id);
+                                                                
+                        // Imprime as informações do novo nó
+                        printf("Informações de uma nova corda: id=%02d, ip=%s, port=%s\n", new_id, inet_ntoa(address.sin_addr), port_char);
 
-                    // Criar um novo nó, desta maneira vai gravar sempre por cima do nó anterior e não armazena uma lista de cordas
-                    node->corda = createNode(new_id, inet_ntoa(address.sin_addr), port_char);
-
-                    /*//Criar um novo nó
-                    Node* new_node = createNode(new_id, inet_ntoa(address.sin_addr), ntohs(address.sin_port));
-
-                    // Adiciona o novo nó à lista de cordas
-                    addNodeToList(node->cordas, new_node);*/   
-                }
+                        // Cria um novo nó, desta maneira vai gravar sempre por cima do nó anterior e não armazena uma lista de cordas
+                        node->corda = createNode(new_id, inet_ntoa(address.sin_addr), port_char);
+                    }
+                
 
 
                 // Verifica se é uma mensagem de entrada
@@ -359,9 +366,21 @@ int main(int argc, char *argv[]) {
                     temos_pred=1;
 
                 }
-            }
+                
+            }  else if (valread == 0) {
+                    // A conexão foi encerrada pelo cliente
+                    printf("A sessão TCP foi fechada pelo cliente.\n");
 
-        }
+                    // Remove a corda
+                    if (node->corda != NULL) {
+                        free(node->corda);
+                        node->corda = NULL;
+                        printf("Corda removida com sucesso.\n");
+                    } else {
+                        printf("Nenhuma corda para remover.\n");
+                    }
+                }
+            }
 
         if(temos_pred==1){
             if (FD_ISSET(new_socket_pred, &readfds)){

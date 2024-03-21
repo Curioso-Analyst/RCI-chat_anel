@@ -14,6 +14,7 @@ Node* createNode(int id, char* ip, char* tcp) {
     node->predecessor = node; // O nó é seu próprio predecessor, criando um anel com apenas um nó
     node->second_successor = node;
     node->corda = NULL;
+    node->corda_socket_fd = -1; // Incializa o socket da corda como -1
     return node;
 }
 
@@ -315,21 +316,27 @@ void establishChord(Node* node) {
         // Extrai o id, ip e tcp de cada linha
         sscanf(line, "%d %s %s", &id, ip, tcp);
 
-        // Verifica se o nó não é o sucessor ou o predecessor
-        if (id != node->sucessor->id && id != node->predecessor->id) {
+        // Verifica se o nó não é o sucessor, o predecessor ou o próprio nó
+        if (id != node->sucessor->id && id != node->predecessor->id && id != node->id) {
             other_node = createNode(id, ip, tcp);  // Criar um nó com o id, ip e tcp
             // Estabelece a corda
             // Conecta-se ao nó escolhido
             int porta_tcp = cliente_tcp(other_node, ip, tcp);
-            printf("Olá cliente, o meu fd é: %d\n", porta_tcp);
-            // Estabeleceu a corda, envia mensagem 
-            send_chord(porta_tcp, node);
+            if (porta_tcp == -1) {
+                printf("Falha ao conectar ao servidor.\n");
+                // Limpa o nó criado
+                free(other_node);
+            } else {
+                printf("Olá cliente, o meu fd é: %d\n", porta_tcp);
+                // Estabeleceu a corda, envia mensagem 
+                send_chord(porta_tcp, node);
 
-            // Guarda o nó escolhido
-            node->corda = other_node;
-            break;
+                // Guarda o nó escolhido
+                node->corda = other_node;
+                node->corda->corda_socket_fd = porta_tcp;
+                break;
+            }
         }
-
         line = strtok(NULL, "\n");
     }
 
@@ -338,4 +345,21 @@ void establishChord(Node* node) {
         printf("Não foram encontrados nós adequados para estabelecer uma corda.\n");
     }
 }
+
+
+void removeChord(Node* node) {
+    if (node->corda != NULL) {
+        // Fecha o socket
+        close(node->corda->corda_socket_fd);
+        
+        // Libera a memória do nó da corda
+        free(node->corda);
+        node->corda = NULL;
+        printf("Corda removida com sucesso.\n");
+    } else {
+        printf("Nenhuma corda para remover.\n");
+    }
+}
+
+
 

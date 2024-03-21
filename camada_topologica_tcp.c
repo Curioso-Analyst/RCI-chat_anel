@@ -8,7 +8,7 @@ int cliente_tcp(Node* node,char* j_ip,char* j_port) {
     fd = socket(AF_INET, SOCK_STREAM, 0);
     if (fd == -1) {
         perror("socket");
-        exit(EXIT_FAILURE);
+        return -1;  // Retorna -1 em caso de erro
     }
     printf("Socket criado.\n");
 
@@ -19,13 +19,13 @@ int cliente_tcp(Node* node,char* j_ip,char* j_port) {
     int errcode = getaddrinfo(j_ip, j_port, &hints, &res);
     if (errcode != 0) {
         fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(errcode));
-        exit(EXIT_FAILURE);
+        return -1;  // Retorna -1 em caso de erro
     }
     printf("getaddrinfo executado com sucesso.\n");
 
     if (connect(fd, res->ai_addr, res->ai_addrlen) == -1) {
         perror("connect");
-        exit(EXIT_FAILURE);
+        return -1;  // Retorna -1 em caso de erro
     }
     // Conectado ao servidor.
     printf("Conectado ao servidor.\n");

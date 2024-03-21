@@ -31,6 +31,7 @@ typedef struct Node {
     struct Node* corda;
     struct Node* cordas;
     int ring;
+    int corda_socket_fd;
     
 } Node;
 
@@ -42,5 +43,6 @@ int getUniqueIdentifier(char* nodes_list);
 void getNodes(int ring, char* user_input);
 void getNodescorda(Node* node, char* buffer);
 void establishChord(Node* node);
+void removeChord(Node* node);
 
 #endif // CAMADA_TOPOLOGICA_H;
