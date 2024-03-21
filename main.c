@@ -149,12 +149,6 @@ int main(int argc, char *argv[]) {
         // Espera por uma atividade em um dos sockets, o timeout é NULL, então espera indefinidamente
         activity = select(max_sd + 1, &readfds, &writefds, NULL, NULL);
 
-        // Imprime o valor de new_socket_corda
-        printf("new_socket_corda após select(): %d\n", new_socket_corda);
-
-        // Imprime o valor de retorno de select()
-        printf("Valor de retorno de select(): %d\n", activity);
-
         // Verifica se algo aconteceu no select
         if ((activity < 0) && (errno != EINTR)) {
             printf("select error: %s\n", strerror(errno));
@@ -290,10 +284,7 @@ int main(int argc, char *argv[]) {
                                 continue;
                             }
                         }
-                                                                
-                        // Imprime as informações do novo nó
-                        printf("Informações de uma nova corda: id=%02d, ip=%s, port=%s\n", new_id, inet_ntoa(address.sin_addr), port_char);
-
+                                                    
                         // Cria um novo nó
                         Node* new_node = createNode(new_id, inet_ntoa(address.sin_addr), port_char);
 
@@ -464,40 +455,6 @@ int main(int argc, char *argv[]) {
                     buffer[valread] = '\0';
                     printf("Mensagem recebida: %s\n", buffer);  // Imprime a mensagem recebida
 
-                    // Verifica se é uma mensagem de entrada
-                    //Só recebe entry do predecessor quando um 3 nó se está a tentar se juntar ao outro que la está
-                    /*if (strncmp(buffer, "ENTRY", 5) == 0) {
-
-                        node->second_successor=node->predecessor;
-
-                        int new_id;
-                        char new_ip[16];
-                        char new_port[6];
-                        
-                        // Analisa a mensagem ENTRY
-                        sscanf(buffer, "ENTRY %d %s %s", &new_id, new_ip, new_port);
-                                                
-                        // Imprime as informações do novo nó
-                        printf("Informações de um novo cliente: id=%02d, ip=%s, port=%s\n", new_id, new_ip, new_port);
-
-                        //Criar um novo nó
-                        node->sucessor = createNode(new_id, new_ip, new_port);
-
-                        // Envia uma mensagem a informar ao predecessor do seu segundo sucessor
-                        send_succ(new_socket_pred, node->sucessor);
-
-                        // Conexão TCP com o novo nó de entrada na porta dele
-                        int new_socket_tcp = cliente_tcp(node, new_ip, new_port);
-
-                        // Envia uma mensagem PRED para a nova porta tcp estabelecida
-                        send_pred(new_socket_tcp, node->predecessor);
-
-                        // Define como a socket com o predecessor a new_socket_tcp
-                        new_socket_suc = new_socket_tcp;
-                        temos_suc=1;
-
-
-                    }*/
                 }else{
                     printf("\nO meu predecessor saiu\n");
                     pred_saiu=1;
