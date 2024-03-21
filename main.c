@@ -92,8 +92,8 @@ int main(int argc, char *argv[]) {
     int ring, id;
     char command[1024];
     int PORT = atoi(TCP_escolhido);
-    int tcp_socket, addrlen, activity, max_sd, new_socket_pred, new_socket_suc; 
-    int temos_pred = -1, temos_suc =-1, pred_saiu =-1;
+    int tcp_socket, udp_socket, addrlen, activity, max_sd, new_socket_pred, new_socket_suc; 
+    int temos_pred = -1, temos_suc =-1, pred_saiu = -1;
     int new_socket = -1;
     struct sockaddr_in address;
     fd_set readfds, writefds;
@@ -169,17 +169,45 @@ int main(int argc, char *argv[]) {
         } else if (strncmp(command, "help", 4) == 0) {
             print_help();
         } else if (strncmp(command, "j", 1) == 0) {
-            sscanf(command, "j %03d %02d", &ring, &id);
-            node = join(ring, id, IP, TCP_escolhido); 
+            int num_args = sscanf(command, "j %03d %02d", &ring, &id);
+
+            // Verifica se ambos os parâmetros foram fornecidos
+            if (num_args < 2) {
+                printf("Erro: Não foram fornecidos argumentos suficientes para o comando 'j'.\n");
+                printf("Uso: j <ring> <id>\n");
+            } else {
+                node = join(ring, id, IP, TCP_escolhido);
+                node->ring = ring; // Para depois poder usar a corda 
+            }
         } else if (strncmp(command, "dj", 2) == 0) {
             int id, succid;
             char succIP[16], succTCP[6];
-            sscanf(command, "dj %d %d %s %s", &id, &succid, succIP, succTCP);
-            node = direct_join(id, succid, succIP, succTCP);
+            int num_args = sscanf(command, "dj %d %d %s %s", &id, &succid, succIP, succTCP);
+
+            // Verifica se todos os 4 parâmetros foram fornecidos
+            if (num_args < 4) {
+                printf("Erro: Não foram fornecidos argumentos suficientes para o comando 'dj'.\n");
+                printf("Uso: dj <id> <succid> <succIP> <succTCP>\n");
+            } else {
+                node = direct_join(id, succid, succIP, succTCP);
+            }
         } else if (strncmp(command, "c", 1) == 0) {
-        // Implementação do comando 'c'
+            // Verifica se o nó foi inicializado
+            if (node == NULL) {
+                printf("Nó não inicializado. Por favor, inicialize o nó antes de tentar estabelecer uma corda.\n");
+            } else if (node->corda != NULL) {
+                printf("O nó já tem uma corda ativa. Por favor, remova a corda existente antes de tentar estabelecer uma nova.\n");
+            } else {
+                // Implementação do comando 'c'
+                establishChord(node);
+            }
         } else if (strncmp(command, "rc", 2) == 0) {
-        // Implementação do comando 'rc'
+            // Implementação do comando 'rc'
+            if (node != NULL) {
+                removeChord(node);
+            } else {
+                printf("Nenhum nó para remover a corda.\n");
+            }
         } else if (strncmp(command, "st", 2) == 0) {
             sscanf(command, "st");
             if (node != NULL) {
@@ -236,6 +264,38 @@ int main(int argc, char *argv[]) {
                 buffer[valread] = '\0';
                 printf("Mensagem recebida: %s\n", buffer);  // Imprime a mensagem recebida
 
+                  // Verifica se é uma mensagem de corda
+                    if (strncmp(buffer, "CHORD", 5) == 0) {
+                        int new_id;
+                        
+                        // Analisa a mensagem CHORD
+                        sscanf(buffer, "CHORD %d", &new_id);
+
+                        // Verifica se já existe uma corda com o mesmo nó
+                        for (int i = 0; i < node->num_cordas; i++) {
+                            if (node->cordas[i]->id == new_id) {
+                                printf("Já existe uma corda com o nó %d. Ignorando a nova corda.\n", new_id);
+                                continue;
+                            }
+                        }
+                                                                
+                        // Imprime as informações do novo nó
+                        printf("Informações de uma nova corda: id=%02d, ip=%s, port=%s\n", new_id, inet_ntoa(address.sin_addr), port_char);
+
+                        // Cria um novo nó
+                        Node* new_node = createNode(new_id, inet_ntoa(address.sin_addr), port_char);
+
+                        // Adiciona a nova corda à lista de cordas
+                        if (node->num_cordas < MAX_CORDAS) {
+                            node->cordas[node->num_cordas] = new_node;
+                            node->num_cordas++;
+                        } else {
+                            printf("Número máximo de cordas atingido. Não é possível adicionar mais cordas.\n");
+                        }
+                    }
+                
+
+
                 // Verifica se é uma mensagem de entrada
                 if (strncmp(buffer, "ENTRY", 5) == 0) {
                     int new_id;
@@ -250,8 +310,6 @@ int main(int argc, char *argv[]) {
 
                     //Se está a entrar o segundo nó
                     if(node->sucessor==node){
-
-                        printf("----ESTAVA SOZINHO---");
 
                         node->predecessor = createNode(new_id, new_ip, new_port);
                         node->sucessor = createNode(new_id, new_ip, new_port);
@@ -278,8 +336,6 @@ int main(int argc, char *argv[]) {
 
                     }else if((node->sucessor!=node) && (node->second_successor==node)){
 
-                        printf("----ESTAMOS DOIS---\n");
-                        
                         // Envia uma mensagem a informar ao novo nó do seu segundo-sucessor
                         send_succ(new_socket, node->sucessor);
 
@@ -287,7 +343,6 @@ int main(int argc, char *argv[]) {
                         node->predecessor = createNode(new_id, new_ip, new_port);
 
                         //Envia para o predecessor o Entry
-                        printf("\nO MEU SOCKET PRED É: %d\n",new_socket_pred);
                         send_entry(new_socket_pred, node->predecessor);
 
                         //Atualiza a nova socket com o predecessor
@@ -403,7 +458,6 @@ int main(int argc, char *argv[]) {
         if(temos_suc==1){
 
             if (FD_ISSET(new_socket_suc, &readfds)){
-                printf("\n----------------ENTROU AQUI NO FD ISSET DO SUCESSOR---------------------\n");
                 char buffer[1024];
                 int valread;
                 if ((valread = read(new_socket_suc, buffer,1024 - 1)) > 0) { // subtract 1 for the null terminator at the end

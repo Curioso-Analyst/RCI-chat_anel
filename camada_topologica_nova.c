@@ -14,9 +14,13 @@ Node* createNode(int id, char* ip, char* tcp) {
     node->predecessor = node; // O nó é seu próprio predecessor, criando um anel com apenas um nó
     node->second_successor = node;
     node->corda = NULL;
+    node->corda_socket_fd = -1; // Incializa o socket da corda como -1
+    node->num_cordas = 0; // Inicializa o número de cordas como 0
+    for (int i = 0; i < MAX_CORDAS; i++) {
+        node->cordas[i] = NULL; // Inicializa a lista de cordas como NULL
+    }
     return node;
 }
-
 
 int getUniqueIdentifier(char* nodes_list) {
     int id;
@@ -260,3 +264,114 @@ void getNodes(int ring, char* user_input) {
     freeaddrinfo(res); //libertar a memoria alocada
     close(fd); //fechar o socket
 }
+
+void getNodescorda(Node* node, char* buffer) {
+    int fd,errcode;
+    ssize_t n;
+    socklen_t addrlen;
+    struct addrinfo hints, *res;
+    struct sockaddr_in addr;
+
+    fd=socket(AF_INET,SOCK_DGRAM,0); //UDP socket
+    if (fd==-1) /*error*/ exit (1);
+
+    memset(&hints,0,sizeof hints);
+    hints.ai_family=AF_INET; //IPv4
+    hints.ai_socktype=SOCK_DGRAM;  //UDP socket
+    errcode=getaddrinfo (SERVER_IP, PORT, &hints, &res);
+    if(errcode!=0) /*error*/ exit(1);
+
+    // Envia a mensagem de pedido da lista de nós
+    char message[1024];
+    sprintf(message, "NODES %03d", node->ring);
+
+    // Imprime a mensagem que será enviada
+    printf("Sending message: %s\n", message);
+    fflush(stdout); // Força a liberação do fluxo de saída padrão
+
+    n=sendto(fd, message, strlen(message), 0, res->ai_addr, res->ai_addrlen);
+    if (n==-1) /*error*/ exit(1);
+
+    // Recebe a resposta
+    addrlen=sizeof(addr);
+    n=recvfrom(fd,buffer,1024,0,(struct sockaddr*) &addr,&addrlen);
+    if(n==-1) /*error*/ exit(1);
+
+    // Escreve no ecra a resposta do servidor
+    // write(1, "Resposta do servidor: ", 22); write(1,buffer,n); write(1, "\n", 1);
+
+    freeaddrinfo(res); //libertar a memoria alocada
+    close(fd); //fechar o socket
+}
+
+bool isInCordas(Node* node, int id) {
+    for (int i = 0; i < node->num_cordas; i++) {
+        if (node->cordas[i]->id == id) {
+            return true;
+        }
+    }
+    return false;
+}
+
+void establishChord(Node* node) {
+    char buffer[1024];
+    // Pede ao servidor de nós o identificador e respetivos contactos dos nós existentes no anel
+    getNodescorda(node, buffer);
+
+    // Percorre a lista de nós
+    char* line = strtok(buffer, "\n");
+    Node* other_node = NULL;
+    while (line != NULL) {
+        int id;
+        char ip[16], tcp[6];
+
+        // Extrai o id, ip e tcp de cada linha
+        sscanf(line, "%d %s %s", &id, ip, tcp);
+
+        // Verifica se o nó não é o sucessor, o predecessor ou o próprio nó
+        if (id != node->sucessor->id && id != node->predecessor->id && id != node->id && !isInCordas(node, id)) {
+            other_node = createNode(id, ip, tcp);  // Criar um nó com o id, ip e tcp
+            // Estabelece a corda
+            // Conecta-se ao nó escolhido
+            int porta_tcp = cliente_tcp(other_node, ip, tcp);
+            if (porta_tcp == -1) {
+                printf("Falha ao conectar ao servidor.\n");
+                // Limpa o nó criado
+                free(other_node);
+            } else {
+                printf("Olá cliente, o meu fd é: %d\n", porta_tcp);
+                // Estabeleceu a corda, envia mensagem 
+                send_chord(porta_tcp, node);
+
+                // Guarda o nó escolhido
+                node->corda = other_node;
+                node->corda->corda_socket_fd = porta_tcp;
+                break;
+            }
+        }
+        line = strtok(NULL, "\n");
+    }
+
+    // Se other_node ainda é NULL, então nenhum nó adequado foi encontrado
+    if (other_node == NULL) {
+        printf("Não foram encontrados nós adequados para estabelecer uma corda.\n");
+    }
+}
+
+
+void removeChord(Node* node) {
+    if (node->corda != NULL) {
+        // Fecha o socket
+        close(node->corda->corda_socket_fd);
+        
+        // Libera a memória do nó da corda
+        free(node->corda);
+        node->corda = NULL;
+        printf("Corda removida com sucesso.\n");
+    } else {
+        printf("Nenhuma corda para remover.\n");
+    }
+}
+
+
+

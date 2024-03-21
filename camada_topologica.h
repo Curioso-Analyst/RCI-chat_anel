@@ -12,6 +12,9 @@
 #include <stdio.h>
 #include <arpa/inet.h>
 #include <time.h>
+#include <stdbool.h>
+
+#define MAX_CORDAS 20
 
 extern int global_variable;
 
@@ -23,12 +26,16 @@ typedef struct Node {
     int id;
     char ip[16];
     char tcp[6];
+    int ring;
+    int corda_socket_fd;
     int pred_socket_fd; // File descriptor do socket de comunicação com o predecessor
     int suc_socket_fd; // File descriptor do socket de comunicação com o sucessor
     struct Node* sucessor;
     struct Node* predecessor;
     struct Node* second_successor;
     struct Node* corda;
+    struct Node* cordas[MAX_CORDAS]; // Lista de cordas recebidas por este nó
+    int num_cordas; // Número de cordas recebidas
 } Node;
 
 Node* createNode(int id, char* ip, char* tcp);
@@ -37,5 +44,8 @@ void regservidornos(Node* node,int fd, char* user_input, char* nodes_list, struc
 void unregisterNode(Node* node, char* user_input);
 int getUniqueIdentifier(char* nodes_list);
 void getNodes(int ring, char* user_input);
+void getNodescorda(Node* node, char* buffer);
+void establishChord(Node* node);
+void removeChord(Node* node);
 
 #endif // CAMADA_TOPOLOGICA_H;

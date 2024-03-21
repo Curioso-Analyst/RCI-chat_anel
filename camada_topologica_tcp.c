@@ -1,6 +1,5 @@
 #include "camada_topologica_tcp.h"
 
-
 int cliente_tcp(Node* node,char* j_ip,char* j_port) {
     int fd;
     struct addrinfo hints, *res;
@@ -8,7 +7,7 @@ int cliente_tcp(Node* node,char* j_ip,char* j_port) {
     fd = socket(AF_INET, SOCK_STREAM, 0);
     if (fd == -1) {
         perror("socket");
-        exit(EXIT_FAILURE);
+        return -1;  // Retorna -1 em caso de erro
     }
     printf("Socket criado.\n");
 
@@ -19,13 +18,13 @@ int cliente_tcp(Node* node,char* j_ip,char* j_port) {
     int errcode = getaddrinfo(j_ip, j_port, &hints, &res);
     if (errcode != 0) {
         fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(errcode));
-        exit(EXIT_FAILURE);
+        return -1;  // Retorna -1 em caso de erro
     }
     printf("getaddrinfo executado com sucesso.\n");
 
     if (connect(fd, res->ai_addr, res->ai_addrlen) == -1) {
         perror("connect");
-        exit(EXIT_FAILURE);
+        return -1;  // Retorna -1 em caso de erro
     }
     // Conectado ao servidor.
     printf("Conectado ao servidor.\n");
@@ -51,7 +50,7 @@ void send_succ(int fd, Node* node){
     char buffer[1024];
     sprintf(buffer, "SUCC %02d %s %s\n", node->id, node->ip, node->tcp);
     // Imprime a mensagem que será enviada
-    printf("Mensagem a ser enviada: %s\n", buffer);
+    printf("Mensagem a ser enviada para o socket %d: %s\n",fd, buffer);
     int n = send(fd, buffer, strlen(buffer), 0);
     if (n == -1) {
         perror("send");
@@ -60,11 +59,24 @@ void send_succ(int fd, Node* node){
     printf("Mensagem enviada!\n");
 }
 
-void send_pred(char fd, Node* node){
+void send_pred(int fd, Node* node){
     char buffer[1024];
     sprintf(buffer, "PRED %02d\n", node->id);
     // Imprime a mensagem que será enviada
-    printf("Mensagem a ser enviada: %s\n", buffer);
+    printf("Mensagem a ser enviada para o socket %d: %s\n",fd, buffer);
+    int n = send(fd, buffer, strlen(buffer), 0);
+    if (n == -1) {
+        perror("send");
+        exit(EXIT_FAILURE);
+    }
+    printf("Mensagem enviada.\n");
+}
+
+void send_chord(int fd, Node* node){
+    char buffer[1024];
+    sprintf(buffer, "CHORD %02d\n", node->id);
+    // Imprime a mensagem que será enviada
+    printf("Mensagem a ser enviada para o socket %d: %s\n",fd, buffer);
     int n = send(fd, buffer, strlen(buffer), 0);
     if (n == -1) {
         perror("send");
