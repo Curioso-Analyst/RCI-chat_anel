@@ -189,6 +189,8 @@ int main(int argc, char *argv[]) {
             // Verifica se o nó foi inicializado
             if (node == NULL) {
                 printf("Nó não inicializado. Por favor, inicialize o nó antes de tentar estabelecer uma corda.\n");
+            } else if (node->corda != NULL) {
+                printf("O nó já tem uma corda ativa. Por favor, remova a corda existente antes de tentar estabelecer uma nova.\n");
             } else {
                 // Implementação do comando 'c'
                 establishChord(node);
@@ -266,8 +268,16 @@ int main(int argc, char *argv[]) {
                         // Imprime as informações do novo nó
                         printf("Informações de uma nova corda: id=%02d, ip=%s, port=%s\n", new_id, inet_ntoa(address.sin_addr), port_char);
 
-                        // Cria um novo nó, desta maneira vai gravar sempre por cima do nó anterior e não armazena uma lista de cordas
-                        node->corda = createNode(new_id, inet_ntoa(address.sin_addr), port_char);
+                        // Cria um novo nó
+                        Node* new_node = createNode(new_id, inet_ntoa(address.sin_addr), port_char);
+
+                        // Adiciona a nova corda à lista de cordas
+                        if (node->num_cordas < MAX_CORDAS) {
+                            node->cordas[node->num_cordas] = new_node;
+                            node->num_cordas++;
+                        } else {
+                            printf("Número máximo de cordas atingido. Não é possível adicionar mais cordas.\n");
+                        }
                     }
                 
 

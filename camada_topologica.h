@@ -13,6 +13,8 @@
 #include <arpa/inet.h>
 #include <time.h>
 
+#define MAX_CORDAS 20
+
 extern int global_variable;
 
 extern char* SERVER_IP;
@@ -23,16 +25,16 @@ typedef struct Node {
     int id;
     char ip[16];
     char tcp[6];
+    int ring;
+    int corda_socket_fd;
     int pred_socket_fd; // File descriptor do socket de comunicação com o predecessor
     int suc_socket_fd; // File descriptor do socket de comunicação com o sucessor
     struct Node* sucessor;
     struct Node* predecessor;
     struct Node* second_successor;
     struct Node* corda;
-    struct Node* cordas;
-    int ring;
-    int corda_socket_fd;
-    
+    struct Node* cordas[MAX_CORDAS]; // Lista de cordas recebidas por este nó
+    int num_cordas; // Número de cordas recebidas
 } Node;
 
 Node* createNode(int id, char* ip, char* tcp);

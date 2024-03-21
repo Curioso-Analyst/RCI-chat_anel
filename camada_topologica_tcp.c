@@ -60,7 +60,7 @@ void send_succ(int fd, Node* node){
     printf("Mensagem enviada!\n");
 }
 
-void send_pred(char fd, Node* node){
+void send_pred(int fd, Node* node){
     char buffer[1024];
     sprintf(buffer, "PRED %02d\n", node->id);
     // Imprime a mensagem que será enviada

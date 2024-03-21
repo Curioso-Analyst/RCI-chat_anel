@@ -103,12 +103,12 @@ void show_topology(Node* node) {
     }
 
     if (node->corda != NULL) {
-        printf("\nVizinho na corda:\n");
+        printf("\nCorda à qual me conectei:\n");
         printf("Identificador: %02d\n", node->corda->id);
         printf("IP: %s\n", node->corda->ip);
         printf("TCP: %s\n", node->corda->tcp);
     } else {
-        printf("\nVizinho na corda: NULL\n");
+        printf("\nCorda à qual me conectei: NULL\n");
     }
 
     if (node->predecessor != NULL) {
@@ -119,6 +119,19 @@ void show_topology(Node* node) {
     } else {
         printf("\nPredecessor: NULL\n");
     }
+
+    printf("\nLista de cordas recebidas:\n");
+    if (node->num_cordas > 0) {
+        for (int i = 0; i < node->num_cordas; i++) {
+            printf("Corda %d:\n", i + 1);
+            printf("Identificador: %02d\n", node->cordas[i]->id);
+            printf("IP: %s\n", node->cordas[i]->ip);
+            printf("TCP: %s\n", node->cordas[i]->tcp);
+        }
+    } else {
+        printf("Nenhuma corda recebida.\n");
+    }
+
 }
 
 
