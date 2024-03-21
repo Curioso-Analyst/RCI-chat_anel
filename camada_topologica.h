@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include <arpa/inet.h>
 #include <time.h>
+#include <stdbool.h>
 
 #define MAX_CORDAS 20
 

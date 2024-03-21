@@ -1,6 +1,5 @@
 #include "camada_topologica_tcp.h"
 
-
 int cliente_tcp(Node* node,char* j_ip,char* j_port) {
     int fd;
     struct addrinfo hints, *res;
@@ -85,7 +84,6 @@ void send_chord(int fd, Node* node){
     }
     printf("Mensagem enviada.\n");
 }
-
 
 void removeNode(Node** node_to_remove_ptr) {
     Node* node_to_remove = *node_to_remove_ptr;

@@ -298,10 +298,19 @@ void getNodescorda(Node* node, char* buffer) {
     if(n==-1) /*error*/ exit(1);
 
     // Escreve no ecra a resposta do servidor
-    write(1, "Resposta do servidor: ", 22); write(1,buffer,n); write(1, "\n", 1);
+    // write(1, "Resposta do servidor: ", 22); write(1,buffer,n); write(1, "\n", 1);
 
     freeaddrinfo(res); //libertar a memoria alocada
     close(fd); //fechar o socket
+}
+
+bool isInCordas(Node* node, int id) {
+    for (int i = 0; i < node->num_cordas; i++) {
+        if (node->cordas[i]->id == id) {
+            return true;
+        }
+    }
+    return false;
 }
 
 void establishChord(Node* node) {
@@ -320,7 +329,7 @@ void establishChord(Node* node) {
         sscanf(line, "%d %s %s", &id, ip, tcp);
 
         // Verifica se o nó não é o sucessor, o predecessor ou o próprio nó
-        if (id != node->sucessor->id && id != node->predecessor->id && id != node->id) {
+        if (id != node->sucessor->id && id != node->predecessor->id && id != node->id && !isInCordas(node, id)) {
             other_node = createNode(id, ip, tcp);  // Criar um nó com o id, ip e tcp
             // Estabelece a corda
             // Conecta-se ao nó escolhido

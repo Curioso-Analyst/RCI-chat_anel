@@ -264,6 +264,14 @@ int main(int argc, char *argv[]) {
                         
                         // Analisa a mensagem CHORD
                         sscanf(buffer, "CHORD %d", &new_id);
+
+                        // Verifica se já existe uma corda com o mesmo nó
+                        for (int i = 0; i < node->num_cordas; i++) {
+                            if (node->cordas[i]->id == new_id) {
+                                printf("Já existe uma corda com o nó %d. Ignorando a nova corda.\n", new_id);
+                                continue;
+                            }
+                        }
                                                                 
                         // Imprime as informações do novo nó
                         printf("Informações de uma nova corda: id=%02d, ip=%s, port=%s\n", new_id, inet_ntoa(address.sin_addr), port_char);
