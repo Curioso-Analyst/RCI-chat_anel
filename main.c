@@ -421,7 +421,7 @@ int main(int argc, char *argv[]) {
                     printf("\nA corda saiu\n");
                     // Procura a corda que perdeu a conexão
                     for (int i = 0; i < node->num_cordas; i++) {
-                        if (node->cordas[i]->corda_socket_recebidas_fd == new_socket) {
+                        if (node->cordas[i]->corda_socket_recebidas_fd == new_socket_corda) {
                             printf("A corda com o nó %d perdeu a conexão.\n", node->cordas[i]->id);
 
                             // Fecha o socket
