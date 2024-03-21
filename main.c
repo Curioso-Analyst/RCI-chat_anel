@@ -386,10 +386,7 @@ int main(int argc, char *argv[]) {
                     }
 
                 }
-            } else {
-                printf("A minha corda saiu!\n");
-            }
-
+            } 
         }
 
         if(temos_pred==1){
