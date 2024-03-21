@@ -269,7 +269,6 @@ int main(int argc, char *argv[]) {
                 buffer[valread] = '\0';
                 printf("Mensagem recebida: %s\n", buffer);  // Imprime a mensagem recebida
 
-
                   // Verifica se é uma mensagem de corda
                     if (strncmp(buffer, "CHORD", 5) == 0) {
                         int new_id;
@@ -416,7 +415,6 @@ int main(int argc, char *argv[]) {
                     buffer[valread] = '\0';
                     printf("Mensagem recebida: %s\n", buffer);  // Imprime a mensagem recebida
                 } else{
-                    printf("\nA corda saiu\n");
                     // Procura a corda que perdeu a conexão
                     for (int i = 0; i < node->num_cordas; i++) {
                         if (node->cordas[i]->corda_socket_recebidas_fd == new_socket_corda) {
@@ -439,7 +437,6 @@ int main(int argc, char *argv[]) {
                     // Verifica se ainda existem cordas na lista
                     if (node->num_cordas == 0) {
                         printf("\nNão há mais cordas na lista.\n");
-                        close(new_socket_corda);
                         temos_corda = -1;
                         new_socket_corda = -1;
                     }
