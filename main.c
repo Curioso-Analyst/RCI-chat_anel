@@ -245,6 +245,10 @@ int main(int argc, char *argv[]) {
                 exit(EXIT_FAILURE);
             }
 
+            // Atualiza new_socket após todas as verificações do loop for
+            if (new_socket_temp != -1) {
+            new_socket = new_socket_temp;
+            }
 
             // Conversão de inteiro para char
             char socket_char[20]; // Tamanho suficiente para armazenar um número inteiro
@@ -252,12 +256,13 @@ int main(int argc, char *argv[]) {
             char port_char[20]; // Tamanho suficiente para armazenar um número inteiro
             sprintf(port_char, "%d", ntohs(address.sin_port));
 
-            // Lê uma mensagem do socket
+            /// Lê uma mensagem do socket
             char buffer[1024];
             int valread;
-            if ((valread = recv(new_socket, buffer, sizeof(buffer), 0)) > 0) {
+            if ((valread = read(new_socket, buffer, sizeof(buffer))) > 0) {
                 buffer[valread] = '\0';
                 printf("Mensagem recebida: %s\n", buffer);  // Imprime a mensagem recebida
+
 
                   // Verifica se é uma mensagem de corda
                     if (strncmp(buffer, "CHORD", 5) == 0) {
@@ -386,7 +391,25 @@ int main(int argc, char *argv[]) {
                     }
 
                 }
-            } 
+            } else {
+                printf("A conexão com a corda foi perdida.\n");
+
+                // Procura a corda que perdeu a conexão
+                for (int i = 0; i < node->num_cordas; i++) {
+                    if (node->cordas[i]->corda_socket_fd == new_socket) {
+                        printf("A corda com o nó %d perdeu a conexão.\n", node->cordas[i]->id);
+
+                        // Remove a corda da lista de cordas
+                        free(node->cordas[i]);
+                        for (int j = i; j < node->num_cordas - 1; j++) {
+                            node->cordas[j] = node->cordas[j + 1];
+                        }
+                        node->num_cordas--;
+
+                        break;
+                    }
+                }
+            }
         }
 
         if(temos_pred==1){
