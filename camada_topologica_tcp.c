@@ -49,14 +49,11 @@ void send_entry(int fd, Node* node){
 void send_succ(int fd, Node* node){
     char buffer[1024];
     sprintf(buffer, "SUCC %02d %s %s\n", node->id, node->ip, node->tcp);
-    // Imprime a mensagem que será enviada
-    printf("Mensagem a ser enviada para o socket %d: %s\n",fd, buffer);
     int n = send(fd, buffer, strlen(buffer), 0);
     if (n == -1) {
         perror("send");
         exit(EXIT_FAILURE);
     }
-    printf("Mensagem enviada!\n");
 }
 
 void send_pred(int fd, Node* node){

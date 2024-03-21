@@ -159,7 +159,7 @@ int main(int argc, char *argv[]) {
             if (node != NULL) {
                 leave(node, ring);
                 close(new_socket_pred);
-                //close(new_socket_suc);
+                close(new_socket_suc);
                 new_socket_pred=-1;
                 new_socket_suc=-1;
                 temos_pred=-1;
@@ -245,14 +245,6 @@ int main(int argc, char *argv[]) {
                 exit(EXIT_FAILURE);
             }
 
-            // Nova conexão, socket fd é %d, ip é: %s, port: %d
-            printf("Olá servidor, o meu socket fd é %d, ip is : %s, port : %d\n", new_socket_temp, inet_ntoa(address.sin_addr), ntohs(address.sin_port));
-
-            // Atualiza new_socket após todas as verificações do loop for
-            if (new_socket_temp != -1) {
-            new_socket = new_socket_temp;
-            printf("Valor de new_socket atualizado para: %d\n", new_socket);
-            }
 
             // Conversão de inteiro para char
             char socket_char[20]; // Tamanho suficiente para armazenar um número inteiro
@@ -263,7 +255,7 @@ int main(int argc, char *argv[]) {
             // Lê uma mensagem do socket
             char buffer[1024];
             int valread;
-            if ((valread = recv(new_socket, buffer, sizeof(buffer), 0)) > 0) {
+            if ((valread = read(new_socket, buffer, sizeof(buffer))) > 0) {
                 buffer[valread] = '\0';
                 printf("Mensagem recebida: %s\n", buffer);  // Imprime a mensagem recebida
 
@@ -308,9 +300,6 @@ int main(int argc, char *argv[]) {
                     // Analisa a mensagem ENTRY
                     sscanf(buffer, "ENTRY %d %s %s", &new_id, new_ip, new_port);
                                             
-                    // Imprime as informações do novo nó
-                    printf("Informações de um novo cliente: id=%02d, ip=%s, port=%s\n", new_id, new_ip, new_port);
-
                     //Se está a entrar o segundo nó
                     if(node->sucessor==node){
 
@@ -397,6 +386,8 @@ int main(int argc, char *argv[]) {
                     }
 
                 }
+            } else {
+                printf("A minha corda saiu!\n");
             }
 
         }
