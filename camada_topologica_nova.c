@@ -312,52 +312,52 @@ void establishChord(Node* node) {
         int id;
         char ip[16], tcp[6];
 
-        // Extrai o id, ip e tcp de cada linha
-        sscanf(line, "%d %s %s", &id, ip, tcp);
+        do {
+            // Extrai o id, ip e tcp de cada linha
+            sscanf(line, "%d %s %s", &id, ip, tcp);
 
-        // Verifica se o nó não é o sucessor, o predecessor ou o próprio nó
-        if (id != node->sucessor->id && id != node->predecessor->id && id != node->id) {
-            // Verifica se o nó já tem uma corda com você
-            bool already_connected = false;
-            for (int i = 0; i < MAX_CLIENTS; i++) {
-                if (clients[i] && clients[i]->node->id == id) {
-                    already_connected = true;
+            // Verifica se o nó não é o sucessor, o predecessor ou o próprio nó
+            if (id != node->sucessor->id && id != node->predecessor->id && id != node->id) {
+                // Verifica se o nó já tem uma corda com você
+                bool already_connected = false;
+                for (int i = 0; i < MAX_CLIENTS; i++) {
+                    if (clients[i] && clients[i]->node->id == id) {
+                        already_connected = true;
+                        break;
+                    }
+                }
+
+                // Se o nó já tem uma corda com você, pula para o próximo nó
+                if (already_connected) {
+                    line = strtok(NULL, "\n");
+                    continue;
+                }
+
+                other_node = createNode(id, ip, tcp);  // Criar um nó com o id, ip e tcp da corda
+                // Estabelece a corda com o nó
+                int porta_tcp = cliente_tcp(other_node, ip, tcp);
+                if (porta_tcp != -1) {
+                    printf("Olá cliente, o meu fd é: %d\n", porta_tcp);
+                    // Estabeleceu a corda, envia mensagem para o socket da corda
+                    send_chord(porta_tcp, node);
+
+                    // Guarda o nó escolhido e o socket da corda
+                    node->corda = other_node;
+                    node->corda->corda_socket_fd = porta_tcp;
                     break;
+                } else {
+                    printf("Falha ao conectar ao servidor.\n");
+                    // Limpa o nó criado
+                    free(other_node);
                 }
             }
+            line = strtok(NULL, "\n");
+        } while (line != NULL);
 
-            // Se o nó já tem uma corda com você, pula para o próximo nó
-            if (already_connected) {
-                line = strtok(NULL, "\n");
-                continue;
-            }
-            other_node = createNode(id, ip, tcp);  // Criar um nó com o id, ip e tcp da corda
-            // Estabelece a corda com o nó
-            int porta_tcp = cliente_tcp(other_node, ip, tcp);
-            if (porta_tcp == -1) {
-                printf("Falha ao conectar ao servidor.\n");
-                // Limpa o nó criado
-                free(other_node);
-                // Pula para o próximo nó na lista
-                line = strtok(NULL, "\n");
-                continue;
-            } else {
-                printf("Olá cliente, o meu fd é: %d\n", porta_tcp);
-                // Estabeleceu a corda, envia mensagem para o socket da corda
-                send_chord(porta_tcp, node);
-
-                // Guarda o nó escolhido e o socket da corda
-                node->corda = other_node;
-                node->corda->corda_socket_fd = porta_tcp;
-                break;
-            }
+        // Se other_node ainda é NULL, então nenhum nó adequado foi encontrado
+        if (other_node == NULL) {
+            printf("Não foram encontrados nós adequados para estabelecer uma corda.\n");
         }
-        line = strtok(NULL, "\n");
-    }
-
-    // Se other_node ainda é NULL, então nenhum nó adequado foi encontrado
-    if (other_node == NULL) {
-        printf("Não foram encontrados nós adequados para estabelecer uma corda.\n");
     }
 }
 
