@@ -389,7 +389,7 @@ int main(int argc, char *argv[]) {
         }
 
         // Verifica se há atividade no socket das cordas recebidas
-        if(temos_corda == 1){
+        if(temos_corda > 0){
             for (int i = 0; i < MAX_CLIENTS; i++) {
                 if (clients[i] && FD_ISSET(clients[i]->socket_fd, &readfds)) {
                     int valread;
@@ -401,7 +401,7 @@ int main(int argc, char *argv[]) {
                         close(clients[i]->socket_fd);
                         clients[i]->socket_fd = -1; 
                         remove_client(temp_socket_fd);
-                        temos_corda = -1;
+                        temos_corda--;  // Decrementa o número de cordas
                     } else {
                         buffer[valread] = '\0';
                         printf("Mensagem recebida: %s\n", buffer);
@@ -409,7 +409,7 @@ int main(int argc, char *argv[]) {
                 }
             }
         }
-        
+                
         
         if(temos_pred==1){
             if (FD_ISSET(new_socket_pred, &readfds)){
