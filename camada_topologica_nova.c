@@ -335,12 +335,7 @@ void establishChord(Node* node) {
         }
 
         // Se o nó já está na lista de clientes, pula para o próximo nó
-        if (already_connected) {
-            line = strtok(NULL, "\n");
-            continue;
-        }
-
-        if (id != node->sucessor->id && id != node->predecessor->id && id != node->id) {
+        if (!already_connected && id != node->sucessor->id && id != node->predecessor->id && id != node->id) {
             other_node = createNode(id, ip, tcp);
             int porta_tcp = cliente_tcp(other_node, ip, tcp);
             if (porta_tcp != -1) {
@@ -353,17 +348,17 @@ void establishChord(Node* node) {
             } else {
                 printf("Falha ao conectar ao servidor.\n");
                 free(other_node);
-                printf("Não foram encontrados nós adequados para estabelecer uma corda.\n");
-                return;
             }
         }
-        //line = strtok(NULL, "\n");
+
+        line = strtok_r(NULL, "\n", &saveptr);  // Mova esta linha para aqui
     }
 
     if (other_node == NULL) {
         printf("Não foram encontrados nós adequados para estabelecer uma corda.\n");
     }
 }
+
 
 
 void removeChord(Node* node) {
