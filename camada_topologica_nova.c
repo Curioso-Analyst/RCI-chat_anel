@@ -317,6 +317,20 @@ void establishChord(Node* node) {
 
         // Verifica se o nó não é o sucessor, o predecessor ou o próprio nó
         if (id != node->sucessor->id && id != node->predecessor->id && id != node->id) {
+            // Verifica se o nó já tem uma corda com você
+            bool already_connected = false;
+            for (int i = 0; i < MAX_CLIENTS; i++) {
+                if (clients[i] && clients[i]->node->id == id) {
+                    already_connected = true;
+                    break;
+                }
+            }
+
+            // Se o nó já tem uma corda com você, pula para o próximo nó
+            if (already_connected) {
+                line = strtok(NULL, "\n");
+                continue;
+            }
             other_node = createNode(id, ip, tcp);  // Criar um nó com o id, ip e tcp da corda
             // Estabelece a corda com o nó
             int porta_tcp = cliente_tcp(other_node, ip, tcp);
