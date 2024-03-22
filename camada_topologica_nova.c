@@ -351,7 +351,7 @@ void establishChord(Node* node) {
             }
         }
 
-        line = strtok_r(NULL, "\n", &saveptr);  // Mova esta linha para aqui
+        line = strtok_r(NULL, "\n", &saveptr);
     }
 
     if (other_node == NULL) {
