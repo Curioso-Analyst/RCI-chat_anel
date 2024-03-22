@@ -338,6 +338,9 @@ void establishChord(Node* node) {
                 printf("Falha ao conectar ao servidor.\n");
                 // Limpa o nó criado
                 free(other_node);
+                // Pula para o próximo nó na lista
+                line = strtok(NULL, "\n");
+                continue;
             } else {
                 printf("Olá cliente, o meu fd é: %d\n", porta_tcp);
                 // Estabeleceu a corda, envia mensagem para o socket da corda
