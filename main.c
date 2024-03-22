@@ -411,10 +411,10 @@ int main(int argc, char *argv[]) {
             if (FD_ISSET(new_socket_corda, &readfds)){
                 char buffer[1024];
                 int valread;
-                if ((valread = read(new_socket_corda, buffer,1024 - 1)) > 0) {
-                    buffer[valread] = '\0';
-                    printf("Mensagem recebida: %s\n", buffer);  // Imprime a mensagem recebida
-                } else{
+                char tmp;
+                if (recv(new_socket_corda, &tmp, 1, MSG_PEEK | MSG_DONTWAIT) == 0) {
+                    // A outra extremidade da conexão foi fechada
+                    printf("A corda com o socket %d perdeu a conexão.\n", new_socket_corda);
                     // Procura a corda que perdeu a conexão
                     if (node != NULL) {
                         for (int i = 0; i < node->num_cordas; i++) {
@@ -455,9 +455,13 @@ int main(int argc, char *argv[]) {
                             new_socket_corda = -1;
                         }
                     }
+                } else if ((valread = read(new_socket_corda, buffer,1024 - 1)) > 0) {
+                    buffer[valread] = '\0';
+                    printf("Mensagem recebida: %s\n", buffer);  // Imprime a mensagem recebida
                 }
             }
         }
+
 
 
 

@@ -1,0 +1,1378 @@
+<pre><center><font size="10" color="blue"> ----- NODE REPORT FOR GROUP 004 ------ </font></center><br><br><center><font size="5" color="blue"> EVENTS IN NODE WITH SERVER PORT: 58130 (request from 178.166.51.165) </font></center><br><br>Report date: Fri, 22 Mar 2024 01:01:46 GMT, Setup type: C<br><br><br><br> --COR--> jointo 004 50 60 at 21MAR2024 23:05:27
+  [INFO]: Contact node 60 to enter ring
+[ACTION]: Connect to 192.168.1.1:58131
+  [INFO]: Connect ok. I am client at desc: 6
+[ACTION]: Send to node 60 (desc 6): ENTRY 50 192.168.1.1 58130 [12,7ms]
+  [INFO]:   Resp from desc 6: SUCC 70 192.168.1.1 58132
+ [EVENT]: Accepted connect req - expect ingress PRED at desc: 7
+  [INFO]: From predecessor: PRED 70
+[ACTION]: Send to node 60 (desc 6): ROUTE 50 50 50 [13,0ms]
+[ACTION]: Send to node 70 (desc 7): ROUTE 50 50 50 [13,0ms]
+[ACTION]: Send to 192.168.1.1:58125: REG 004 50 192.168.1.1 58130
+  [INFO]: Registered (004.50)
+
+ [EVENT]: Activity detected - successor (ch: 6) at 21MAR2024 23:05:27 [13,2ms]
+  [INFO]: 51 bytes read from socket
+  [INFO]: 3 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : ROUTE 60 60 60 [13,2ms]
+[ACTION]: Send to node 60 (desc 6): ROUTE 50 60 50-60 [13,2ms]
+[ACTION]: Send to node 70 (desc 7): ROUTE 50 60 50-60 [13,3ms]
+  [INFO]: Recv msg from node 60 : ROUTE 60 70 60-70 [13,3ms]
+[ACTION]: Send to node 60 (desc 6): ROUTE 50 70 50-60-70 [13,3ms]
+[ACTION]: Send to node 70 (desc 7): ROUTE 50 70 50-60-70 [13,3ms]
+  [INFO]: Recv msg from node 60 : ROUTE 60 50 60-50 [13,3ms]
+  [INFO]: No action
+
+ [EVENT]: Activity detected - predecessor (ch: 7) at 21MAR2024 23:05:27 [13,4ms]
+  [INFO]: 51 bytes read from socket
+  [INFO]: 3 message(s) at predecessor ID: 70, ch: 7
+  [INFO]: Recv msg from node 70 : ROUTE 70 70 70 [13,4ms]
+[ACTION]: Send to node 60 (desc 6): ROUTE 50 70 50-70 [13,4ms]
+[ACTION]: Send to node 70 (desc 7): ROUTE 50 70 50-70 [13,4ms]
+  [INFO]: Recv msg from node 70 : ROUTE 70 60 70-60 [13,4ms]
+  [INFO]: No action
+  [INFO]: Recv msg from node 70 : ROUTE 70 50 70-50 [13,5ms]
+  [INFO]: No action
+
+ [EVENT]: Connect request 21MAR2024 23:05:27
+  [INFO]: Accepted - test phase desc: 8
+  [INFO]: From 192.168.1.1
+  [INFO]: Accepted - stdby phase desc: 8
+
+ [EVENT]: Pre-neighbor (desc 8) at 21MAR2024 23:05:27 [13,5ms]
+  [INFO]: 27 bytes read from socket
+  [INFO]: Recv msg: ENTRY 40 192.168.1.1 58129
+[ACTION]: Send to node 40 (desc 8): SUCC 60 192.168.1.1 58131 [13,6ms]
+[ACTION]: Send to node 70 (desc 7): ENTRY 40 192.168.1.1 58129 [13,6ms]
+[ACTION]: Send to node 60 (desc 6): ROUTE 50 70 50-60-70 [13,7ms]
+[ACTION]: Send to node 40 (desc 8): ROUTE 50 50 50 [13,8ms]
+[ACTION]: Send to node 40 (desc 8): ROUTE 50 60 50-60 [13,8ms]
+[ACTION]: Send to node 40 (desc 8): ROUTE 50 70 50-60-70 [13,8ms]
+  [INFO]: Successful ingress of node 40 now my predecessor
+
+ [EVENT]: Activity detected - predecessor (ch: 8) at 21MAR2024 23:05:27 [13,9ms]
+  [INFO]: 15 bytes read from socket
+  [INFO]: 1 message(s) at predecessor ID: 40, ch: 8
+  [INFO]: Recv msg from node 40 : ROUTE 40 40 40 [13,9ms]
+[ACTION]: Send to node 60 (desc 6): ROUTE 50 40 50-40 [13,9ms]
+[ACTION]: Send to node 40 (desc 8): ROUTE 50 40 50-40 [13,9ms]
+
+ [EVENT]: Activity detected - predecessor (ch: 8) at 21MAR2024 23:05:27 [14,0ms]
+  [INFO]: 18 bytes read from socket
+  [INFO]: 1 message(s) at predecessor ID: 40, ch: 8
+  [INFO]: Recv msg from node 40 : ROUTE 40 50 40-50 [14,1ms]
+  [INFO]: No action
+ 004.50 > show topology at 21MAR2024 23:05:27
+
+================================================================================
+  [INFO]: TOPOLOGY 21MAR2024 23:05:27, NS at: 192.168.1.1 / 58125
+================================================================================
+Net ID: 004, Node ID: 50, at 192.168.1.1 / 58130  Four nodes or more in ring
+--------------------------------------------------------------------------------
+
+      Unit                                         Descriptor
+
+  TCP listen channel                                   5
+  UDP server                                           3
+  Predecessor ID: 40                                   8 private
+           My ID: 50 IP: 192.168.1.1, port: 58130
+    Successor ID: 60 IP: 192.168.1.1, port: 58131     6
+2nd successor ID: 70 IP: 192.168.1.1, port: 58132
+--------------------------------------------------------------------------------
+
+ [EVENT]: Activity detected - predecessor (ch: 8) at 21MAR2024 23:05:27 [55,5ms]
+  [INFO]: 105 bytes read from socket
+  [INFO]: 5 message(s) at predecessor ID: 40, ch: 8
+  [INFO]: Recv msg from node 40 : ROUTE 40 60 40-50-60 [55,6ms]
+  [INFO]: No action
+  [INFO]: Recv msg from node 40 : ROUTE 40 70 40-50-60-70 [55,6ms]
+  [INFO]: No action
+  [INFO]: Recv msg from node 40 : ROUTE 40 70 40-70 [55,6ms]
+  [INFO]: No action
+  [INFO]: Recv msg from node 40 : ROUTE 40 70 40-50-60-70 [55,6ms]
+  [INFO]: No action
+  [INFO]: Recv msg from node 40 : ROUTE 40 30 40-30 [55,7ms]
+[ACTION]: Send to node 60 (desc 6): ROUTE 50 30 50-40-30 [55,7ms]
+[ACTION]: Send to node 40 (desc 8): ROUTE 50 30 50-40-30 [55,7ms]
+
+ [EVENT]: Activity detected - successor (ch: 6) at 21MAR2024 23:05:27 [55,7ms]
+  [INFO]: 33 bytes read from socket
+  [INFO]: 2 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : ROUTE 60 40 60-70-40 [55,8ms]
+  [INFO]: No action
+  [INFO]: Recv msg from node 60 : ROUTE 60 40 [55,8ms]
+  [INFO]: No action
+
+ [EVENT]: Activity detected - successor (ch: 6) at 21MAR2024 23:05:27 [55,8ms]
+  [INFO]: 21 bytes read from socket
+  [INFO]: 1 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : ROUTE 60 30 60-70-30 [55,8ms]
+  [INFO]: No action
+
+ [EVENT]: Activity detected - predecessor (ch: 8) at 21MAR2024 23:05:27 [55,9ms]
+  [INFO]: 21 bytes read from socket
+  [INFO]: 1 message(s) at predecessor ID: 40, ch: 8
+  [INFO]: Recv msg from node 40 : ROUTE 40 20 40-30-20 [55,9ms]
+[ACTION]: Send to node 60 (desc 6): ROUTE 50 20 50-40-30-20 [55,9ms]
+[ACTION]: Send to node 40 (desc 8): ROUTE 50 20 50-40-30-20 [55,9ms]
+
+ [EVENT]: Activity detected - successor (ch: 6) at 21MAR2024 23:05:27 [55,9ms]
+  [INFO]: 48 bytes read from socket
+  [INFO]: 3 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : ROUTE 60 40 60-70-30-40 [56,0ms]
+  [INFO]: No action
+  [INFO]: Recv msg from node 60 : ROUTE 60 30 [56,0ms]
+  [INFO]: No action
+  [INFO]: Recv msg from node 60 : ROUTE 60 40 [56,0ms]
+  [INFO]: No action
+
+ [EVENT]: Activity detected - successor (ch: 6) at 21MAR2024 23:05:27 [99,6ms]
+  [INFO]: 255 bytes read from socket
+  [INFO]: 12 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : ROUTE 60 20 60-70-20 [99,7ms]
+[ACTION]: Send to node 60 (desc 6): ROUTE 50 20 50-60-70-20 [99,7ms]
+[ACTION]: Send to node 40 (desc 8): ROUTE 50 20 50-60-70-20 [99,7ms]
+  [INFO]: Recv msg from node 60 : ROUTE 60 30 60-70-20-30 [99,8ms]
+  [INFO]: No action
+  [INFO]: Recv msg from node 60 : ROUTE 60 40 60-70-20-30-40 [99,8ms]
+  [INFO]: No action
+  [INFO]: Recv msg from node 60 : ROUTE 60 20 [99,8ms]
+[ACTION]: Send to node 60 (desc 6): ROUTE 50 20 50-40-30-20 [99,8ms]
+[ACTION]: Send to node 40 (desc 8): ROUTE 50 20 50-40-30-20 [99,8ms]
+  [INFO]: Recv msg from node 60 : ROUTE 60 30 [99,9ms]
+  [INFO]: No action
+  [INFO]: Recv msg from node 60 : ROUTE 60 40 [99,9ms]
+  [INFO]: No action
+  [INFO]: Recv msg from node 60 : ROUTE 60 10 60-70-10 [99,9ms]
+[ACTION]: Send to node 60 (desc 6): ROUTE 50 10 50-60-70-10 [99,9ms]
+[ACTION]: Send to node 40 (desc 8): ROUTE 50 10 50-60-70-10 [99,9ms]
+  [INFO]: Recv msg from node 60 : ROUTE 60 20 60-70-10-20 [100,0ms]
+  [INFO]: No action
+  [INFO]: Recv msg from node 60 : ROUTE 60 30 60-70-10-20-30 [100,0ms]
+  [INFO]: No action
+  [INFO]: Recv msg from node 60 : ROUTE 60 40 60-70-10-20-30-40 [100,0ms]
+  [INFO]: No action
+  [INFO]: Recv msg from node 60 : ROUTE 60 40 60-50-40 [100,0ms]
+  [INFO]: No action
+  [INFO]: Recv msg from node 60 : ROUTE 60 30 60-50-40-30 [100,1ms]
+  [INFO]: No action
+
+ [EVENT]: Activity detected - predecessor (ch: 8) at 21MAR2024 23:05:27 [100,1ms]
+  [INFO]: 27 bytes read from socket
+  [INFO]: 1 message(s) at predecessor ID: 40, ch: 8
+  [INFO]: Recv msg from node 40 : ROUTE 40 10 40-50-60-70-10 [100,1ms]
+  [INFO]: No action
+
+ [EVENT]: Activity detected - predecessor (ch: 8) at 21MAR2024 23:05:27 [143,7ms]
+  [INFO]: 24 bytes read from socket
+  [INFO]: 1 message(s) at predecessor ID: 40, ch: 8
+  [INFO]: Recv msg from node 40 : ROUTE 40 10 40-30-20-10 [143,7ms]
+  [INFO]: No action
+
+ [EVENT]: Activity detected - successor (ch: 6) at 21MAR2024 23:06:40 [73171,1ms]
+  [INFO]: 12 bytes read from socket
+  [INFO]: 1 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : ROUTE 60 70 [73171,2ms]
+[ACTION]: Send to node 60 (desc 6): ROUTE 50 70 [73171,2ms]
+[ACTION]: Send to node 40 (desc 8): ROUTE 50 70 [73171,2ms]
+
+ [EVENT]: Activity detected - successor (ch: 6) at 21MAR2024 23:06:40 [73171,3ms]
+  [INFO]: 39 bytes read from socket
+  [INFO]: 2 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : ROUTE 60 10 [73171,3ms]
+[ACTION]: Send to node 60 (desc 6): ROUTE 50 10 50-40-30-20-10 [73171,3ms]
+[ACTION]: Send to node 40 (desc 8): ROUTE 50 10 50-40-30-20-10 [73171,4ms]
+  [INFO]: Recv msg from node 60 : ROUTE 60 20 60-50-40-30-20 [73171,4ms]
+  [INFO]: No action
+
+ [EVENT]: Activity detected - predecessor (ch: 8) at 21MAR2024 23:06:40 [73171,4ms]
+  [INFO]: 27 bytes read from socket
+  [INFO]: 1 message(s) at predecessor ID: 40, ch: 8
+  [INFO]: Recv msg from node 40 : ROUTE 40 70 40-30-20-10-70 [73171,4ms]
+[ACTION]: Send to node 60 (desc 6): ROUTE 50 70 50-40-30-20-10-70 [73171,5ms]
+[ACTION]: Send to node 40 (desc 8): ROUTE 50 70 50-40-30-20-10-70 [73171,5ms]
+
+ [EVENT]: Activity detected - successor (ch: 6) at 21MAR2024 23:06:40 [73172,4ms]
+  [INFO]: 30 bytes read from socket
+  [INFO]: 1 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : SUCC 80 193.136.128.103 58111 [73172,4ms]
+
+ [EVENT]: Activity detected - successor (ch: 6) at 21MAR2024 23:06:40 [73172,4ms]
+  [INFO]: 30 bytes read from socket
+  [INFO]: 1 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : ROUTE 60 10 60-50-40-30-20-10 [73172,5ms]
+  [INFO]: No action
+
+ [EVENT]: Activity detected - successor (ch: 6) at 21MAR2024 23:06:40 [73215,3ms]
+  [INFO]: 33 bytes read from socket
+  [INFO]: 1 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : ROUTE 60 70 60-50-40-30-20-10-70 [73215,3ms]
+  [INFO]: No action
+
+ [EVENT]: Activity detected - successor (ch: 6) at 21MAR2024 23:07:45 [138252,2ms]
+  [INFO]: 89 bytes read from socket
+  [INFO]: 4 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : SUCC 70 192.168.1.1 58132 [138252,3ms]
+  [INFO]: Recv msg from node 60 : ROUTE 60 70 60-70 [138252,3ms]
+[ACTION]: Send to node 60 (desc 6): ROUTE 50 70 50-60-70 [138252,3ms]
+[ACTION]: Send to node 40 (desc 8): ROUTE 50 70 50-60-70 [138252,4ms]
+  [INFO]: Recv msg from node 60 : ROUTE 60 10 60-70-10 [138252,4ms]
+[ACTION]: Send to node 60 (desc 6): ROUTE 50 10 50-60-70-10 [138252,4ms]
+[ACTION]: Send to node 40 (desc 8): ROUTE 50 10 50-60-70-10 [138252,5ms]
+  [INFO]: Recv msg from node 60 : ROUTE 60 20 60-70-10-20 [138252,5ms]
+  [INFO]: No action
+
+ [EVENT]: Activity detected - predecessor (ch: 8) at 21MAR2024 23:07:45 [138252,5ms]
+  [INFO]: 24 bytes read from socket
+  [INFO]: 1 message(s) at predecessor ID: 40, ch: 8
+  [INFO]: Recv msg from node 40 : ROUTE 40 70 40-50-60-70 [138252,6ms]
+  [INFO]: No action
+
+ [EVENT]: Activity detected - successor (ch: 6) at 21MAR2024 23:22:00 [993258,6ms]
+  [INFO]: 27 bytes read from socket
+  [INFO]: 1 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : ROUTE 60 20 60-50-40-30-20 [993258,7ms]
+  [INFO]: No action
+
+ [EVENT]: Activity detected - successor (ch: 6) at 21MAR2024 23:22:00 [993299,5ms]
+  [INFO]: 54 bytes read from socket
+  [INFO]: 3 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : ROUTE 60 10 [993299,6ms]
+[ACTION]: Send to node 60 (desc 6): ROUTE 50 10 50-40-30-20-10 [993299,6ms]
+[ACTION]: Send to node 40 (desc 8): ROUTE 50 10 50-40-30-20-10 [993299,6ms]
+  [INFO]: Recv msg from node 60 : ROUTE 60 70 [993299,7ms]
+[ACTION]: Send to node 60 (desc 6): ROUTE 50 70 [993299,7ms]
+[ACTION]: Send to node 40 (desc 8): ROUTE 50 70 [993299,7ms]
+  [INFO]: Recv msg from node 60 : SUCC 80 193.136.128.103 58111 [993299,7ms]
+
+ [EVENT]: Activity detected - successor (ch: 6) at 21MAR2024 23:22:00 [993299,8ms]
+  [INFO]: 30 bytes read from socket
+  [INFO]: 1 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : ROUTE 60 10 60-50-40-30-20-10 [993299,8ms]
+  [INFO]: No action
+
+ [EVENT]: Activity detected - predecessor (ch: 8) at 21MAR2024 23:22:00 [993343,9ms]
+  [INFO]: 27 bytes read from socket
+  [INFO]: 1 message(s) at predecessor ID: 40, ch: 8
+  [INFO]: Recv msg from node 40 : ROUTE 40 70 40-30-20-10-70 [993343,9ms]
+[ACTION]: Send to node 60 (desc 6): ROUTE 50 70 50-40-30-20-10-70 [993344,0ms]
+[ACTION]: Send to node 40 (desc 8): ROUTE 50 70 50-40-30-20-10-70 [993344,0ms]
+
+ [EVENT]: Activity detected - successor (ch: 6) at 21MAR2024 23:22:00 [993344,1ms]
+  [INFO]: 33 bytes read from socket
+  [INFO]: 1 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : ROUTE 60 70 60-50-40-30-20-10-70 [993344,2ms]
+  [INFO]: No action
+
+ [EVENT]: Activity detected - successor (ch: 6) at 21MAR2024 23:23:36 [1089421,8ms]
+  [INFO]: 89 bytes read from socket
+  [INFO]: 4 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : SUCC 70 192.168.1.1 58132 [1089421,8ms]
+  [INFO]: Recv msg from node 60 : ROUTE 60 70 60-70 [1089421,9ms]
+[ACTION]: Send to node 60 (desc 6): ROUTE 50 70 50-60-70 [1089421,9ms]
+[ACTION]: Send to node 40 (desc 8): ROUTE 50 70 50-60-70 [1089421,9ms]
+  [INFO]: Recv msg from node 60 : ROUTE 60 10 60-70-10 [1089422,0ms]
+[ACTION]: Send to node 60 (desc 6): ROUTE 50 10 50-60-70-10 [1089422,0ms]
+[ACTION]: Send to node 40 (desc 8): ROUTE 50 10 50-60-70-10 [1089422,0ms]
+  [INFO]: Recv msg from node 60 : ROUTE 60 20 60-70-10-20 [1089422,0ms]
+  [INFO]: No action
+
+ [EVENT]: Activity detected - predecessor (ch: 8) at 21MAR2024 23:23:36 [1089422,1ms]
+  [INFO]: 24 bytes read from socket
+  [INFO]: 1 message(s) at predecessor ID: 40, ch: 8
+  [INFO]: Recv msg from node 40 : ROUTE 40 70 40-50-60-70 [1089422,1ms]
+  [INFO]: No action
+
+ [EVENT]: Activity detected - successor (ch: 6) at 21MAR2024 23:28:53 [1406276,9ms]
+  [INFO]: 27 bytes read from socket
+  [INFO]: 1 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : ROUTE 60 20 60-50-40-30-20 [1406277,0ms]
+  [INFO]: No action
+
+ [EVENT]: Activity detected - successor (ch: 6) at 21MAR2024 23:28:53 [1406319,4ms]
+  [INFO]: 54 bytes read from socket
+  [INFO]: 3 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : ROUTE 60 10 [1406319,5ms]
+[ACTION]: Send to node 60 (desc 6): ROUTE 50 10 50-40-30-20-10 [1406319,5ms]
+[ACTION]: Send to node 40 (desc 8): ROUTE 50 10 50-40-30-20-10 [1406319,5ms]
+  [INFO]: Recv msg from node 60 : ROUTE 60 70 [1406319,6ms]
+[ACTION]: Send to node 60 (desc 6): ROUTE 50 70 [1406319,6ms]
+[ACTION]: Send to node 40 (desc 8): ROUTE 50 70 [1406319,6ms]
+  [INFO]: Recv msg from node 60 : SUCC 80 193.136.128.108 55000 [1406319,6ms]
+
+ [EVENT]: Activity detected - successor (ch: 6) at 21MAR2024 23:28:53 [1406319,7ms]
+  [INFO]: 30 bytes read from socket
+  [INFO]: 1 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : ROUTE 60 10 60-50-40-30-20-10 [1406319,8ms]
+  [INFO]: No action
+
+ [EVENT]: Activity detected - predecessor (ch: 8) at 21MAR2024 23:28:53 [1406363,5ms]
+  [INFO]: 27 bytes read from socket
+  [INFO]: 1 message(s) at predecessor ID: 40, ch: 8
+  [INFO]: Recv msg from node 40 : ROUTE 40 70 40-30-20-10-70 [1406363,6ms]
+[ACTION]: Send to node 60 (desc 6): ROUTE 50 70 50-40-30-20-10-70 [1406363,6ms]
+[ACTION]: Send to node 40 (desc 8): ROUTE 50 70 50-40-30-20-10-70 [1406363,6ms]
+
+ [EVENT]: Activity detected - successor (ch: 6) at 21MAR2024 23:28:53 [1406363,8ms]
+  [INFO]: 33 bytes read from socket
+  [INFO]: 1 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : ROUTE 60 70 60-50-40-30-20-10-70 [1406363,9ms]
+  [INFO]: No action
+ 004.50 > ct 80 at 21MAR2024 23:30:50
+[ACTION]: Send to node 80 (desc 7): CHORD 50 [1523708,2ms]
+[ACTION]: Send to node 80 (desc 7): ROUTE 50 50 50 [1523708,2ms]
+[ACTION]: Send to node 80 (desc 7): ROUTE 50 60 50-60 [1523708,3ms]
+[ACTION]: Send to node 80 (desc 7): ROUTE 50 40 50-40 [1523708,3ms]
+[ACTION]: Send to node 80 (desc 7): ROUTE 50 30 50-40-30 [1523708,3ms]
+[ACTION]: Send to node 80 (desc 7): ROUTE 50 20 50-40-30-20 [1523708,3ms]
+[ACTION]: Send to node 80 (desc 7): ROUTE 50 10 50-40-30-20-10 [1523708,3ms]
+[ACTION]: Send to node 80 (desc 7): ROUTE 50 70 50-40-30-20-10-70 [1523708,3ms]
+
+================================================================================
+  [INFO]: TOPOLOGY 21MAR2024 23:30:50, NS at: 192.168.1.1 / 58125
+================================================================================
+Net ID: 004, Node ID: 50, at 192.168.1.1 / 58130  Four nodes or more in ring
+--------------------------------------------------------------------------------
+
+      Unit                                         Descriptor
+
+  TCP listen channel                                   5
+  UDP server                                           3
+  Predecessor ID: 40                                   8 private
+           My ID: 50 IP: 192.168.1.1, port: 58130
+    Successor ID: 60 IP: 192.168.1.1, port: 58131     6
+2nd successor ID: 80 IP: 193.136.128.108, port: 55000
+     Chord to ID: 80 IP: 193.136.128.108, port: 55000     7
+--------------------------------------------------------------------------------
+ 004.50 > rc at 21MAR2024 23:32:12
+  [INFO]:  Chord to node 80 removed
+
+================================================================================
+  [INFO]: TOPOLOGY 21MAR2024 23:32:12, NS at: 192.168.1.1 / 58125
+================================================================================
+Net ID: 004, Node ID: 50, at 192.168.1.1 / 58130  Four nodes or more in ring
+--------------------------------------------------------------------------------
+
+      Unit                                         Descriptor
+
+  TCP listen channel                                   5
+  UDP server                                           3
+  Predecessor ID: 40                                   8 private
+           My ID: 50 IP: 192.168.1.1, port: 58130
+    Successor ID: 60 IP: 192.168.1.1, port: 58131     6
+2nd successor ID: 80 IP: 193.136.128.108, port: 55000
+--------------------------------------------------------------------------------
+
+ [EVENT]: Activity detected - successor (ch: 6) at 21MAR2024 23:32:33 [1626875,8ms]
+  [INFO]: 26 bytes read from socket
+  [INFO]: 1 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : SUCC 70 192.168.1.1 58132 [1626875,8ms]
+
+ [EVENT]: Activity detected - successor (ch: 6) at 21MAR2024 23:32:33 [1626875,9ms]
+  [INFO]: 18 bytes read from socket
+  [INFO]: 1 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : ROUTE 60 70 60-70 [1626875,9ms]
+[ACTION]: Send to node 60 (desc 6): ROUTE 50 70 50-60-70 [1626875,9ms]
+[ACTION]: Send to node 40 (desc 8): ROUTE 50 70 50-60-70 [1626876,0ms]
+
+ [EVENT]: Activity detected - successor (ch: 6) at 21MAR2024 23:32:33 [1626876,0ms]
+  [INFO]: 45 bytes read from socket
+  [INFO]: 2 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : ROUTE 60 10 60-70-10 [1626876,0ms]
+[ACTION]: Send to node 60 (desc 6): ROUTE 50 10 50-60-70-10 [1626876,1ms]
+[ACTION]: Send to node 40 (desc 8): ROUTE 50 10 50-60-70-10 [1626876,1ms]
+  [INFO]: Recv msg from node 60 : ROUTE 60 20 60-70-10-20 [1626876,1ms]
+  [INFO]: No action
+
+ [EVENT]: Activity detected - predecessor (ch: 8) at 21MAR2024 23:32:33 [1626876,2ms]
+  [INFO]: 24 bytes read from socket
+  [INFO]: 1 message(s) at predecessor ID: 40, ch: 8
+  [INFO]: Recv msg from node 40 : ROUTE 40 70 40-50-60-70 [1626876,2ms]
+  [INFO]: No action
+
+ [EVENT]: Activity detected - successor (ch: 6) at 21MAR2024 23:41:27 [2160624,0ms]
+  [INFO]: 27 bytes read from socket
+  [INFO]: 1 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : ROUTE 60 20 60-50-40-30-20 [2160624,0ms]
+  [INFO]: No action
+
+ [EVENT]: Activity detected - successor (ch: 6) at 21MAR2024 23:41:27 [2160667,7ms]
+  [INFO]: 54 bytes read from socket
+  [INFO]: 3 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : ROUTE 60 10 [2160667,8ms]
+[ACTION]: Send to node 60 (desc 6): ROUTE 50 10 50-40-30-20-10 [2160667,8ms]
+[ACTION]: Send to node 40 (desc 8): ROUTE 50 10 50-40-30-20-10 [2160667,9ms]
+  [INFO]: Recv msg from node 60 : ROUTE 60 70 [2160667,9ms]
+[ACTION]: Send to node 60 (desc 6): ROUTE 50 70 [2160667,9ms]
+[ACTION]: Send to node 40 (desc 8): ROUTE 50 70 [2160667,9ms]
+  [INFO]: Recv msg from node 60 : SUCC 80 193.136.128.108 55000 [2160668,0ms]
+
+ [EVENT]: Activity detected - successor (ch: 6) at 21MAR2024 23:41:27 [2160668,0ms]
+  [INFO]: 30 bytes read from socket
+  [INFO]: 1 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : ROUTE 60 10 60-50-40-30-20-10 [2160668,0ms]
+  [INFO]: No action
+
+ [EVENT]: Activity detected - predecessor (ch: 8) at 21MAR2024 23:41:27 [2160711,9ms]
+  [INFO]: 27 bytes read from socket
+  [INFO]: 1 message(s) at predecessor ID: 40, ch: 8
+  [INFO]: Recv msg from node 40 : ROUTE 40 70 40-30-20-10-70 [2160711,9ms]
+[ACTION]: Send to node 60 (desc 6): ROUTE 50 70 50-40-30-20-10-70 [2160711,9ms]
+[ACTION]: Send to node 40 (desc 8): ROUTE 50 70 50-40-30-20-10-70 [2160712,0ms]
+
+ [EVENT]: Activity detected - successor (ch: 6) at 21MAR2024 23:41:27 [2160712,1ms]
+  [INFO]: 33 bytes read from socket
+  [INFO]: 1 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : ROUTE 60 70 60-50-40-30-20-10-70 [2160712,1ms]
+  [INFO]: No action
+ 004.50 > ct 80 at 21MAR2024 23:41:38
+[ACTION]: Send to node 80 (desc 7): CHORD 50 [2171558,7ms]
+[ACTION]: Send to node 80 (desc 7): ROUTE 50 50 50 [2171558,7ms]
+[ACTION]: Send to node 80 (desc 7): ROUTE 50 60 50-60 [2171558,7ms]
+[ACTION]: Send to node 80 (desc 7): ROUTE 50 40 50-40 [2171558,7ms]
+[ACTION]: Send to node 80 (desc 7): ROUTE 50 30 50-40-30 [2171558,7ms]
+[ACTION]: Send to node 80 (desc 7): ROUTE 50 20 50-40-30-20 [2171558,7ms]
+[ACTION]: Send to node 80 (desc 7): ROUTE 50 10 50-40-30-20-10 [2171558,7ms]
+[ACTION]: Send to node 80 (desc 7): ROUTE 50 70 50-40-30-20-10-70 [2171558,8ms]
+
+================================================================================
+  [INFO]: TOPOLOGY 21MAR2024 23:41:38, NS at: 192.168.1.1 / 58125
+================================================================================
+Net ID: 004, Node ID: 50, at 192.168.1.1 / 58130  Four nodes or more in ring
+--------------------------------------------------------------------------------
+
+      Unit                                         Descriptor
+
+  TCP listen channel                                   5
+  UDP server                                           3
+  Predecessor ID: 40                                   8 private
+           My ID: 50 IP: 192.168.1.1, port: 58130
+    Successor ID: 60 IP: 192.168.1.1, port: 58131     6
+2nd successor ID: 80 IP: 193.136.128.108, port: 55000
+     Chord to ID: 80 IP: 193.136.128.108, port: 55000     7
+--------------------------------------------------------------------------------
+ 004.50 > rc at 21MAR2024 23:42:24
+  [INFO]:  Chord to node 80 removed
+
+================================================================================
+  [INFO]: TOPOLOGY 21MAR2024 23:42:24, NS at: 192.168.1.1 / 58125
+================================================================================
+Net ID: 004, Node ID: 50, at 192.168.1.1 / 58130  Four nodes or more in ring
+--------------------------------------------------------------------------------
+
+      Unit                                         Descriptor
+
+  TCP listen channel                                   5
+  UDP server                                           3
+  Predecessor ID: 40                                   8 private
+           My ID: 50 IP: 192.168.1.1, port: 58130
+    Successor ID: 60 IP: 192.168.1.1, port: 58131     6
+2nd successor ID: 80 IP: 193.136.128.108, port: 55000
+--------------------------------------------------------------------------------
+
+ [EVENT]: Activity detected - successor (ch: 6) at 21MAR2024 23:42:55 [2248529,4ms]
+  [INFO]: 26 bytes read from socket
+  [INFO]: 1 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : SUCC 70 192.168.1.1 58132 [2248529,5ms]
+
+ [EVENT]: Activity detected - successor (ch: 6) at 21MAR2024 23:42:55 [2248529,5ms]
+  [INFO]: 18 bytes read from socket
+  [INFO]: 1 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : ROUTE 60 70 60-70 [2248529,6ms]
+[ACTION]: Send to node 60 (desc 6): ROUTE 50 70 50-60-70 [2248529,6ms]
+[ACTION]: Send to node 40 (desc 8): ROUTE 50 70 50-60-70 [2248529,6ms]
+
+ [EVENT]: Activity detected - successor (ch: 6) at 21MAR2024 23:42:55 [2248529,7ms]
+  [INFO]: 45 bytes read from socket
+  [INFO]: 2 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : ROUTE 60 10 60-70-10 [2248529,7ms]
+[ACTION]: Send to node 60 (desc 6): ROUTE 50 10 50-60-70-10 [2248529,7ms]
+[ACTION]: Send to node 40 (desc 8): ROUTE 50 10 50-60-70-10 [2248529,7ms]
+  [INFO]: Recv msg from node 60 : ROUTE 60 20 60-70-10-20 [2248529,8ms]
+  [INFO]: No action
+
+ [EVENT]: Activity detected - predecessor (ch: 8) at 21MAR2024 23:42:55 [2248529,8ms]
+  [INFO]: 24 bytes read from socket
+  [INFO]: 1 message(s) at predecessor ID: 40, ch: 8
+  [INFO]: Recv msg from node 40 : ROUTE 40 70 40-50-60-70 [2248529,8ms]
+  [INFO]: No action
+
+ [EVENT]: Activity detected - successor (ch: 6) at 21MAR2024 23:49:46 [2659670,2ms]
+  [INFO]: 27 bytes read from socket
+  [INFO]: 1 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : ROUTE 60 20 60-50-40-30-20 [2659670,3ms]
+  [INFO]: No action
+
+ [EVENT]: Activity detected - successor (ch: 6) at 21MAR2024 23:49:46 [2659711,7ms]
+  [INFO]: 54 bytes read from socket
+  [INFO]: 3 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : ROUTE 60 10 [2659711,8ms]
+[ACTION]: Send to node 60 (desc 6): ROUTE 50 10 50-40-30-20-10 [2659711,8ms]
+[ACTION]: Send to node 40 (desc 8): ROUTE 50 10 50-40-30-20-10 [2659711,8ms]
+  [INFO]: Recv msg from node 60 : ROUTE 60 70 [2659711,9ms]
+[ACTION]: Send to node 60 (desc 6): ROUTE 50 70 [2659711,9ms]
+[ACTION]: Send to node 40 (desc 8): ROUTE 50 70 [2659711,9ms]
+  [INFO]: Recv msg from node 60 : SUCC 80 193.136.128.103 58111 [2659711,9ms]
+
+ [EVENT]: Activity detected - successor (ch: 6) at 21MAR2024 23:49:46 [2659712,0ms]
+  [INFO]: 30 bytes read from socket
+  [INFO]: 1 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : ROUTE 60 10 60-50-40-30-20-10 [2659712,0ms]
+  [INFO]: No action
+
+ [EVENT]: Activity detected - predecessor (ch: 8) at 21MAR2024 23:49:46 [2659756,0ms]
+  [INFO]: 27 bytes read from socket
+  [INFO]: 1 message(s) at predecessor ID: 40, ch: 8
+  [INFO]: Recv msg from node 40 : ROUTE 40 70 40-30-20-10-70 [2659756,1ms]
+[ACTION]: Send to node 60 (desc 6): ROUTE 50 70 50-40-30-20-10-70 [2659756,1ms]
+[ACTION]: Send to node 40 (desc 8): ROUTE 50 70 50-40-30-20-10-70 [2659756,1ms]
+
+ [EVENT]: Activity detected - successor (ch: 6) at 21MAR2024 23:49:46 [2659756,3ms]
+  [INFO]: 33 bytes read from socket
+  [INFO]: 1 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : ROUTE 60 70 60-50-40-30-20-10-70 [2659756,3ms]
+  [INFO]: No action
+
+ [EVENT]: Activity detected - successor (ch: 6) at 21MAR2024 23:50:35 [2708179,9ms]
+  [INFO]: 89 bytes read from socket
+  [INFO]: 4 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : SUCC 70 192.168.1.1 58132 [2708180,0ms]
+  [INFO]: Recv msg from node 60 : ROUTE 60 70 60-70 [2708180,0ms]
+[ACTION]: Send to node 60 (desc 6): ROUTE 50 70 50-60-70 [2708180,0ms]
+[ACTION]: Send to node 40 (desc 8): ROUTE 50 70 50-60-70 [2708180,1ms]
+  [INFO]: Recv msg from node 60 : ROUTE 60 10 60-70-10 [2708180,1ms]
+[ACTION]: Send to node 60 (desc 6): ROUTE 50 10 50-60-70-10 [2708180,1ms]
+[ACTION]: Send to node 40 (desc 8): ROUTE 50 10 50-60-70-10 [2708180,2ms]
+  [INFO]: Recv msg from node 60 : ROUTE 60 20 60-70-10-20 [2708180,2ms]
+  [INFO]: No action
+
+ [EVENT]: Activity detected - predecessor (ch: 8) at 21MAR2024 23:50:35 [2708180,2ms]
+  [INFO]: 24 bytes read from socket
+  [INFO]: 1 message(s) at predecessor ID: 40, ch: 8
+  [INFO]: Recv msg from node 40 : ROUTE 40 70 40-50-60-70 [2708180,3ms]
+  [INFO]: No action
+
+ [EVENT]: Activity detected - successor (ch: 6) at 21MAR2024 23:53:24 [2877276,3ms]
+  [INFO]: 27 bytes read from socket
+  [INFO]: 1 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : ROUTE 60 20 60-50-40-30-20 [2877276,4ms]
+  [INFO]: No action
+
+ [EVENT]: Activity detected - successor (ch: 6) at 21MAR2024 23:53:24 [2877319,7ms]
+  [INFO]: 54 bytes read from socket
+  [INFO]: 3 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : ROUTE 60 10 [2877319,8ms]
+[ACTION]: Send to node 60 (desc 6): ROUTE 50 10 50-40-30-20-10 [2877319,8ms]
+[ACTION]: Send to node 40 (desc 8): ROUTE 50 10 50-40-30-20-10 [2877319,8ms]
+  [INFO]: Recv msg from node 60 : ROUTE 60 70 [2877319,9ms]
+[ACTION]: Send to node 60 (desc 6): ROUTE 50 70 [2877319,9ms]
+[ACTION]: Send to node 40 (desc 8): ROUTE 50 70 [2877319,9ms]
+  [INFO]: Recv msg from node 60 : SUCC 80 193.136.128.108 55000 [2877319,9ms]
+
+ [EVENT]: Activity detected - successor (ch: 6) at 21MAR2024 23:53:24 [2877320,0ms]
+  [INFO]: 30 bytes read from socket
+  [INFO]: 1 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : ROUTE 60 10 60-50-40-30-20-10 [2877320,0ms]
+  [INFO]: No action
+
+ [EVENT]: Activity detected - predecessor (ch: 8) at 21MAR2024 23:53:24 [2877363,9ms]
+  [INFO]: 27 bytes read from socket
+  [INFO]: 1 message(s) at predecessor ID: 40, ch: 8
+  [INFO]: Recv msg from node 40 : ROUTE 40 70 40-30-20-10-70 [2877364,0ms]
+[ACTION]: Send to node 60 (desc 6): ROUTE 50 70 50-40-30-20-10-70 [2877364,0ms]
+[ACTION]: Send to node 40 (desc 8): ROUTE 50 70 50-40-30-20-10-70 [2877364,0ms]
+
+ [EVENT]: Activity detected - successor (ch: 6) at 21MAR2024 23:53:24 [2877364,1ms]
+  [INFO]: 33 bytes read from socket
+  [INFO]: 1 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : ROUTE 60 70 60-50-40-30-20-10-70 [2877364,2ms]
+  [INFO]: No action
+ 004.50 > ct 80 at 21MAR2024 23:53:43
+[ACTION]: Send to node 80 (desc 7): CHORD 50 [2896220,7ms]
+[ACTION]: Send to node 80 (desc 7): ROUTE 50 50 50 [2896220,8ms]
+[ACTION]: Send to node 80 (desc 7): ROUTE 50 60 50-60 [2896220,8ms]
+[ACTION]: Send to node 80 (desc 7): ROUTE 50 40 50-40 [2896220,8ms]
+[ACTION]: Send to node 80 (desc 7): ROUTE 50 30 50-40-30 [2896220,8ms]
+[ACTION]: Send to node 80 (desc 7): ROUTE 50 20 50-40-30-20 [2896220,8ms]
+[ACTION]: Send to node 80 (desc 7): ROUTE 50 10 50-40-30-20-10 [2896220,8ms]
+[ACTION]: Send to node 80 (desc 7): ROUTE 50 70 50-40-30-20-10-70 [2896220,8ms]
+
+================================================================================
+  [INFO]: TOPOLOGY 21MAR2024 23:53:43, NS at: 192.168.1.1 / 58125
+================================================================================
+Net ID: 004, Node ID: 50, at 192.168.1.1 / 58130  Four nodes or more in ring
+--------------------------------------------------------------------------------
+
+      Unit                                         Descriptor
+
+  TCP listen channel                                   5
+  UDP server                                           3
+  Predecessor ID: 40                                   8 private
+           My ID: 50 IP: 192.168.1.1, port: 58130
+    Successor ID: 60 IP: 192.168.1.1, port: 58131     6
+2nd successor ID: 80 IP: 193.136.128.108, port: 55000
+     Chord to ID: 80 IP: 193.136.128.108, port: 55000     7
+--------------------------------------------------------------------------------
+ 004.50 > rc at 21MAR2024 23:54:22
+  [INFO]:  Chord to node 80 removed
+
+================================================================================
+  [INFO]: TOPOLOGY 21MAR2024 23:54:22, NS at: 192.168.1.1 / 58125
+================================================================================
+Net ID: 004, Node ID: 50, at 192.168.1.1 / 58130  Four nodes or more in ring
+--------------------------------------------------------------------------------
+
+      Unit                                         Descriptor
+
+  TCP listen channel                                   5
+  UDP server                                           3
+  Predecessor ID: 40                                   8 private
+           My ID: 50 IP: 192.168.1.1, port: 58130
+    Successor ID: 60 IP: 192.168.1.1, port: 58131     6
+2nd successor ID: 80 IP: 193.136.128.108, port: 55000
+--------------------------------------------------------------------------------
+
+ [EVENT]: Activity detected - successor (ch: 6) at 21MAR2024 23:54:32 [2945010,1ms]
+  [INFO]: 89 bytes read from socket
+  [INFO]: 4 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : SUCC 70 192.168.1.1 58132 [2945010,2ms]
+  [INFO]: Recv msg from node 60 : ROUTE 60 70 60-70 [2945010,2ms]
+[ACTION]: Send to node 60 (desc 6): ROUTE 50 70 50-60-70 [2945010,2ms]
+[ACTION]: Send to node 40 (desc 8): ROUTE 50 70 50-60-70 [2945010,2ms]
+  [INFO]: Recv msg from node 60 : ROUTE 60 10 60-70-10 [2945010,3ms]
+[ACTION]: Send to node 60 (desc 6): ROUTE 50 10 50-60-70-10 [2945010,3ms]
+[ACTION]: Send to node 40 (desc 8): ROUTE 50 10 50-60-70-10 [2945010,3ms]
+  [INFO]: Recv msg from node 60 : ROUTE 60 20 60-70-10-20 [2945010,4ms]
+  [INFO]: No action
+
+ [EVENT]: Activity detected - predecessor (ch: 8) at 21MAR2024 23:54:32 [2945010,4ms]
+  [INFO]: 24 bytes read from socket
+  [INFO]: 1 message(s) at predecessor ID: 40, ch: 8
+  [INFO]: Recv msg from node 40 : ROUTE 40 70 40-50-60-70 [2945010,4ms]
+  [INFO]: No action
+
+ [EVENT]: Activity detected - successor (ch: 6) at 21MAR2024 23:55:49 [3022670,9ms]
+  [INFO]: 27 bytes read from socket
+  [INFO]: 1 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : ROUTE 60 20 60-50-40-30-20 [3022671,0ms]
+  [INFO]: No action
+
+ [EVENT]: Activity detected - successor (ch: 6) at 21MAR2024 23:55:49 [3022711,7ms]
+  [INFO]: 54 bytes read from socket
+  [INFO]: 3 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : ROUTE 60 10 [3022711,8ms]
+[ACTION]: Send to node 60 (desc 6): ROUTE 50 10 50-40-30-20-10 [3022711,8ms]
+[ACTION]: Send to node 40 (desc 8): ROUTE 50 10 50-40-30-20-10 [3022711,8ms]
+  [INFO]: Recv msg from node 60 : ROUTE 60 70 [3022711,9ms]
+[ACTION]: Send to node 60 (desc 6): ROUTE 50 70 [3022711,9ms]
+[ACTION]: Send to node 40 (desc 8): ROUTE 50 70 [3022711,9ms]
+  [INFO]: Recv msg from node 60 : SUCC 80 193.136.128.103 58111 [3022711,9ms]
+
+ [EVENT]: Activity detected - successor (ch: 6) at 21MAR2024 23:55:49 [3022712,0ms]
+  [INFO]: 30 bytes read from socket
+  [INFO]: 1 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : ROUTE 60 10 60-50-40-30-20-10 [3022712,0ms]
+  [INFO]: No action
+
+ [EVENT]: Activity detected - predecessor (ch: 8) at 21MAR2024 23:55:49 [3022755,9ms]
+  [INFO]: 27 bytes read from socket
+  [INFO]: 1 message(s) at predecessor ID: 40, ch: 8
+  [INFO]: Recv msg from node 40 : ROUTE 40 70 40-30-20-10-70 [3022755,9ms]
+[ACTION]: Send to node 60 (desc 6): ROUTE 50 70 50-40-30-20-10-70 [3022755,9ms]
+[ACTION]: Send to node 40 (desc 8): ROUTE 50 70 50-40-30-20-10-70 [3022756,0ms]
+
+ [EVENT]: Activity detected - successor (ch: 6) at 21MAR2024 23:55:49 [3022756,1ms]
+  [INFO]: 33 bytes read from socket
+  [INFO]: 1 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : ROUTE 60 70 60-50-40-30-20-10-70 [3022756,2ms]
+  [INFO]: No action
+
+ [EVENT]: Activity detected - successor (ch: 6) at 21MAR2024 23:58:06 [3159625,1ms]
+  [INFO]: 26 bytes read from socket
+  [INFO]: 1 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : SUCC 70 192.168.1.1 58132 [3159625,2ms]
+
+ [EVENT]: Activity detected - successor (ch: 6) at 21MAR2024 23:58:06 [3159625,2ms]
+  [INFO]: 18 bytes read from socket
+  [INFO]: 1 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : ROUTE 60 70 60-70 [3159625,2ms]
+[ACTION]: Send to node 60 (desc 6): ROUTE 50 70 50-60-70 [3159625,2ms]
+[ACTION]: Send to node 40 (desc 8): ROUTE 50 70 50-60-70 [3159625,3ms]
+
+ [EVENT]: Activity detected - successor (ch: 6) at 21MAR2024 23:58:06 [3159625,3ms]
+  [INFO]: 45 bytes read from socket
+  [INFO]: 2 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : ROUTE 60 10 60-70-10 [3159625,3ms]
+[ACTION]: Send to node 60 (desc 6): ROUTE 50 10 50-60-70-10 [3159625,4ms]
+[ACTION]: Send to node 40 (desc 8): ROUTE 50 10 50-60-70-10 [3159625,4ms]
+  [INFO]: Recv msg from node 60 : ROUTE 60 20 60-70-10-20 [3159625,4ms]
+  [INFO]: No action
+
+ [EVENT]: Activity detected - predecessor (ch: 8) at 21MAR2024 23:58:06 [3159625,4ms]
+  [INFO]: 24 bytes read from socket
+  [INFO]: 1 message(s) at predecessor ID: 40, ch: 8
+  [INFO]: Recv msg from node 40 : ROUTE 40 70 40-50-60-70 [3159625,5ms]
+  [INFO]: No action
+
+ [EVENT]: Activity detected - successor (ch: 6) at 21MAR2024 23:58:58 [3211397,5ms]
+  [INFO]: 27 bytes read from socket
+  [INFO]: 1 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : ROUTE 60 20 60-50-40-30-20 [3211397,6ms]
+  [INFO]: No action
+
+ [EVENT]: Activity detected - successor (ch: 6) at 21MAR2024 23:58:58 [3211439,7ms]
+  [INFO]: 54 bytes read from socket
+  [INFO]: 3 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : ROUTE 60 10 [3211439,8ms]
+[ACTION]: Send to node 60 (desc 6): ROUTE 50 10 50-40-30-20-10 [3211439,8ms]
+[ACTION]: Send to node 40 (desc 8): ROUTE 50 10 50-40-30-20-10 [3211439,8ms]
+  [INFO]: Recv msg from node 60 : ROUTE 60 70 [3211439,9ms]
+[ACTION]: Send to node 60 (desc 6): ROUTE 50 70 [3211439,9ms]
+[ACTION]: Send to node 40 (desc 8): ROUTE 50 70 [3211439,9ms]
+  [INFO]: Recv msg from node 60 : SUCC 80 193.136.128.108 55000 [3211439,9ms]
+
+ [EVENT]: Activity detected - successor (ch: 6) at 21MAR2024 23:58:58 [3211440,0ms]
+  [INFO]: 30 bytes read from socket
+  [INFO]: 1 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : ROUTE 60 10 60-50-40-30-20-10 [3211440,0ms]
+  [INFO]: No action
+
+ [EVENT]: Activity detected - predecessor (ch: 8) at 21MAR2024 23:58:58 [3211483,6ms]
+  [INFO]: 27 bytes read from socket
+  [INFO]: 1 message(s) at predecessor ID: 40, ch: 8
+  [INFO]: Recv msg from node 40 : ROUTE 40 70 40-30-20-10-70 [3211483,7ms]
+[ACTION]: Send to node 60 (desc 6): ROUTE 50 70 50-40-30-20-10-70 [3211483,7ms]
+[ACTION]: Send to node 40 (desc 8): ROUTE 50 70 50-40-30-20-10-70 [3211483,7ms]
+
+ [EVENT]: Activity detected - successor (ch: 6) at 21MAR2024 23:58:58 [3211483,9ms]
+  [INFO]: 33 bytes read from socket
+  [INFO]: 1 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : ROUTE 60 70 60-50-40-30-20-10-70 [3211484,0ms]
+  [INFO]: No action
+ 004.50 > ct 80 at 21MAR2024 23:59:13
+[ACTION]: Send to node 80 (desc 7): CHORD 50 [3226615,3ms]
+[ACTION]: Send to node 80 (desc 7): ROUTE 50 50 50 [3226615,3ms]
+[ACTION]: Send to node 80 (desc 7): ROUTE 50 60 50-60 [3226615,3ms]
+[ACTION]: Send to node 80 (desc 7): ROUTE 50 40 50-40 [3226615,3ms]
+[ACTION]: Send to node 80 (desc 7): ROUTE 50 30 50-40-30 [3226615,4ms]
+[ACTION]: Send to node 80 (desc 7): ROUTE 50 20 50-40-30-20 [3226615,4ms]
+[ACTION]: Send to node 80 (desc 7): ROUTE 50 10 50-40-30-20-10 [3226615,4ms]
+[ACTION]: Send to node 80 (desc 7): ROUTE 50 70 50-40-30-20-10-70 [3226615,4ms]
+
+================================================================================
+  [INFO]: TOPOLOGY 21MAR2024 23:59:13, NS at: 192.168.1.1 / 58125
+================================================================================
+Net ID: 004, Node ID: 50, at 192.168.1.1 / 58130  Four nodes or more in ring
+--------------------------------------------------------------------------------
+
+      Unit                                         Descriptor
+
+  TCP listen channel                                   5
+  UDP server                                           3
+  Predecessor ID: 40                                   8 private
+           My ID: 50 IP: 192.168.1.1, port: 58130
+    Successor ID: 60 IP: 192.168.1.1, port: 58131     6
+2nd successor ID: 80 IP: 193.136.128.108, port: 55000
+     Chord to ID: 80 IP: 193.136.128.108, port: 55000     7
+--------------------------------------------------------------------------------
+
+ [EVENT]: Activity detected - successor (ch: 6) at 22MAR2024 00:00:24 [3297077,5ms]
+  [INFO]: 65 bytes read from socket
+  [INFO]: 3 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : SUCC 70 192.168.1.1 58132 [3297077,5ms]
+  [INFO]: Recv msg from node 60 : ROUTE 60 70 60-70 [3297077,5ms]
+[ACTION]: Send to node 60 (desc 6): ROUTE 50 70 50-60-70 [3297077,6ms]
+[ACTION]: Send to node 40 (desc 8): ROUTE 50 70 50-60-70 [3297077,6ms]
+[ACTION]: Send to node 80 (desc 7): ROUTE 50 70 50-60-70 [3297077,6ms]
+  [INFO]: Recv msg from node 60 : ROUTE 60 10 60-70-10 [3297077,7ms]
+[ACTION]: Send to node 60 (desc 6): ROUTE 50 10 50-60-70-10 [3297077,7ms]
+[ACTION]: Send to node 40 (desc 8): ROUTE 50 10 50-60-70-10 [3297077,7ms]
+[ACTION]: Send to node 80 (desc 7): ROUTE 50 10 50-60-70-10 [3297077,7ms]
+
+ [EVENT]: Activity detected - successor (ch: 6) at 22MAR2024 00:00:24 [3297077,8ms]
+  [INFO]: 24 bytes read from socket
+  [INFO]: 1 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : ROUTE 60 20 60-70-10-20 [3297077,8ms]
+  [INFO]: No action
+
+ [EVENT]: Activity detected - predecessor (ch: 8) at 22MAR2024 00:00:24 [3297077,8ms]
+  [INFO]: 24 bytes read from socket
+  [INFO]: 1 message(s) at predecessor ID: 40, ch: 8
+  [INFO]: Recv msg from node 40 : ROUTE 40 70 40-50-60-70 [3297077,8ms]
+  [INFO]: No action
+
+ [EVENT]: Activity detected - out-chord (ch: 7) at 22MAR2024 00:04:47 [3560641,3ms]
+ [ERROR]: Reading from socket
+ [ERROR]: Read out-chord ch: 7
+
+ [EVENT]: Activity detected - out-chord (ch: 7) at 22MAR2024 00:04:47 [3560641,4ms]
+  [INFO]: Termination node closed my chord ch: 7
+  [INFO]:  Chord to node 80 removed
+
+ [EVENT]: Activity detected - successor (ch: 6) at 22MAR2024 00:11:09 [3942695,7ms]
+  [INFO]: 27 bytes read from socket
+  [INFO]: 1 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : ROUTE 60 20 60-50-40-30-20 [3942695,7ms]
+  [INFO]: No action
+
+ [EVENT]: Activity detected - successor (ch: 6) at 22MAR2024 00:11:09 [3942739,7ms]
+  [INFO]: 54 bytes read from socket
+  [INFO]: 3 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : ROUTE 60 10 [3942739,8ms]
+[ACTION]: Send to node 60 (desc 6): ROUTE 50 10 50-40-30-20-10 [3942739,8ms]
+[ACTION]: Send to node 40 (desc 8): ROUTE 50 10 50-40-30-20-10 [3942739,8ms]
+  [INFO]: Recv msg from node 60 : ROUTE 60 70 [3942739,9ms]
+[ACTION]: Send to node 60 (desc 6): ROUTE 50 70 [3942739,9ms]
+[ACTION]: Send to node 40 (desc 8): ROUTE 50 70 [3942739,9ms]
+  [INFO]: Recv msg from node 60 : SUCC 80 193.136.128.108 55000 [3942739,9ms]
+
+ [EVENT]: Activity detected - successor (ch: 6) at 22MAR2024 00:11:09 [3942740,0ms]
+  [INFO]: 30 bytes read from socket
+  [INFO]: 1 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : ROUTE 60 10 60-50-40-30-20-10 [3942740,0ms]
+  [INFO]: No action
+
+ [EVENT]: Activity detected - predecessor (ch: 8) at 22MAR2024 00:11:09 [3942740,0ms]
+  [INFO]: 27 bytes read from socket
+  [INFO]: 1 message(s) at predecessor ID: 40, ch: 8
+  [INFO]: Recv msg from node 40 : ROUTE 40 70 40-30-20-10-70 [3942740,1ms]
+[ACTION]: Send to node 60 (desc 6): ROUTE 50 70 50-40-30-20-10-70 [3942740,1ms]
+[ACTION]: Send to node 40 (desc 8): ROUTE 50 70 50-40-30-20-10-70 [3942740,1ms]
+
+ [EVENT]: Activity detected - successor (ch: 6) at 22MAR2024 00:11:09 [3942740,2ms]
+  [INFO]: 33 bytes read from socket
+  [INFO]: 1 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : ROUTE 60 70 60-50-40-30-20-10-70 [3942740,2ms]
+  [INFO]: No action
+ 004.50 > ct 80 at 22MAR2024 00:11:39
+[ACTION]: Send to node 80 (desc 7): CHORD 50 [3972706,4ms]
+[ACTION]: Send to node 80 (desc 7): ROUTE 50 50 50 [3972706,5ms]
+[ACTION]: Send to node 80 (desc 7): ROUTE 50 60 50-60 [3972706,5ms]
+[ACTION]: Send to node 80 (desc 7): ROUTE 50 40 50-40 [3972706,5ms]
+[ACTION]: Send to node 80 (desc 7): ROUTE 50 30 50-40-30 [3972706,5ms]
+[ACTION]: Send to node 80 (desc 7): ROUTE 50 20 50-40-30-20 [3972706,5ms]
+[ACTION]: Send to node 80 (desc 7): ROUTE 50 10 50-40-30-20-10 [3972706,5ms]
+[ACTION]: Send to node 80 (desc 7): ROUTE 50 70 50-40-30-20-10-70 [3972706,5ms]
+
+================================================================================
+  [INFO]: TOPOLOGY 22MAR2024 00:11:39, NS at: 192.168.1.1 / 58125
+================================================================================
+Net ID: 004, Node ID: 50, at 192.168.1.1 / 58130  Four nodes or more in ring
+--------------------------------------------------------------------------------
+
+      Unit                                         Descriptor
+
+  TCP listen channel                                   5
+  UDP server                                           3
+  Predecessor ID: 40                                   8 private
+           My ID: 50 IP: 192.168.1.1, port: 58130
+    Successor ID: 60 IP: 192.168.1.1, port: 58131     6
+2nd successor ID: 80 IP: 193.136.128.108, port: 55000
+     Chord to ID: 80 IP: 193.136.128.108, port: 55000     7
+--------------------------------------------------------------------------------
+ 004.50 > rc at 22MAR2024 00:11:50
+  [INFO]:  Chord to node 80 removed
+
+================================================================================
+  [INFO]: TOPOLOGY 22MAR2024 00:11:50, NS at: 192.168.1.1 / 58125
+================================================================================
+Net ID: 004, Node ID: 50, at 192.168.1.1 / 58130  Four nodes or more in ring
+--------------------------------------------------------------------------------
+
+      Unit                                         Descriptor
+
+  TCP listen channel                                   5
+  UDP server                                           3
+  Predecessor ID: 40                                   8 private
+           My ID: 50 IP: 192.168.1.1, port: 58130
+    Successor ID: 60 IP: 192.168.1.1, port: 58131     6
+2nd successor ID: 80 IP: 193.136.128.108, port: 55000
+--------------------------------------------------------------------------------
+
+ [EVENT]: Activity detected - successor (ch: 6) at 22MAR2024 00:24:04 [4717159,4ms]
+  [INFO]: 26 bytes read from socket
+  [INFO]: 1 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : SUCC 70 192.168.1.1 58132 [4717159,5ms]
+
+ [EVENT]: Activity detected - successor (ch: 6) at 22MAR2024 00:24:04 [4717159,5ms]
+  [INFO]: 18 bytes read from socket
+  [INFO]: 1 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : ROUTE 60 70 60-70 [4717159,6ms]
+[ACTION]: Send to node 60 (desc 6): ROUTE 50 70 50-60-70 [4717159,6ms]
+[ACTION]: Send to node 40 (desc 8): ROUTE 50 70 50-60-70 [4717159,6ms]
+
+ [EVENT]: Activity detected - successor (ch: 6) at 22MAR2024 00:24:04 [4717159,6ms]
+  [INFO]: 21 bytes read from socket
+  [INFO]: 1 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : ROUTE 60 10 60-70-10 [4717159,7ms]
+[ACTION]: Send to node 60 (desc 6): ROUTE 50 10 50-60-70-10 [4717159,7ms]
+[ACTION]: Send to node 40 (desc 8): ROUTE 50 10 50-60-70-10 [4717159,7ms]
+
+ [EVENT]: Activity detected - successor (ch: 6) at 22MAR2024 00:24:04 [4717159,7ms]
+  [INFO]: 24 bytes read from socket
+  [INFO]: 1 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : ROUTE 60 20 60-70-10-20 [4717159,7ms]
+  [INFO]: No action
+
+ [EVENT]: Activity detected - predecessor (ch: 8) at 22MAR2024 00:24:04 [4717159,8ms]
+  [INFO]: 24 bytes read from socket
+  [INFO]: 1 message(s) at predecessor ID: 40, ch: 8
+  [INFO]: Recv msg from node 40 : ROUTE 40 70 40-50-60-70 [4717159,8ms]
+  [INFO]: No action
+
+ [EVENT]: Activity detected - successor (ch: 6) at 22MAR2024 00:24:20 [4733801,6ms]
+  [INFO]: 27 bytes read from socket
+  [INFO]: 1 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : ROUTE 60 20 60-50-40-30-20 [4733801,7ms]
+  [INFO]: No action
+
+ [EVENT]: Activity detected - successor (ch: 6) at 22MAR2024 00:24:20 [4733843,7ms]
+  [INFO]: 54 bytes read from socket
+  [INFO]: 3 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : ROUTE 60 10 [4733843,8ms]
+[ACTION]: Send to node 60 (desc 6): ROUTE 50 10 50-40-30-20-10 [4733843,8ms]
+[ACTION]: Send to node 40 (desc 8): ROUTE 50 10 50-40-30-20-10 [4733843,8ms]
+  [INFO]: Recv msg from node 60 : ROUTE 60 70 [4733843,9ms]
+[ACTION]: Send to node 60 (desc 6): ROUTE 50 70 [4733843,9ms]
+[ACTION]: Send to node 40 (desc 8): ROUTE 50 70 [4733843,9ms]
+  [INFO]: Recv msg from node 60 : SUCC 80 193.136.128.109 58999 [4733843,9ms]
+
+ [EVENT]: Activity detected - successor (ch: 6) at 22MAR2024 00:24:20 [4733844,0ms]
+  [INFO]: 30 bytes read from socket
+  [INFO]: 1 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : ROUTE 60 10 60-50-40-30-20-10 [4733844,0ms]
+  [INFO]: No action
+
+ [EVENT]: Activity detected - predecessor (ch: 8) at 22MAR2024 00:24:20 [4733887,4ms]
+  [INFO]: 27 bytes read from socket
+  [INFO]: 1 message(s) at predecessor ID: 40, ch: 8
+  [INFO]: Recv msg from node 40 : ROUTE 40 70 40-30-20-10-70 [4733887,5ms]
+[ACTION]: Send to node 60 (desc 6): ROUTE 50 70 50-40-30-20-10-70 [4733887,5ms]
+[ACTION]: Send to node 40 (desc 8): ROUTE 50 70 50-40-30-20-10-70 [4733887,5ms]
+
+ [EVENT]: Activity detected - successor (ch: 6) at 22MAR2024 00:24:20 [4733887,7ms]
+  [INFO]: 33 bytes read from socket
+  [INFO]: 1 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : ROUTE 60 70 60-50-40-30-20-10-70 [4733887,7ms]
+  [INFO]: No action
+
+ [EVENT]: Activity detected - successor (ch: 6) at 22MAR2024 00:26:30 [4863295,6ms]
+  [INFO]: 89 bytes read from socket
+  [INFO]: 4 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : SUCC 70 192.168.1.1 58132 [4863295,6ms]
+  [INFO]: Recv msg from node 60 : ROUTE 60 70 60-70 [4863295,6ms]
+[ACTION]: Send to node 60 (desc 6): ROUTE 50 70 50-60-70 [4863295,6ms]
+[ACTION]: Send to node 40 (desc 8): ROUTE 50 70 50-60-70 [4863295,7ms]
+  [INFO]: Recv msg from node 60 : ROUTE 60 10 60-70-10 [4863295,7ms]
+[ACTION]: Send to node 60 (desc 6): ROUTE 50 10 50-60-70-10 [4863295,7ms]
+[ACTION]: Send to node 40 (desc 8): ROUTE 50 10 50-60-70-10 [4863295,7ms]
+  [INFO]: Recv msg from node 60 : ROUTE 60 20 60-70-10-20 [4863295,8ms]
+  [INFO]: No action
+
+ [EVENT]: Activity detected - predecessor (ch: 8) at 22MAR2024 00:26:30 [4863295,8ms]
+  [INFO]: 24 bytes read from socket
+  [INFO]: 1 message(s) at predecessor ID: 40, ch: 8
+  [INFO]: Recv msg from node 40 : ROUTE 40 70 40-50-60-70 [4863295,9ms]
+  [INFO]: No action
+
+ [EVENT]: Activity detected - successor (ch: 6) at 22MAR2024 00:34:40 [5353486,3ms]
+  [INFO]: 27 bytes read from socket
+  [INFO]: 1 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : ROUTE 60 20 60-50-40-30-20 [5353486,3ms]
+  [INFO]: No action
+
+ [EVENT]: Activity detected - successor (ch: 6) at 22MAR2024 00:34:40 [5353527,7ms]
+  [INFO]: 54 bytes read from socket
+  [INFO]: 3 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : ROUTE 60 10 [5353527,8ms]
+[ACTION]: Send to node 60 (desc 6): ROUTE 50 10 50-40-30-20-10 [5353527,8ms]
+[ACTION]: Send to node 40 (desc 8): ROUTE 50 10 50-40-30-20-10 [5353527,8ms]
+  [INFO]: Recv msg from node 60 : ROUTE 60 70 [5353527,9ms]
+[ACTION]: Send to node 60 (desc 6): ROUTE 50 70 [5353527,9ms]
+[ACTION]: Send to node 40 (desc 8): ROUTE 50 70 [5353527,9ms]
+  [INFO]: Recv msg from node 60 : SUCC 80 193.136.128.108 55000 [5353527,9ms]
+
+ [EVENT]: Activity detected - successor (ch: 6) at 22MAR2024 00:34:40 [5353528,0ms]
+  [INFO]: 30 bytes read from socket
+  [INFO]: 1 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : ROUTE 60 10 60-50-40-30-20-10 [5353528,1ms]
+  [INFO]: No action
+
+ [EVENT]: Activity detected - predecessor (ch: 8) at 22MAR2024 00:34:40 [5353571,6ms]
+  [INFO]: 27 bytes read from socket
+  [INFO]: 1 message(s) at predecessor ID: 40, ch: 8
+  [INFO]: Recv msg from node 40 : ROUTE 40 70 40-30-20-10-70 [5353571,6ms]
+[ACTION]: Send to node 60 (desc 6): ROUTE 50 70 50-40-30-20-10-70 [5353571,6ms]
+[ACTION]: Send to node 40 (desc 8): ROUTE 50 70 50-40-30-20-10-70 [5353571,6ms]
+
+ [EVENT]: Activity detected - successor (ch: 6) at 22MAR2024 00:34:40 [5353571,8ms]
+  [INFO]: 33 bytes read from socket
+  [INFO]: 1 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : ROUTE 60 70 60-50-40-30-20-10-70 [5353571,8ms]
+  [INFO]: No action
+ 004.50 > ct 80 at 22MAR2024 00:34:58
+[ACTION]: Send to node 80 (desc 7): CHORD 50 [5370929,2ms]
+[ACTION]: Send to node 80 (desc 7): ROUTE 50 50 50 [5370929,3ms]
+[ACTION]: Send to node 80 (desc 7): ROUTE 50 60 50-60 [5370929,3ms]
+[ACTION]: Send to node 80 (desc 7): ROUTE 50 40 50-40 [5370929,3ms]
+[ACTION]: Send to node 80 (desc 7): ROUTE 50 30 50-40-30 [5370929,3ms]
+[ACTION]: Send to node 80 (desc 7): ROUTE 50 20 50-40-30-20 [5370929,3ms]
+[ACTION]: Send to node 80 (desc 7): ROUTE 50 10 50-40-30-20-10 [5370929,3ms]
+[ACTION]: Send to node 80 (desc 7): ROUTE 50 70 50-40-30-20-10-70 [5370929,3ms]
+
+================================================================================
+  [INFO]: TOPOLOGY 22MAR2024 00:34:58, NS at: 192.168.1.1 / 58125
+================================================================================
+Net ID: 004, Node ID: 50, at 192.168.1.1 / 58130  Four nodes or more in ring
+--------------------------------------------------------------------------------
+
+      Unit                                         Descriptor
+
+  TCP listen channel                                   5
+  UDP server                                           3
+  Predecessor ID: 40                                   8 private
+           My ID: 50 IP: 192.168.1.1, port: 58130
+    Successor ID: 60 IP: 192.168.1.1, port: 58131     6
+2nd successor ID: 80 IP: 193.136.128.108, port: 55000
+     Chord to ID: 80 IP: 193.136.128.108, port: 55000     7
+--------------------------------------------------------------------------------
+ 004.50 > rc at 22MAR2024 00:35:27
+  [INFO]:  Chord to node 80 removed
+
+================================================================================
+  [INFO]: TOPOLOGY 22MAR2024 00:35:27, NS at: 192.168.1.1 / 58125
+================================================================================
+Net ID: 004, Node ID: 50, at 192.168.1.1 / 58130  Four nodes or more in ring
+--------------------------------------------------------------------------------
+
+      Unit                                         Descriptor
+
+  TCP listen channel                                   5
+  UDP server                                           3
+  Predecessor ID: 40                                   8 private
+           My ID: 50 IP: 192.168.1.1, port: 58130
+    Successor ID: 60 IP: 192.168.1.1, port: 58131     6
+2nd successor ID: 80 IP: 193.136.128.108, port: 55000
+--------------------------------------------------------------------------------
+
+ [EVENT]: Activity detected - successor (ch: 6) at 22MAR2024 00:35:31 [5404111,8ms]
+  [INFO]: 26 bytes read from socket
+  [INFO]: 1 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : SUCC 70 192.168.1.1 58132 [5404111,8ms]
+
+ [EVENT]: Activity detected - successor (ch: 6) at 22MAR2024 00:35:31 [5404111,9ms]
+  [INFO]: 18 bytes read from socket
+  [INFO]: 1 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : ROUTE 60 70 60-70 [5404111,9ms]
+[ACTION]: Send to node 60 (desc 6): ROUTE 50 70 50-60-70 [5404111,9ms]
+[ACTION]: Send to node 40 (desc 8): ROUTE 50 70 50-60-70 [5404112,0ms]
+
+ [EVENT]: Activity detected - successor (ch: 6) at 22MAR2024 00:35:31 [5404112,0ms]
+  [INFO]: 45 bytes read from socket
+  [INFO]: 2 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : ROUTE 60 10 60-70-10 [5404112,0ms]
+[ACTION]: Send to node 60 (desc 6): ROUTE 50 10 50-60-70-10 [5404112,0ms]
+[ACTION]: Send to node 40 (desc 8): ROUTE 50 10 50-60-70-10 [5404112,1ms]
+  [INFO]: Recv msg from node 60 : ROUTE 60 20 60-70-10-20 [5404112,1ms]
+  [INFO]: No action
+
+ [EVENT]: Activity detected - predecessor (ch: 8) at 22MAR2024 00:35:31 [5404112,2ms]
+  [INFO]: 24 bytes read from socket
+  [INFO]: 1 message(s) at predecessor ID: 40, ch: 8
+  [INFO]: Recv msg from node 40 : ROUTE 40 70 40-50-60-70 [5404112,2ms]
+  [INFO]: No action
+
+ [EVENT]: Activity detected - successor (ch: 6) at 22MAR2024 00:40:34 [5707003,6ms]
+  [INFO]: 27 bytes read from socket
+  [INFO]: 1 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : ROUTE 60 20 60-50-40-30-20 [5707003,6ms]
+  [INFO]: No action
+
+ [EVENT]: Activity detected - successor (ch: 6) at 22MAR2024 00:40:34 [5707047,7ms]
+  [INFO]: 54 bytes read from socket
+  [INFO]: 3 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : ROUTE 60 10 [5707047,8ms]
+[ACTION]: Send to node 60 (desc 6): ROUTE 50 10 50-40-30-20-10 [5707047,8ms]
+[ACTION]: Send to node 40 (desc 8): ROUTE 50 10 50-40-30-20-10 [5707047,9ms]
+  [INFO]: Recv msg from node 60 : ROUTE 60 70 [5707047,9ms]
+[ACTION]: Send to node 60 (desc 6): ROUTE 50 70 [5707047,9ms]
+[ACTION]: Send to node 40 (desc 8): ROUTE 50 70 [5707047,9ms]
+  [INFO]: Recv msg from node 60 : SUCC 80 193.136.128.108 55000 [5707047,9ms]
+
+ [EVENT]: Activity detected - successor (ch: 6) at 22MAR2024 00:40:34 [5707048,0ms]
+  [INFO]: 30 bytes read from socket
+  [INFO]: 1 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : ROUTE 60 10 60-50-40-30-20-10 [5707048,0ms]
+  [INFO]: No action
+
+ [EVENT]: Activity detected - predecessor (ch: 8) at 22MAR2024 00:40:34 [5707091,9ms]
+  [INFO]: 27 bytes read from socket
+  [INFO]: 1 message(s) at predecessor ID: 40, ch: 8
+  [INFO]: Recv msg from node 40 : ROUTE 40 70 40-30-20-10-70 [5707091,9ms]
+[ACTION]: Send to node 60 (desc 6): ROUTE 50 70 50-40-30-20-10-70 [5707091,9ms]
+[ACTION]: Send to node 40 (desc 8): ROUTE 50 70 50-40-30-20-10-70 [5707091,9ms]
+
+ [EVENT]: Activity detected - successor (ch: 6) at 22MAR2024 00:40:34 [5707092,1ms]
+  [INFO]: 33 bytes read from socket
+  [INFO]: 1 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : ROUTE 60 70 60-50-40-30-20-10-70 [5707092,1ms]
+  [INFO]: No action
+ 004.50 > ct 80 at 22MAR2024 00:40:45
+[ACTION]: Send to node 80 (desc 7): CHORD 50 [5717972,1ms]
+[ACTION]: Send to node 80 (desc 7): ROUTE 50 50 50 [5717972,2ms]
+[ACTION]: Send to node 80 (desc 7): ROUTE 50 60 50-60 [5717972,2ms]
+[ACTION]: Send to node 80 (desc 7): ROUTE 50 40 50-40 [5717972,2ms]
+[ACTION]: Send to node 80 (desc 7): ROUTE 50 30 50-40-30 [5717972,2ms]
+[ACTION]: Send to node 80 (desc 7): ROUTE 50 20 50-40-30-20 [5717972,2ms]
+[ACTION]: Send to node 80 (desc 7): ROUTE 50 10 50-40-30-20-10 [5717972,2ms]
+[ACTION]: Send to node 80 (desc 7): ROUTE 50 70 50-40-30-20-10-70 [5717972,2ms]
+
+================================================================================
+  [INFO]: TOPOLOGY 22MAR2024 00:40:45, NS at: 192.168.1.1 / 58125
+================================================================================
+Net ID: 004, Node ID: 50, at 192.168.1.1 / 58130  Four nodes or more in ring
+--------------------------------------------------------------------------------
+
+      Unit                                         Descriptor
+
+  TCP listen channel                                   5
+  UDP server                                           3
+  Predecessor ID: 40                                   8 private
+           My ID: 50 IP: 192.168.1.1, port: 58130
+    Successor ID: 60 IP: 192.168.1.1, port: 58131     6
+2nd successor ID: 80 IP: 193.136.128.108, port: 55000
+     Chord to ID: 80 IP: 193.136.128.108, port: 55000     7
+--------------------------------------------------------------------------------
+ 004.50 > rc at 22MAR2024 00:42:06
+  [INFO]:  Chord to node 80 removed
+
+================================================================================
+  [INFO]: TOPOLOGY 22MAR2024 00:42:06, NS at: 192.168.1.1 / 58125
+================================================================================
+Net ID: 004, Node ID: 50, at 192.168.1.1 / 58130  Four nodes or more in ring
+--------------------------------------------------------------------------------
+
+      Unit                                         Descriptor
+
+  TCP listen channel                                   5
+  UDP server                                           3
+  Predecessor ID: 40                                   8 private
+           My ID: 50 IP: 192.168.1.1, port: 58130
+    Successor ID: 60 IP: 192.168.1.1, port: 58131     6
+2nd successor ID: 80 IP: 193.136.128.108, port: 55000
+--------------------------------------------------------------------------------
+
+ [EVENT]: Activity detected - successor (ch: 6) at 22MAR2024 00:42:20 [5813419,0ms]
+  [INFO]: 26 bytes read from socket
+  [INFO]: 1 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : SUCC 70 192.168.1.1 58132 [5813419,1ms]
+
+ [EVENT]: Activity detected - successor (ch: 6) at 22MAR2024 00:42:20 [5813419,1ms]
+  [INFO]: 18 bytes read from socket
+  [INFO]: 1 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : ROUTE 60 70 60-70 [5813419,2ms]
+[ACTION]: Send to node 60 (desc 6): ROUTE 50 70 50-60-70 [5813419,2ms]
+[ACTION]: Send to node 40 (desc 8): ROUTE 50 70 50-60-70 [5813419,2ms]
+
+ [EVENT]: Activity detected - successor (ch: 6) at 22MAR2024 00:42:20 [5813419,3ms]
+  [INFO]: 45 bytes read from socket
+  [INFO]: 2 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : ROUTE 60 10 60-70-10 [5813419,3ms]
+[ACTION]: Send to node 60 (desc 6): ROUTE 50 10 50-60-70-10 [5813419,3ms]
+[ACTION]: Send to node 40 (desc 8): ROUTE 50 10 50-60-70-10 [5813419,3ms]
+  [INFO]: Recv msg from node 60 : ROUTE 60 20 60-70-10-20 [5813419,4ms]
+  [INFO]: No action
+
+ [EVENT]: Activity detected - predecessor (ch: 8) at 22MAR2024 00:42:20 [5813419,4ms]
+  [INFO]: 24 bytes read from socket
+  [INFO]: 1 message(s) at predecessor ID: 40, ch: 8
+  [INFO]: Recv msg from node 40 : ROUTE 40 70 40-50-60-70 [5813419,5ms]
+  [INFO]: No action
+
+ [EVENT]: Activity detected - successor (ch: 6) at 22MAR2024 00:46:34 [6067278,7ms]
+  [INFO]: 27 bytes read from socket
+  [INFO]: 1 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : ROUTE 60 20 60-50-40-30-20 [6067278,8ms]
+  [INFO]: No action
+
+ [EVENT]: Activity detected - successor (ch: 6) at 22MAR2024 00:46:34 [6067319,7ms]
+  [INFO]: 54 bytes read from socket
+  [INFO]: 3 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : ROUTE 60 10 [6067319,8ms]
+[ACTION]: Send to node 60 (desc 6): ROUTE 50 10 50-40-30-20-10 [6067319,8ms]
+[ACTION]: Send to node 40 (desc 8): ROUTE 50 10 50-40-30-20-10 [6067319,8ms]
+  [INFO]: Recv msg from node 60 : ROUTE 60 70 [6067319,9ms]
+[ACTION]: Send to node 60 (desc 6): ROUTE 50 70 [6067319,9ms]
+[ACTION]: Send to node 40 (desc 8): ROUTE 50 70 [6067319,9ms]
+  [INFO]: Recv msg from node 60 : SUCC 80 193.136.128.108 55000 [6067319,9ms]
+
+ [EVENT]: Activity detected - successor (ch: 6) at 22MAR2024 00:46:34 [6067320,0ms]
+  [INFO]: 30 bytes read from socket
+  [INFO]: 1 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : ROUTE 60 10 60-50-40-30-20-10 [6067320,0ms]
+  [INFO]: No action
+
+ [EVENT]: Activity detected - predecessor (ch: 8) at 22MAR2024 00:46:34 [6067363,9ms]
+  [INFO]: 27 bytes read from socket
+  [INFO]: 1 message(s) at predecessor ID: 40, ch: 8
+  [INFO]: Recv msg from node 40 : ROUTE 40 70 40-30-20-10-70 [6067363,9ms]
+[ACTION]: Send to node 60 (desc 6): ROUTE 50 70 50-40-30-20-10-70 [6067363,9ms]
+[ACTION]: Send to node 40 (desc 8): ROUTE 50 70 50-40-30-20-10-70 [6067364,0ms]
+
+ [EVENT]: Activity detected - successor (ch: 6) at 22MAR2024 00:46:34 [6067364,1ms]
+  [INFO]: 33 bytes read from socket
+  [INFO]: 1 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : ROUTE 60 70 60-50-40-30-20-10-70 [6067364,1ms]
+  [INFO]: No action
+ 004.50 > ct 80 at 22MAR2024 00:46:48
+[ACTION]: Send to node 80 (desc 7): CHORD 50 [6080938,6ms]
+[ACTION]: Send to node 80 (desc 7): ROUTE 50 50 50 [6080938,6ms]
+[ACTION]: Send to node 80 (desc 7): ROUTE 50 60 50-60 [6080938,7ms]
+[ACTION]: Send to node 80 (desc 7): ROUTE 50 40 50-40 [6080938,7ms]
+[ACTION]: Send to node 80 (desc 7): ROUTE 50 30 50-40-30 [6080938,7ms]
+[ACTION]: Send to node 80 (desc 7): ROUTE 50 20 50-40-30-20 [6080938,7ms]
+[ACTION]: Send to node 80 (desc 7): ROUTE 50 10 50-40-30-20-10 [6080938,7ms]
+[ACTION]: Send to node 80 (desc 7): ROUTE 50 70 50-40-30-20-10-70 [6080938,7ms]
+
+================================================================================
+  [INFO]: TOPOLOGY 22MAR2024 00:46:48, NS at: 192.168.1.1 / 58125
+================================================================================
+Net ID: 004, Node ID: 50, at 192.168.1.1 / 58130  Four nodes or more in ring
+--------------------------------------------------------------------------------
+
+      Unit                                         Descriptor
+
+  TCP listen channel                                   5
+  UDP server                                           3
+  Predecessor ID: 40                                   8 private
+           My ID: 50 IP: 192.168.1.1, port: 58130
+    Successor ID: 60 IP: 192.168.1.1, port: 58131     6
+2nd successor ID: 80 IP: 193.136.128.108, port: 55000
+     Chord to ID: 80 IP: 193.136.128.108, port: 55000     7
+--------------------------------------------------------------------------------
+ 004.50 > rc at 22MAR2024 00:47:08
+  [INFO]:  Chord to node 80 removed
+
+================================================================================
+  [INFO]: TOPOLOGY 22MAR2024 00:47:08, NS at: 192.168.1.1 / 58125
+================================================================================
+Net ID: 004, Node ID: 50, at 192.168.1.1 / 58130  Four nodes or more in ring
+--------------------------------------------------------------------------------
+
+      Unit                                         Descriptor
+
+  TCP listen channel                                   5
+  UDP server                                           3
+  Predecessor ID: 40                                   8 private
+           My ID: 50 IP: 192.168.1.1, port: 58130
+    Successor ID: 60 IP: 192.168.1.1, port: 58131     6
+2nd successor ID: 80 IP: 193.136.128.108, port: 55000
+--------------------------------------------------------------------------------
+
+ [EVENT]: Activity detected - successor (ch: 6) at 22MAR2024 00:47:11 [6104658,7ms]
+  [INFO]: 26 bytes read from socket
+  [INFO]: 1 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : SUCC 70 192.168.1.1 58132 [6104658,7ms]
+
+ [EVENT]: Activity detected - successor (ch: 6) at 22MAR2024 00:47:11 [6104658,8ms]
+  [INFO]: 18 bytes read from socket
+  [INFO]: 1 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : ROUTE 60 70 60-70 [6104658,8ms]
+[ACTION]: Send to node 60 (desc 6): ROUTE 50 70 50-60-70 [6104658,8ms]
+[ACTION]: Send to node 40 (desc 8): ROUTE 50 70 50-60-70 [6104658,9ms]
+
+ [EVENT]: Activity detected - successor (ch: 6) at 22MAR2024 00:47:11 [6104658,9ms]
+  [INFO]: 45 bytes read from socket
+  [INFO]: 2 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : ROUTE 60 10 60-70-10 [6104658,9ms]
+[ACTION]: Send to node 60 (desc 6): ROUTE 50 10 50-60-70-10 [6104658,9ms]
+[ACTION]: Send to node 40 (desc 8): ROUTE 50 10 50-60-70-10 [6104659,0ms]
+  [INFO]: Recv msg from node 60 : ROUTE 60 20 60-70-10-20 [6104659,0ms]
+  [INFO]: No action
+
+ [EVENT]: Activity detected - predecessor (ch: 8) at 22MAR2024 00:47:11 [6104659,1ms]
+  [INFO]: 24 bytes read from socket
+  [INFO]: 1 message(s) at predecessor ID: 40, ch: 8
+  [INFO]: Recv msg from node 40 : ROUTE 40 70 40-50-60-70 [6104659,1ms]
+  [INFO]: No action
+
+ [EVENT]: Activity detected - successor (ch: 6) at 22MAR2024 00:58:42 [6795495,6ms]
+  [INFO]: 27 bytes read from socket
+  [INFO]: 1 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : ROUTE 60 20 60-50-40-30-20 [6795495,6ms]
+  [INFO]: No action
+
+ [EVENT]: Activity detected - successor (ch: 6) at 22MAR2024 00:58:42 [6795539,3ms]
+  [INFO]: 54 bytes read from socket
+  [INFO]: 3 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : ROUTE 60 10 [6795539,4ms]
+[ACTION]: Send to node 60 (desc 6): ROUTE 50 10 50-40-30-20-10 [6795539,4ms]
+[ACTION]: Send to node 40 (desc 8): ROUTE 50 10 50-40-30-20-10 [6795539,4ms]
+  [INFO]: Recv msg from node 60 : ROUTE 60 70 [6795539,5ms]
+[ACTION]: Send to node 60 (desc 6): ROUTE 50 70 [6795539,5ms]
+[ACTION]: Send to node 40 (desc 8): ROUTE 50 70 [6795539,5ms]
+  [INFO]: Recv msg from node 60 : SUCC 80 193.136.128.108 55000 [6795539,5ms]
+
+ [EVENT]: Activity detected - successor (ch: 6) at 22MAR2024 00:58:42 [6795539,6ms]
+  [INFO]: 30 bytes read from socket
+  [INFO]: 1 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : ROUTE 60 10 60-50-40-30-20-10 [6795539,6ms]
+  [INFO]: No action
+
+ [EVENT]: Activity detected - predecessor (ch: 8) at 22MAR2024 00:58:42 [6795583,9ms]
+  [INFO]: 27 bytes read from socket
+  [INFO]: 1 message(s) at predecessor ID: 40, ch: 8
+  [INFO]: Recv msg from node 40 : ROUTE 40 70 40-30-20-10-70 [6795583,9ms]
+[ACTION]: Send to node 60 (desc 6): ROUTE 50 70 50-40-30-20-10-70 [6795583,9ms]
+[ACTION]: Send to node 40 (desc 8): ROUTE 50 70 50-40-30-20-10-70 [6795584,0ms]
+
+ [EVENT]: Activity detected - successor (ch: 6) at 22MAR2024 00:58:42 [6795584,1ms]
+  [INFO]: 33 bytes read from socket
+  [INFO]: 1 message(s) at successor ID: 60, ch: 6
+  [INFO]: Recv msg from node 60 : ROUTE 60 70 60-50-40-30-20-10-70 [6795584,1ms]
+  [INFO]: No action
+ 004.50 > ct 80 at 22MAR2024 00:58:53
+[ACTION]: Send to node 80 (desc 7): CHORD 50 [6806329,2ms]
+[ACTION]: Send to node 80 (desc 7): ROUTE 50 50 50 [6806329,3ms]
+[ACTION]: Send to node 80 (desc 7): ROUTE 50 60 50-60 [6806329,3ms]
+[ACTION]: Send to node 80 (desc 7): ROUTE 50 40 50-40 [6806329,3ms]
+[ACTION]: Send to node 80 (desc 7): ROUTE 50 30 50-40-30 [6806329,3ms]
+[ACTION]: Send to node 80 (desc 7): ROUTE 50 20 50-40-30-20 [6806329,3ms]
+[ACTION]: Send to node 80 (desc 7): ROUTE 50 10 50-40-30-20-10 [6806329,3ms]
+[ACTION]: Send to node 80 (desc 7): ROUTE 50 70 50-40-30-20-10-70 [6806329,3ms]
+
+================================================================================
+  [INFO]: TOPOLOGY 22MAR2024 00:58:53, NS at: 192.168.1.1 / 58125
+================================================================================
+Net ID: 004, Node ID: 50, at 192.168.1.1 / 58130  Four nodes or more in ring
+--------------------------------------------------------------------------------
+
+      Unit                                         Descriptor
+
+  TCP listen channel                                   5
+  UDP server                                           3
+  Predecessor ID: 40                                   8 private
+           My ID: 50 IP: 192.168.1.1, port: 58130
+    Successor ID: 60 IP: 192.168.1.1, port: 58131     6
+2nd successor ID: 80 IP: 193.136.128.108, port: 55000
+     Chord to ID: 80 IP: 193.136.128.108, port: 55000     7
+--------------------------------------------------------------------------------
+ 004.50 > rc at 22MAR2024 00:59:13
+  [INFO]:  Chord to node 80 removed
+
+================================================================================
+  [INFO]: TOPOLOGY 22MAR2024 00:59:13, NS at: 192.168.1.1 / 58125
+================================================================================
+Net ID: 004, Node ID: 50, at 192.168.1.1 / 58130  Four nodes or more in ring
+--------------------------------------------------------------------------------
+
+      Unit                                         Descriptor
+
+  TCP listen channel                                   5
+  UDP server                                           3
+  Predecessor ID: 40                                   8 private
+           My ID: 50 IP: 192.168.1.1, port: 58130
+    Successor ID: 60 IP: 192.168.1.1, port: 58131     6
+2nd successor ID: 80 IP: 193.136.128.108, port: 55000
+--------------------------------------------------------------------------------
+</pre><br><br>
