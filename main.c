@@ -150,7 +150,6 @@ int main(int argc, char *argv[]) {
             }
         }
         
-
         // Espera por uma atividade em um dos sockets, o timeout é NULL, então espera indefinidamente
         activity = select(max_sd + 1, &readfds, &writefds, NULL, NULL);
 

@@ -311,12 +311,14 @@ void establishChord(Node* node) {
         char ip[16], tcp[6];
 
         sscanf(line, "%d %s %s", &id, ip, tcp);
+        printf("Verificando o nó com ID: %d\n", id);  // Imprime o ID do nó que está sendo verificado
 
         // Verifica se o nó já está na lista de clientes antes de tentar estabelecer uma conexão
         bool already_connected = false;
         for (int i = 0; i < MAX_CLIENTS; i++) {
             if (clients[i] && clients[i]->node->id == id) {
                 already_connected = true;
+                printf("O nó com ID: %d já está conectado.\n", id);  // Imprime se o nó já está conectado
                 break;
             }
         }
@@ -327,7 +329,7 @@ void establishChord(Node* node) {
             continue;
         }
 
-        if (!already_connected && id != node->sucessor->id && id != node->predecessor->id && id != node->id) {
+        if (id != node->sucessor->id && id != node->predecessor->id && id != node->id) {
             other_node = createNode(id, ip, tcp);
             int porta_tcp = cliente_tcp(other_node, ip, tcp);
             if (porta_tcp != -1) {
@@ -340,7 +342,7 @@ void establishChord(Node* node) {
             } else {
                 printf("Falha ao conectar ao servidor.\n");
                 free(other_node);
-                //printf("Não foram encontrados nós adequados para estabelecer uma corda.\n");
+                printf("Não foram encontrados nós adequados para estabelecer uma corda.\n");
                 return;
             }
         }
@@ -351,6 +353,7 @@ void establishChord(Node* node) {
         printf("Não foram encontrados nós adequados para estabelecer uma corda.\n");
     }
 }
+
 
 void removeChord(Node* node) {
     if (node->corda != NULL) {
