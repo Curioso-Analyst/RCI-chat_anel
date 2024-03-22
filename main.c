@@ -398,9 +398,8 @@ int main(int argc, char *argv[]) {
                         printf("\nA minha corda saiu\n");
                         printf("Host disconnected, ip %s, port %s\n", clients[i]->node->ip, clients[i]->node->tcp);
                         int temp_socket_fd = clients[i]->socket_fd;
-                        remove_client(temp_socket_fd);  // Chame remove_client antes de definir clients[i]->socket_fd para -1
-                        close(clients[i]->socket_fd);
-                        clients[i]->socket_fd = -1; 
+                        close(temp_socket_fd);  // Feche o socket antes de chamar remove_client
+                        remove_client(temp_socket_fd);  
                         temos_corda--;  // Decrementa o número de cordas
                     } else {
                         buffer[valread] = '\0';
