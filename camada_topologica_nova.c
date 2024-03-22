@@ -311,6 +311,9 @@ void establishChord(Node* node) {
         char ip[16], tcp[6];
 
         sscanf(line, "%d %s %s", &id, ip, tcp);
+        printf("ID: %d, IP: %s, TCP: %s\n", id, ip, tcp);  // Imprime o ID, IP e porta TCP que foram lidos
+
+        
         printf("Verificando o nó com ID: %d\n", id);  // Imprime o ID do nó que está sendo verificado
 
         // Verifica se o nó já está na lista de clientes antes de tentar estabelecer uma conexão
