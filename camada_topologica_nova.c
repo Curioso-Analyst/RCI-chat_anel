@@ -312,6 +312,7 @@ void establishChord(Node* node) {
 
         sscanf(line, "%d %s %s", &id, ip, tcp);
 
+        // Verifica se o nó já está na lista de clientes antes de tentar estabelecer uma conexão
         bool already_connected = false;
         for (int i = 0; i < MAX_CLIENTS; i++) {
             if (clients[i] && clients[i]->node->id == id) {
@@ -320,33 +321,36 @@ void establishChord(Node* node) {
             }
         }
 
-        if (already_connected || id == node->sucessor->id || id == node->predecessor->id || id == node->id || (node->corda && id == node->corda->id)) {
+        // Se o nó já está na lista de clientes, pula para o próximo nó
+        if (already_connected) {
             line = strtok(NULL, "\n");
             continue;
         }
 
-        other_node = createNode(id, ip, tcp);
-        int porta_tcp = cliente_tcp(other_node, ip, tcp);
-        if (porta_tcp != -1) {
-            printf("Olá cliente, o meu fd é: %d\n", porta_tcp);
-            send_chord(porta_tcp, node);
+        if (!already_connected && id != node->sucessor->id && id != node->predecessor->id && id != node->id) {
+            other_node = createNode(id, ip, tcp);
+            int porta_tcp = cliente_tcp(other_node, ip, tcp);
+            if (porta_tcp != -1) {
+                printf("Olá cliente, o meu fd é: %d\n", porta_tcp);
+                send_chord(porta_tcp, node);
 
-            node->corda = other_node;
-            node->corda->corda_socket_fd = porta_tcp;
-            break;
-        } else {
-            printf("Falha ao conectar ao servidor.\n");
-            free(other_node);
-            printf("Não foram encontrados nós adequados para estabelecer uma corda.\n");
-            return;
+                node->corda = other_node;
+                node->corda->corda_socket_fd = porta_tcp;
+                break;
+            } else {
+                printf("Falha ao conectar ao servidor.\n");
+                free(other_node);
+                //printf("Não foram encontrados nós adequados para estabelecer uma corda.\n");
+                return;
+            }
         }
+        line = strtok(NULL, "\n");
     }
 
     if (other_node == NULL) {
         printf("Não foram encontrados nós adequados para estabelecer uma corda.\n");
     }
 }
-
 
 void removeChord(Node* node) {
     if (node->corda != NULL) {
