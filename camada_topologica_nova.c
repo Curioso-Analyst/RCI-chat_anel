@@ -315,7 +315,7 @@ void establishChord(Node* node) {
         char* tcp = strtok(NULL, " ");
 
         if (id_str == NULL || ip == NULL || tcp == NULL) {
-            // Se qualquer um dos tokens for NULL, pule para a próxima linha
+            // Se qualquer um dos tokens for NULL, pula para a próxima linha
             line = strtok_r(NULL, "\n", &saveptr);
             continue;
         }
