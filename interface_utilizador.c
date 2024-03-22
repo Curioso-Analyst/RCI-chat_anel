@@ -123,10 +123,12 @@ void show_topology(Node* node) {
     printf("\nLista de cordas recebidas:\n");
     if (node->num_cordas > 0) {
         for (int i = 0; i < node->num_cordas; i++) {
+            if (node->cordas[i] != NULL){
             printf("Corda %d:\n", i + 1);
             printf("Identificador: %02d\n", node->cordas[i]->id);
             printf("IP: %s\n", node->cordas[i]->ip);
             printf("TCP: %s\n", node->cordas[i]->tcp);
+            }
         }
     } else {
         printf("Nenhuma corda recebida.\n");

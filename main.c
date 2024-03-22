@@ -426,10 +426,12 @@ int main(int argc, char *argv[]) {
 
                                 // Remove a corda da lista de cordas
                                 free(node->cordas[i]);
+                                node->cordas[i] = NULL;
                                 for (int j = i; j < node->num_cordas - 1; j++) {
                                     node->cordas[j] = node->cordas[j + 1];
                                 }
                                 node->num_cordas--;
+                                node->cordas[node->num_cordas] = NULL;
 
                                 break;
                             }
