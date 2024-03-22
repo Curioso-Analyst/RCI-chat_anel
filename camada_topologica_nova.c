@@ -358,7 +358,6 @@ void removeChord(Node* node) {
     }
 }
 
-
 void add_client(int socket_fd, Node* node) {
     for (int i = 0; i < MAX_CLIENTS; i++) {
         if (!clients[i]) {

@@ -94,7 +94,7 @@ int main(int argc, char *argv[]) {
     char command[1024];
     int PORT = atoi(TCP_escolhido);
     int tcp_socket, addrlen, activity, max_sd, new_socket_pred, new_socket_suc; 
-    int temos_pred = -1, temos_suc =-1, pred_saiu = -1, new_socket = -1, temos_corda = -1;
+    int temos_pred = -1, temos_suc =-1, pred_saiu = -1, new_socket = -1, temos_corda = 0;
     struct sockaddr_in address;
     fd_set readfds, writefds;
 
@@ -139,7 +139,7 @@ int main(int argc, char *argv[]) {
         if(new_socket_suc > max_sd)
             max_sd = new_socket_suc;
         
-        if (temos_corda == 1){
+        if (temos_corda > 0){
             for (int i = 0; i < MAX_CLIENTS; i++) {
                 if (clients[i]) {
                     FD_SET(clients[i]->socket_fd, &readfds);
@@ -288,7 +288,7 @@ int main(int argc, char *argv[]) {
                         add_client(new_socket, new_node);
                         
                         printf("Corda estabelecida com sucesso no socket\n");
-                        temos_corda=1;
+                        temos_corda++;  // Incrementa o número de cordas
                     }
                 
                 // Verifica se é uma mensagem de entrada
@@ -398,9 +398,9 @@ int main(int argc, char *argv[]) {
                         printf("\nA minha corda saiu\n");
                         printf("Host disconnected, ip %s, port %s\n", clients[i]->node->ip, clients[i]->node->tcp);
                         int temp_socket_fd = clients[i]->socket_fd;
+                        remove_client(temp_socket_fd);  // Chame remove_client antes de definir clients[i]->socket_fd para -1
                         close(clients[i]->socket_fd);
                         clients[i]->socket_fd = -1; 
-                        remove_client(temp_socket_fd);
                         temos_corda--;  // Decrementa o número de cordas
                     } else {
                         buffer[valread] = '\0';
