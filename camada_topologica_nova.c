@@ -15,11 +15,6 @@ Node* createNode(int id, char* ip, char* tcp) {
     node->second_successor = node;
     node->corda = NULL;
     node->corda_socket_fd = -1; // Incializa o socket da corda como -1
-    node->corda_socket_recebidas_fd = -1; // Incializa o socket da corda como -1
-    node->num_cordas = 0; // Inicializa o número de cordas como 0
-    for (int i = 0; i < MAX_CORDAS; i++) {
-        node->cordas[i] = NULL; // Inicializa a lista de cordas como NULL
-    }
     return node;
 }
 
@@ -287,7 +282,7 @@ void getNodescorda(Node* node, char* buffer) {
     sprintf(message, "NODES %03d", node->ring);
 
     // Imprime a mensagem que será enviada
-    printf("Sending message: %s\n", message);
+    //printf("Sending message: %s\n", message);
     fflush(stdout); // Força a liberação do fluxo de saída padrão
 
     n=sendto(fd, message, strlen(message), 0, res->ai_addr, res->ai_addrlen);
@@ -303,15 +298,6 @@ void getNodescorda(Node* node, char* buffer) {
 
     freeaddrinfo(res); //libertar a memoria alocada
     close(fd); //fechar o socket
-}
-
-bool isInCordas(Node* node, int id) {
-    for (int i = 0; i < node->num_cordas; i++) {
-        if (node->cordas[i]->id == id) {
-            return true;
-        }
-    }
-    return false;
 }
 
 void establishChord(Node* node) {
@@ -330,10 +316,9 @@ void establishChord(Node* node) {
         sscanf(line, "%d %s %s", &id, ip, tcp);
 
         // Verifica se o nó não é o sucessor, o predecessor ou o próprio nó
-        if (id != node->sucessor->id && id != node->predecessor->id && id != node->id && !isInCordas(node, id)) {
-            other_node = createNode(id, ip, tcp);  // Criar um nó com o id, ip e tcp
-            // Estabelece a corda
-            // Conecta-se ao nó escolhido
+        if (id != node->sucessor->id && id != node->predecessor->id && id != node->id) {
+            other_node = createNode(id, ip, tcp);  // Criar um nó com o id, ip e tcp da corda
+            // Estabelece a corda com o nó
             int porta_tcp = cliente_tcp(other_node, ip, tcp);
             if (porta_tcp == -1) {
                 printf("Falha ao conectar ao servidor.\n");
@@ -341,10 +326,10 @@ void establishChord(Node* node) {
                 free(other_node);
             } else {
                 printf("Olá cliente, o meu fd é: %d\n", porta_tcp);
-                // Estabeleceu a corda, envia mensagem 
+                // Estabeleceu a corda, envia mensagem para o socket da corda
                 send_chord(porta_tcp, node);
 
-                // Guarda o nó escolhido
+                // Guarda o nó escolhido e o socket da corda
                 node->corda = other_node;
                 node->corda->corda_socket_fd = porta_tcp;
                 break;
@@ -358,7 +343,6 @@ void establishChord(Node* node) {
         printf("Não foram encontrados nós adequados para estabelecer uma corda.\n");
     }
 }
-
 
 void removeChord(Node* node) {
     if (node->corda != NULL) {
@@ -374,5 +358,26 @@ void removeChord(Node* node) {
     }
 }
 
+
+void add_client(int socket_fd, Node* node) {
+    for (int i = 0; i < MAX_CLIENTS; i++) {
+        if (!clients[i]) {
+            clients[i] = (ClientInfo*) malloc(sizeof(ClientInfo));
+            clients[i]->socket_fd = socket_fd;
+            clients[i]->node = node;
+            return;
+        }
+    }
+}
+
+void remove_client(int socket_fd) {
+    for (int i = 0; i < MAX_CLIENTS; i++) {
+        if (clients[i] && clients[i]->socket_fd == socket_fd) {
+            free(clients[i]);
+            clients[i] = NULL;
+            return;
+        }
+    }
+}
 
 

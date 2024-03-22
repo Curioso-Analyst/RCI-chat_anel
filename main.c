@@ -14,7 +14,6 @@
 #include <sys/select.h>
 #include <netdb.h>
 
-#define MAX_CLIENTS 20
 
 // Variaveis Globais
 Node* node = NULL; 
@@ -76,6 +75,8 @@ void setup_master_socket(int *tcp_socket, int PORT) {
     puts("Waiting for connections ...");
 }
 
+ClientInfo* clients[MAX_CLIENTS] = {0};
+
 int main(int argc, char *argv[]) {
     if(argc != 5) {
         printf("Uso: %s IP TCP regIP regUDP\n", argv[0]);
@@ -125,17 +126,6 @@ int main(int argc, char *argv[]) {
             FD_SET(new_socket_suc, &readfds);  // Adiciona o socket do sucessor ao conjunto
         }
 
-        if (temos_corda==1){
-            if (node != NULL) {
-                for (int i = 0; i < node->num_cordas; i++) {
-                    if (node->cordas[i] != NULL) {
-                        int corda_socket = node->cordas[i]->corda_socket_recebidas_fd;
-                        FD_SET(corda_socket, &readfds);
-                    }
-                }
-            }
-        }
-
         max_sd = tcp_socket;
 
         // Compare STDIN_FILENO with max_sd and assigns larger value to max_sd
@@ -148,17 +138,18 @@ int main(int argc, char *argv[]) {
 
         if(new_socket_suc > max_sd)
             max_sd = new_socket_suc;
-
-        if (node != NULL) {
-            for (int i = 0; i < node->num_cordas; i++) {
-                if (node->cordas[i] != NULL) {
-                    int corda_socket = node->cordas[i]->corda_socket_recebidas_fd;
-                    if (corda_socket > max_sd) {
-                        max_sd = corda_socket;
+        
+        if (temos_corda == 1){
+            for (int i = 0; i < MAX_CLIENTS; i++) {
+                if (clients[i]) {
+                    FD_SET(clients[i]->socket_fd, &readfds);
+                    if (clients[i]->socket_fd > max_sd) {
+                        max_sd = clients[i]->socket_fd;
                     }
                 }
             }
         }
+        
 
         // Espera por uma atividade em um dos sockets, o timeout é NULL, então espera indefinidamente
         activity = select(max_sd + 1, &readfds, &writefds, NULL, NULL);
@@ -255,12 +246,6 @@ int main(int argc, char *argv[]) {
         }
 
         int new_socket_temp = -1; // Variável temporária para armazenar o novo socket aceite
-
-        // Cria um array para armazenar os nós
-        Node* nodes[MAX_CORDAS];
-        for (int i = 0; i < MAX_CORDAS; i++) {
-            nodes[i] = NULL; // Inicializa todos os nós como NULL
-        }
         
         // Verifica se há atividade no socket de escuta
         if (FD_ISSET(tcp_socket, &readfds)) {
@@ -295,39 +280,15 @@ int main(int argc, char *argv[]) {
                         
                         // Analisa a mensagem CHORD
                         sscanf(buffer, "CHORD %d", &new_id);
-
-                        // Verifica se já existe uma corda com o mesmo nó
-                        for (int i = 0; i < node->num_cordas; i++) {
-                            if (node->cordas[i]->id == new_id) {
-                                printf("Já existe uma corda com o nó %d. Ignorando a nova corda.\n", new_id);
-                                continue;
-                            }
-                        }
                                                     
-                        // Cria um novo nó
+                        // Cria um novo nó para a corda
                         Node* new_node = createNode(new_id, inet_ntoa(address.sin_addr), port_char);
 
-                        // Adiciona o novo nó ao array
-                        for (int i = 0; i < MAX_CORDAS; i++) {
-                            if (nodes[i] == NULL) {
-                                nodes[i] = new_node;
-                                break;
-                            }
-                        }
-
-                        // Armazena o file descriptor do socket na estrutura do nó atual
-                        node->corda_socket_recebidas_fd = new_socket;
-
-                        // Adiciona a nova corda à lista de cordas
-                        if (node->num_cordas < MAX_CORDAS) {
-                            node->cordas[node->num_cordas] = new_node;
-                            node->num_cordas++;
-                        } else {
-                            printf("Número máximo de cordas atingido. Não é possível adicionar mais cordas.\n");
-                        }
+                        // Adiciona o nó à lista de nós recebidos do servidor (cordas)
+                        add_client(new_socket, new_node);
                         
+                        printf("Corda estabelecida com sucesso no socket\n");
                         temos_corda=1;
-                        printf("Corda estabelecida com sucesso no socket: %d\n", new_socket);
                     }
                 
                 // Verifica se é uma mensagem de entrada
@@ -427,39 +388,28 @@ int main(int argc, char *argv[]) {
              }
         }
 
-        if(temos_corda==1){
-                if (node != NULL) {
-                    for (int i = 0; i < node->num_cordas; i++) {
-                        if (node->cordas[i] != NULL) {
-                            int corda_socket = node->cordas[i]->corda_socket_recebidas_fd;
-                            if (FD_ISSET(corda_socket, &readfds)) {
-                                char buffer[1024];
-                                int valread;
-                                if ((valread = read(corda_socket, buffer, 1024 - 1)) < 0) {
-                                    // A outra extremidade da conexão foi fechada
-                                    printf("A corda com o socket %d perdeu a conexão.\n", corda_socket);
-                                    printf("A corda com o nó %d perdeu a conexão.\n", node->cordas[i]->id);
-
-                                    // Fecha o socket
-                                    close(corda_socket);
-
-                                    // Remove a corda da lista de cordas
-                                    free(node->cordas[i]);
-                                    node->cordas[i] = NULL;
-                                    for (int j = i; j < node->num_cordas - 1; j++) {
-                                        node->cordas[j] = node->cordas[j + 1];
-                                    }
-                                    node->num_cordas--;
-                                    node->cordas[node->num_cordas] = NULL;
-
-                                    printf("\nNão há mais cordas na lista.\n");
-                                    break;
-                                }
-                            }
-                        }
+        // Verifica se há atividade no socket das cordas recebidas
+        if(temos_corda == 1){
+            for (int i = 0; i < MAX_CLIENTS; i++) {
+                if (clients[i] && FD_ISSET(clients[i]->socket_fd, &readfds)) {
+                    int valread;
+                    char buffer[1024];
+                    if ((valread = read(clients[i]->socket_fd, buffer, sizeof(buffer))) == 0) {
+                        printf("\nA minha corda saiu\n");
+                        printf("Host disconnected, ip %s, port %s\n", clients[i]->node->ip, clients[i]->node->tcp);
+                        int temp_socket_fd = clients[i]->socket_fd;
+                        close(clients[i]->socket_fd);
+                        clients[i]->socket_fd = -1; 
+                        remove_client(temp_socket_fd);
+                        temos_corda = -1;
+                    } else {
+                        buffer[valread] = '\0';
+                        printf("Mensagem recebida: %s\n", buffer);
                     }
                 }
             }
+        }
+        
         
         if(temos_pred==1){
             if (FD_ISSET(new_socket_pred, &readfds)){
