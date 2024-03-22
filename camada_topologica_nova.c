@@ -304,17 +304,25 @@ void establishChord(Node* node) {
     char buffer[1024];
     getNodescorda(node, buffer);
 
-    char* line = strtok(buffer, "\n");
+    printf("Lista de nós:\n%s\n", buffer);  // Imprime a lista de nós
+
+    char* saveptr;
+    char* line = strtok_r(buffer, "\n", &saveptr);
     Node* other_node = NULL;
     while (line != NULL) {
-        int id;
-        char ip[16], tcp[6];
+        char* id_str = strtok(line, " ");
+        char* ip = strtok(NULL, " ");
+        char* tcp = strtok(NULL, " ");
 
-        sscanf(line, "%d %s %s", &id, ip, tcp);
-        printf("ID: %d, IP: %s, TCP: %s\n", id, ip, tcp);  // Imprime o ID, IP e porta TCP que foram lidos
+        if (id_str == NULL || ip == NULL || tcp == NULL) {
+            // Se qualquer um dos tokens for NULL, pule para a próxima linha
+            line = strtok_r(NULL, "\n", &saveptr);
+            continue;
+        }
 
-        
-        printf("Verificando o nó com ID: %d\n", id);  // Imprime o ID do nó que está sendo verificado
+        int id = atoi(id_str);  // Converte a string do ID para um inteiro
+
+        printf("ID: %02d, IP: %s, TCP: %s\n", id, ip, tcp);  // Imprime o ID, IP e porta TCP que foram lidos
 
         // Verifica se o nó já está na lista de clientes antes de tentar estabelecer uma conexão
         bool already_connected = false;
@@ -349,7 +357,7 @@ void establishChord(Node* node) {
                 return;
             }
         }
-        line = strtok(NULL, "\n");
+        //line = strtok(NULL, "\n");
     }
 
     if (other_node == NULL) {
