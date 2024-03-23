@@ -11,8 +11,14 @@ Node* join(int ring, int id, char* IP, char* TCP) {
     // Regista o nó
     char user_input[1024];
     sprintf(user_input, "REG %03d %02d %s %s", ring, id, IP, TCP);
-    registerNode(node, ring, IP, TCP, user_input);
+    int status = registerNode(node, ring, IP, TCP, user_input);
 
+    // Se o registo falhar, liberta a memória alocada para o nó e retorna NULL
+    if (status == -1) {
+        printf("Erro ao registar o nó\n");
+        free(node);
+        return NULL;
+    }
     return node;
 }
 

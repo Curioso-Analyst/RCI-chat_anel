@@ -38,6 +38,7 @@ void print_help() {
     // Adicionar mais comandos aqui
 }
 
+// Função para configurar o socket mestre e iniciar o servidor
 void setup_master_socket(int *tcp_socket, int PORT) {
     struct sockaddr_in address;
     int opt = 1;
@@ -75,6 +76,7 @@ void setup_master_socket(int *tcp_socket, int PORT) {
     puts("Waiting for connections ...");
 }
 
+// Cordas Recebidas
 ClientInfo* clients[MAX_CLIENTS] = {0};
 
 int main(int argc, char *argv[]) {
@@ -190,7 +192,9 @@ int main(int argc, char *argv[]) {
                 printf("Uso: j <ring> <id>\n");
             } else {
                 node = join(ring, id, IP, TCP_escolhido);
-                node->ring = ring; // Para depois poder usar a corda 
+                if(node != NULL) {
+                    node->ring = ring; // Para depois poder usar a corda
+                }
             }
         } else if (strncmp(command, "dj", 2) == 0) {
             int id, succid;
@@ -387,28 +391,6 @@ int main(int argc, char *argv[]) {
              }
         }
 
-        // Verifica se há atividade no socket das cordas recebidas
-        if(temos_corda > 0){
-            for (int i = 0; i < MAX_CLIENTS; i++) {
-                if (clients[i] && FD_ISSET(clients[i]->socket_fd, &readfds)) {
-                    int valread;
-                    char buffer[1024];
-                    if ((valread = read(clients[i]->socket_fd, buffer, sizeof(buffer))) == 0) {
-                        printf("\nA minha corda saiu\n");
-                        printf("Host disconnected, ip %s, port %s\n", clients[i]->node->ip, clients[i]->node->tcp);
-                        int temp_socket_fd = clients[i]->socket_fd;
-                        close(temp_socket_fd);  // Feche o socket antes de chamar remove_client
-                        remove_client(temp_socket_fd);  
-                        temos_corda--;  // Decrementa o número de cordas
-                    } else {
-                        buffer[valread] = '\0';
-                        printf("Mensagem recebida: %s\n", buffer);
-                    }
-                }
-            }
-        }
-                
-        
         if(temos_pred==1){
             if (FD_ISSET(new_socket_pred, &readfds)){
                 char buffer[1024];
@@ -422,7 +404,7 @@ int main(int argc, char *argv[]) {
                     pred_saiu=1;
                     close(new_socket_pred);
                     temos_pred=-1;
-                    new_socket_pred=-1;
+                    //new_socket_pred=-1;
 
                     //ele aqui pode sempre definir o predecessor como ele propria porque caso havia 2 nós, fica certo
                     //caso havia mais que 2 nós ele há de receber um pred e atualizar
@@ -519,6 +501,27 @@ int main(int argc, char *argv[]) {
                     }
 
                 }     
+            }
+        }
+
+        // Verifica se há atividade no socket das cordas recebidas
+        if(temos_corda > 0){
+            for (int i = 0; i < MAX_CLIENTS; i++) {
+                if (clients[i] && FD_ISSET(clients[i]->socket_fd, &readfds)) {
+                    int valread;
+                    char buffer[1024];
+                    if ((valread = read(clients[i]->socket_fd, buffer, sizeof(buffer))) == 0) {
+                        printf("\nA minha corda saiu\n");
+                        printf("Host disconnected, ip %s, port %s\n", clients[i]->node->ip, clients[i]->node->tcp);
+                        int temp_socket_fd = clients[i]->socket_fd;
+                        close(temp_socket_fd);  // Feche o socket antes de chamar remove_client
+                        remove_client(temp_socket_fd);  
+                        temos_corda--;  // Decrementa o número de cordas
+                    } else {
+                        buffer[valread] = '\0';
+                        printf("Mensagem recebida: %s\n", buffer);
+                    }
+                }
             }
         }
     }
