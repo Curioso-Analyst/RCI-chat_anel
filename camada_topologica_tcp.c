@@ -51,7 +51,6 @@ void send_succ(int fd, Node* node){
     }
 }
 
-<<<<<<< HEAD
 void send_succ1(int fd, Node* node, char* mensagem){
     char buffer[1024];
     sprintf(buffer, "SUCC %02d %s %s\n", node->id, node->ip, node->tcp);
@@ -66,10 +65,7 @@ void send_succ1(int fd, Node* node, char* mensagem){
     printf("Mensagem enviada!\n");
 }
 
-void send_pred(char fd, Node* node){
-=======
 void send_pred(int fd, Node* node){
->>>>>>> origin/HEAD
     char buffer[1024];
     sprintf(buffer, "PRED %02d\n", node->id);
     int n = send(fd, buffer, strlen(buffer), 0);

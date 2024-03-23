@@ -2,7 +2,7 @@
 CC = gcc
 
 # Opções de compilação
-CFLAGS = -Wall
+CFLAGS = -Wall -g
 
 # Nome do executável
 TARGET = COR
