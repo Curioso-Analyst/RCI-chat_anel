@@ -13,16 +13,18 @@
 #include <arpa/inet.h>
 #include <time.h>
 #include <stdbool.h>
+#include <errno.h>
+#include <signal.h>
 
 #define MAX_CLIENTS 20
+#define TIMEOUT 2  // 2 segundos de TIMEOUT
+#define MAX_TRIES 3  // Número máximo de tentativas de envio de mensagem UDP
 
 extern int global_variable;
 
 extern char* SERVER_IP;
 extern char* PORT;
 extern char* TCP_escolhido;
-
-
 
 typedef struct Node {
     int id;
@@ -48,7 +50,7 @@ typedef struct {
 extern ClientInfo* clients[MAX_CLIENTS];
 
 Node* createNode(int id, char* ip, char* tcp);
-void registerNode(Node* node, int ring, char* IP, char* TCP, char* user_input);
+int registerNode(Node* node, int ring, char* IP, char* TCP, char* user_input);
 void regservidornos(Node* node,int fd, char* user_input, char* nodes_list, struct addrinfo* server_info, struct sockaddr_in* addr, int ring, char* IP, char* TCP);
 void unregisterNode(Node* node, char* user_input);
 int getUniqueIdentifier(char* nodes_list);

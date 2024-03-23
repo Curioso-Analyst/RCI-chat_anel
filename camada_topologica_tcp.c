@@ -6,10 +6,9 @@ int cliente_tcp(Node* node,char* j_ip,char* j_port) {
 
     fd = socket(AF_INET, SOCK_STREAM, 0);
     if (fd == -1) {
-        perror("socket");
+        perror("socket tcp");
         return -1;  // Retorna -1 em caso de erro
     }
-    printf("Socket criado.\n");
 
     memset(&hints, 0, sizeof hints);
     hints.ai_family = AF_INET;
@@ -20,14 +19,13 @@ int cliente_tcp(Node* node,char* j_ip,char* j_port) {
         fprintf(stderr, "getaddrinfo: %s\n", gai_strerror(errcode));
         return -1;  // Retorna -1 em caso de erro
     }
-    printf("getaddrinfo executado com sucesso.\n");
 
     if (connect(fd, res->ai_addr, res->ai_addrlen) == -1) {
         perror("connect");
         return -1;  // Retorna -1 em caso de erro
     }
     // Conectado ao servidor.
-    printf("Conectado ao servidor.\n");
+    printf("\n------Conectado ao servidor------\n");
 
     freeaddrinfo(res);
     return fd;
@@ -36,14 +34,11 @@ int cliente_tcp(Node* node,char* j_ip,char* j_port) {
 void send_entry(int fd, Node* node){
     char buffer[1024];
     sprintf(buffer, "ENTRY %02d %s %s\n", node->id, node->ip, node->tcp);
-    // Imprime a mensagem que será enviada
-    printf("Mensagem a ser enviada para o socket %d: %s\n",fd, buffer);
     int n = send(fd, buffer, strlen(buffer), 0);
     if (n == -1) {
-        perror("send");
+        perror("send entry");
         exit(EXIT_FAILURE);
     }
-    printf("Mensagem enviada.\n");
 }
 
 void send_succ(int fd, Node* node){
@@ -51,7 +46,7 @@ void send_succ(int fd, Node* node){
     sprintf(buffer, "SUCC %02d %s %s\n", node->id, node->ip, node->tcp);
     int n = send(fd, buffer, strlen(buffer), 0);
     if (n == -1) {
-        perror("send");
+        perror("send succ");
         exit(EXIT_FAILURE);
     }
 }
@@ -59,27 +54,21 @@ void send_succ(int fd, Node* node){
 void send_pred(int fd, Node* node){
     char buffer[1024];
     sprintf(buffer, "PRED %02d\n", node->id);
-    // Imprime a mensagem que será enviada
-    printf("Mensagem a ser enviada para o socket %d: %s\n",fd, buffer);
     int n = send(fd, buffer, strlen(buffer), 0);
     if (n == -1) {
-        perror("send");
+        perror("send pred");
         exit(EXIT_FAILURE);
     }
-    printf("Mensagem enviada.\n");
 }
 
 void send_chord(int fd, Node* node){
     char buffer[1024];
     sprintf(buffer, "CHORD %02d\n", node->id);
-    // Imprime a mensagem que será enviada
-    printf("Mensagem a ser enviada para o socket %d: %s\n",fd, buffer);
     int n = send(fd, buffer, strlen(buffer), 0);
     if (n == -1) {
-        perror("send");
+        perror("send corda");
         exit(EXIT_FAILURE);
     }
-    printf("Mensagem enviada.\n");
 }
 
 void removeNode(Node** node_to_remove_ptr) {
