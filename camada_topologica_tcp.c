@@ -60,9 +60,37 @@ void send_succ(int fd, Node* node){
     printf("Mensagem enviada!\n");
 }
 
+void send_succ1(int fd, Node* node, char* mensagem){
+    char buffer[1024];
+    sprintf(buffer, "SUCC %02d %s %s\n", node->id, node->ip, node->tcp);
+    strcat(buffer, mensagem);
+    // Imprime a mensagem que será enviada
+    printf("Mensagem a ser enviada: %s\n", buffer);
+    int n = send(fd, buffer, strlen(buffer), 0);
+    if (n == -1) {
+        perror("send");
+        exit(EXIT_FAILURE);
+    }
+    printf("Mensagem enviada!\n");
+}
+
 void send_pred(char fd, Node* node){
     char buffer[1024];
     sprintf(buffer, "PRED %02d\n", node->id);
+    // Imprime a mensagem que será enviada
+    printf("Mensagem a ser enviada: %s\n", buffer);
+    int n = send(fd, buffer, strlen(buffer), 0);
+    if (n == -1) {
+        perror("send");
+        exit(EXIT_FAILURE);
+    }
+    printf("Mensagem enviada.\n");
+}
+
+void send_pred1(char fd, Node* node, char* mensagem){
+    char buffer[1024];
+    sprintf(buffer, "PRED %02d\n", node->id);
+    strcat(buffer, mensagem);
     // Imprime a mensagem que será enviada
     printf("Mensagem a ser enviada: %s\n", buffer);
     int n = send(fd, buffer, strlen(buffer), 0);
