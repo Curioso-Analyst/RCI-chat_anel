@@ -11,8 +11,14 @@ Node* join(int ring, int id, char* IP, char* TCP) {
     // Regista o nó
     char user_input[1024];
     sprintf(user_input, "REG %03d %02d %s %s", ring, id, IP, TCP);
-    registerNode(node, ring, IP, TCP, user_input);
+    int status = registerNode(node, ring, IP, TCP, user_input);
 
+    // Se o registo falhar, liberta a memória alocada para o nó e retorna NULL
+    if (status == -1) {
+        printf("Erro ao registar o nó\n");
+        free(node);
+        return NULL;
+    }
     return node;
 }
 
@@ -26,8 +32,36 @@ Node* direct_join(int id, int succId, char* succIP, char* succTCP) {
         node->predecessor = node;
     } else {
          // Conecta-se ao nó sucessor e informa-o sobre a entrada do novo nó no anel
-         cliente_tcp(node, succIP, succTCP);
+        int porta_tcp = cliente_tcp(node, succIP, succTCP);
+        printf("Olá cliente, o meu fd é: %d\n", porta_tcp);
+        send_entry(porta_tcp, node);
 
+        node->sucessor=createNode(succId, succIP, succTCP);
+
+        // Lê uma mensagem do socket
+        char buffer[1024];
+        int valread;
+        if ((valread = recv(porta_tcp, buffer, sizeof(buffer), 0)) > 0) {
+            buffer[valread] = '\0';
+            printf("Mensagem recebida: %s\n", buffer);  // Imprime a mensagem recebida
+                
+            // Verifica se é uma mensagem de entrada
+            if (strncmp(buffer, "SUCC", 4) == 0) {
+                    int new_id;
+                    char new_ip[16];
+                    char new_port[6];
+                    
+                // Analisa a mensagem SUCC
+                sscanf(buffer, "SUCC %d %s %s", &new_id, new_ip, new_port);
+
+                node->second_successor=createNode(new_id, new_ip, new_port);
+
+                global_variable=porta_tcp;
+                                            
+                // Imprime as informações do novo nó
+                printf("Informações do segundo sucessor: id=%02d, ip=%s, port=%s\n", new_id, new_ip, new_port);
+            }
+        }
     }
 
     // Iniciar o servidor/cliente TCP na porta escolhida pelo usuário
@@ -75,12 +109,12 @@ void show_topology(Node* node) {
     }
 
     if (node->corda != NULL) {
-        printf("\nVizinho na corda:\n");
+        printf("\nCorda à qual me conectei:\n");
         printf("Identificador: %02d\n", node->corda->id);
         printf("IP: %s\n", node->corda->ip);
         printf("TCP: %s\n", node->corda->tcp);
     } else {
-        printf("\nVizinho na corda: NULL\n");
+        printf("\nCorda à qual me conectei: NULL\n");
     }
 
     if (node->predecessor != NULL) {
@@ -91,6 +125,18 @@ void show_topology(Node* node) {
     } else {
         printf("\nPredecessor: NULL\n");
     }
+
+    printf("\nLista de cordas recebidas:\n");
+    for (int i = 0; i < MAX_CLIENTS; i++) {
+        if (clients[i]) {
+            printf("\nCorda %d:\n", i);
+            printf("Identificador: %02d\n", clients[i]->node->id);
+            printf("IP: %s\n", clients[i]->node->ip);
+            printf("TCP: %s\n", clients[i]->node->tcp);
+        }
+    }
+
 }
+
 
 // Implementar as outras funções aqui
