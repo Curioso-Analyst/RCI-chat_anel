@@ -16,6 +16,8 @@ Node* join(int ring, int id, char* IP, char* TCP) {
     // Se o registo falhar, liberta a memória alocada para o nó e retorna NULL
     if (status == -1) {
         printf("Erro ao registar o nó\n");
+        sprintf(user_input, "UNREG %03d %02d", ring, node->id);
+        unregisterNode(node, user_input);
         free(node);
         return NULL;
     }

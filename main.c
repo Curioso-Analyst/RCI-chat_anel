@@ -14,6 +14,7 @@
 #include <sys/types.h>
 #include <sys/select.h>
 #include <netdb.h>
+#include <signal.h>
 
 
 // Variaveis Globais
@@ -83,6 +84,16 @@ ClientInfo* clients[MAX_CLIENTS] = {0};
 int main(int argc, char *argv[]) {
     if(argc != 5) {
         printf("Uso: %s IP TCP regIP regUDP\n", argv[0]);
+        return 1;
+    }
+
+    //Protect the application against SIGPIPE signals.
+    struct sigaction act;
+    memset(&act,0,sizeof act);
+    act.sa_handler=SIG_IGN;
+
+    if(sigaction(SIGPIPE,&act,NULL)<0){
+        perror("SIGPIPE");
         return 1;
     }
 
@@ -175,6 +186,13 @@ int main(int argc, char *argv[]) {
         if (FD_ISSET(STDIN_FILENO, &readfds)) {
         // Lê a entrada do teclado
         fgets(command, sizeof(command), stdin);
+        // Verifica se o último caractere lido não é uma nova linha
+        if (command[strlen(command) - 1] != '\n') {
+            // Limpa o buffer de entrada
+            int c;
+            while ((c = getchar()) != '\n' && c != EOF) { }
+        }
+
         printf("Keyboard input: %s", command);
 
         if (strncmp(command, "l", 1) == 0) {
@@ -196,7 +214,6 @@ int main(int argc, char *argv[]) {
             print_help();
         } else if (strncmp(command, "j", 1) == 0) {
             int num_args = sscanf(command, "j %03d %02d", &ring, &id);
-
             // Verifica se ambos os parâmetros foram fornecidos
             if (num_args < 2) {
                 printf("Erro: Não foram fornecidos argumentos suficientes para o comando 'j'.\n");
@@ -211,7 +228,6 @@ int main(int argc, char *argv[]) {
             int id, succid;
             char succIP[16], succTCP[6];
             int num_args = sscanf(command, "dj %d %d %s %s", &id, &succid, succIP, succTCP);
-
             // Verifica se todos os 4 parâmetros foram fornecidos
             if (num_args < 4) {
                 printf("Erro: Não foram fornecidos argumentos suficientes para o comando 'dj'.\n");
@@ -220,13 +236,11 @@ int main(int argc, char *argv[]) {
                 node = direct_join(id, succid, succIP, succTCP);
             }
         } else if (strncmp(command, "c", 1) == 0) {
-            // Verifica se o nó foi inicializado
             if (node == NULL) {
                 printf("Nó não inicializado. Por favor, inicialize o nó antes de tentar estabelecer uma corda.\n");
             } else if (node->corda != NULL) {
                 printf("O nó já tem uma corda ativa. Por favor, remova a corda existente antes de tentar estabelecer uma nova.\n");
             } else {
-                // Implementação do comando 'c'
                 establishChord(node);
             }
         } else if (strncmp(command, "rc", 2) == 0) {
@@ -246,10 +260,9 @@ int main(int argc, char *argv[]) {
         } else if (strncmp(command, "sr", 2) == 0) {
             sscanf(command, "sr %d", &id);
             imprimir_encaminhamento(id,tabela_encaminhamento);
-
         } else if (strncmp(command, "sp", 2) == 0) {
             sscanf(command, "sp %d", &id);
-            printf("O caminho para %d é: %s",id,tabela_curtos[id][1]);
+            printf("O caminho para %d é: %s\n",id,tabela_curtos[id][1]);
         } else if (strncmp(command, "sf", 2) == 0) {
             // Mostra a tabela de expedicao
             imprimir_expedicao(tabela_expedicao);

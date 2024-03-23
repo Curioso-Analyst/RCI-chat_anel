@@ -146,6 +146,7 @@ void imprimir_encaminhamento(int destino, char tabela_encaminhamento[101][101][5
             printf(" %s |",tabela_encaminhamento[destino+1][i]);
         }
     }
+    printf("\n");
 }
 
 void imprimir_expedicao(char tabela_expedicao[101][2][5]){
