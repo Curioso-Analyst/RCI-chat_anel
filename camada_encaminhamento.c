@@ -30,7 +30,7 @@ void update_tabelas(char mensagens_guardadas[20][512], int temos_pred,int socket
     //char input[] = "ROUTE 30 10 30-8-10\n"; // Input string
     char temporario[55]; // Variables to store parameters
     char nodeid[3];
-    char buffer[512];
+    char buffer[1024];
     int aux=0;
 
     //passar de int para string
@@ -63,7 +63,7 @@ void update_tabelas(char mensagens_guardadas[20][512], int temos_pred,int socket
             //printf("o caminho mais curto para o destino %d OU %s é: %s\n", destino,tabela_curtos[destino][0],tabela_curtos[destino][1]);
 
             //A entrada na tabela de mais curtos é diferente da anterior logo anuncia aos vizinhos
-            sprintf(buffer, "ROUTE %d %d %s", node->id, destino, temporario);
+            sprintf(buffer, "ROUTE %d %d %s\n", node->id, destino, temporario);
             if(temos_pred==1){
                 send_route(socket_pred, buffer);
             }else{
@@ -87,7 +87,7 @@ void update_tabelas(char mensagens_guardadas[20][512], int temos_pred,int socket
                 //printf("o caminho mais curto para o destino %d OU %s é: %s\n", destino,tabela_curtos[destino][0],tabela_curtos[destino][1]);
 
                 //A entrada na tabela de mais curtos é diferente da anterior logo anuncia aos vizinhos
-                sprintf(buffer, "ROUTE %d %d %s", node->id, destino, temporario);
+                sprintf(buffer, "ROUTE %d %d %s\n", node->id, destino, temporario);
                 if(temos_pred==1){
                     send_route(socket_pred, buffer);
                 }else{
@@ -107,10 +107,10 @@ void update_tabelas(char mensagens_guardadas[20][512], int temos_pred,int socket
 }
 
 //envia um route especifico
-void send_route(int fd, char buffer[512]){
+void send_route(int fd, char buffer[1024]){
     // Imprime a mensagem que será enviada
     printf("Mensagem a ser enviada: %s\n", buffer);
-    int n = send(fd, buffer, strlen(buffer), 0);
+    int n = write(fd, buffer, strlen(buffer));
     if (n == -1) {
         perror("send");
         exit(EXIT_FAILURE);
@@ -119,18 +119,15 @@ void send_route(int fd, char buffer[512]){
 }
 
 //acumula todos os routes para enviar
-char* acumula_routes(Node* node,char tabela_curtos[101][2][55]){
-    char* mensagem = malloc(500 * sizeof(char)); 
-    char momentaneo[150];
+void acumula_routes(int fd, Node* node,char tabela_curtos[101][2][55]){
+    char buffer[1024];
     int i;
     for(i=0; i<101; i++){
         if(strcmp(tabela_curtos[i][0],"-1")!=0){
-            sprintf(momentaneo, "ROUTE %d %s %s\n", node->id, tabela_curtos[i][0], tabela_curtos[i][1]);
-            strcat(mensagem, momentaneo);
-
+            sprintf(buffer, "ROUTE %d %s %s\n", node->id, tabela_curtos[i][0], tabela_curtos[i][1]);
+            send_route(fd, buffer);
         }
     }
-    return mensagem;
 }
 
 void imprimir_encaminhamento(int destino, char tabela_encaminhamento[101][101][55]){
@@ -146,6 +143,7 @@ void imprimir_encaminhamento(int destino, char tabela_encaminhamento[101][101][5
             printf(" %s |",tabela_encaminhamento[destino+1][i]);
         }
     }
+    printf("\n");
 }
 
 void imprimir_expedicao(char tabela_expedicao[101][2][5]){
@@ -174,7 +172,7 @@ void elimina_vizinho(int fd, int id, Node* node,char tabela_encaminhamento[101][
     for(i=0; i<101; i++){
         strcpy(tabela_encaminhamento[i][node->id+1],"-1");
     }
-    //atualiza tabela de caminho curtos
+    //atualiza tabela de caminho curtos e expedicao
     for(i=1; i<101; i++){
         aux=0;
         vizinho=-1;

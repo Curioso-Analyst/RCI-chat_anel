@@ -181,7 +181,11 @@ int main(int argc, char *argv[]) {
             print_help();
         } else if (strncmp(command, "j", 1) == 0) {
             sscanf(command, "j %03d %02d", &ring, &id);
-            node = join(ring, id, IP, TCP_escolhido); 
+            node = join(ring, id, IP, TCP_escolhido);
+            char nodeid[3];
+            sprintf(nodeid, "%d", node->id);
+            strcpy(tabela_curtos[node->id][0],nodeid);
+            strcpy(tabela_curtos[node->id][1],nodeid);
         } else if (strncmp(command, "dj", 2) == 0) {
             int id, succid;
             char succIP[16], succTCP[6];
@@ -204,7 +208,7 @@ int main(int argc, char *argv[]) {
 
         } else if (strncmp(command, "sp", 2) == 0) {
             sscanf(command, "sp %d", &id);
-            printf("O caminho para %d é: %s",id,tabela_curtos[id][1]);
+            printf("O caminho para %d é: %s\n",id,tabela_curtos[id][1]);
         } else if (strncmp(command, "sf", 2) == 0) {
             // Mostra a tabela de expedicao
             imprimir_expedicao(tabela_expedicao);
@@ -266,7 +270,7 @@ int main(int argc, char *argv[]) {
                     printf("Informações de um novo cliente: id=%02d, ip=%s, port=%s\n", new_id, new_ip, new_port);
 
                     //Se está a entrar o segundo nó
-                    if(node->sucessor==node){
+                    if(node->sucessor->id==node->id){
 
                         printf("----ESTAVA SOZINHO---");
 
@@ -293,6 +297,28 @@ int main(int argc, char *argv[]) {
                         temos_pred=1;
                         temos_suc=1;
 
+                    }else if(node->id==node->second_successor->id){
+
+                        //Atualiza as tabelas
+                        //elimina_vizinho(new_socket_suc, node->id,node->predecessor, tabela_encaminhamento,tabela_curtos,tabela_expedicao);
+
+                        // Envia uma mensagem a informar ao novo nó do seu segundo-sucesso
+
+                        send_succ(new_socket, node->sucessor);
+
+                        //Atualiza o st
+                        node->predecessor = createNode(new_id, new_ip, new_port);
+
+                        //Envia para o antigo predecessor o Entry
+                        send_entry(new_socket_pred, node->predecessor);
+
+                        acumula_routes(new_socket, node, tabela_curtos);
+
+                        //Atualiza a nova socket com o predecessor
+                        new_socket_pred=new_socket;
+                        temos_pred=1;
+                        temos_suc=1;
+
                     }
                     else{
 
@@ -300,16 +326,17 @@ int main(int argc, char *argv[]) {
                         elimina_vizinho(new_socket_suc, node->id,node->predecessor, tabela_encaminhamento,tabela_curtos,tabela_expedicao);
 
                         // Envia uma mensagem a informar ao novo nó do seu segundo-sucessor
-                        char* mensagem = acumula_routes(node, tabela_curtos);
+                        //char* mensagem = acumula_routes(node, tabela_curtos);
 
-                        send_succ1(new_socket, node->sucessor, mensagem);
-                        free(mensagem);
+                        send_succ(new_socket, node->sucessor);
 
                         //Atualiza o st
                         node->predecessor = createNode(new_id, new_ip, new_port);
 
                         //Envia para o antigo predecessor o Entry
                         send_entry(new_socket_pred, node->predecessor);
+
+                        acumula_routes(new_socket, node, tabela_curtos);
 
                         //Atualiza a nova socket com o predecessor
                         new_socket_pred=new_socket;
@@ -463,10 +490,9 @@ int main(int argc, char *argv[]) {
                         int new_socket_tcp = cliente_tcp(node, new_ip, new_port);
 
                         // Envia uma mensagem PRED para a nova porta tcp estabelecida
-                        char* mensagem = acumula_routes(node, tabela_curtos);
-                        send_pred1(new_socket_tcp, node, mensagem);
+                        send_pred(new_socket_tcp, node);
 
-                        free(mensagem);
+                        acumula_routes(new_socket_tcp, node, tabela_curtos);
 
                         // Define como a socket com o sucessor a new_socket_tcp
                         new_socket_suc = new_socket_tcp;
