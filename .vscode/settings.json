@@ -1,5 +1,7 @@
 {
     "files.associations": {
-        "time.h": "c"
+        "time.h": "c",
+        "camada_chat.h": "c",
+        "in.h": "c"
     }
 }

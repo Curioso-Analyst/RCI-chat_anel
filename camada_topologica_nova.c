@@ -106,7 +106,9 @@ int registerNode(Node* node, int ring, char* IP, char* TCP, char* user_input) {
             tries++;
         } else {
             // Confirmação recebida, sai do loop
+            if (DEBUG) {
             printf("Mensagem confirmada!\n");
+            }
             break;
         }
     }
@@ -166,7 +168,9 @@ int registerNode(Node* node, int ring, char* IP, char* TCP, char* user_input) {
                 global_variable=porta_tcp;
                                             
                 // Imprime as informações do novo nó
-                printf("Informações do segundo sucessor: id=%02d, ip=%s, port=%s\n", new_id, new_ip, new_port);
+                if (DEBUG) {
+                    printf("Informações do segundo sucessor: id=%02d, ip=%s, port=%s\n", new_id, new_ip, new_port);
+                }
             }
         }
     }
@@ -205,7 +209,9 @@ void regservidornos(Node* node,int fd, char* user_input, char* nodes_list, struc
         regservidornos(node, fd, user_input,nodes_list, server_info, addr, ring, IP, TCP);
     } else {
         // Escreve no ecra a resposta do servidor
-        write(1, "Resposta do servidor: ", 22); write(1,buffer,n); write(1, "\n", 1);
+        write(1, "Resposta do servidor de nós: ", strlen("Resposta do servidor de nós: "));
+        write(1, buffer, n);
+        write(1, "\n", 1);
     }
 }
 
@@ -339,7 +345,7 @@ void establishChord(Node* node) {
 
         int id = atoi(id_str);  // Converte a string do ID para um inteiro
 
-        // Verifica se o nó já está na lista de clientes antes de tentar estabelecer uma conexão
+        // Verifica se o nó já está na lista de clientes antes de tentar estabelecer uma conexão(evita conexões duplicadas)
         bool already_connected = false;
         for (int i = 0; i < MAX_CLIENTS; i++) {
             if (clients[i] && clients[i]->node->id == id) {
@@ -353,9 +359,11 @@ void establishChord(Node* node) {
             other_node = createNode(id, ip, tcp);
             int porta_tcp = cliente_tcp(other_node, ip, tcp);
             if (porta_tcp != -1) {
+                if (DEBUG) {
                 printf("Olá cliente, o meu fd é: %d\n", porta_tcp);
+                }
                 send_chord(porta_tcp, node);
-                printf("Corda estabelecida com sucesso.\n");
+                printf("Corda estabelecida com sucesso com o nó %02d!\n", id);
 
                 node->corda = other_node;
                 node->corda->corda_socket_fd = porta_tcp;

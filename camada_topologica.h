@@ -1,4 +1,3 @@
-// camada_topologica.h
 #ifndef CAMADA_TOPOLOGICA_H
 #define CAMADA_TOPOLOGICA_H
 
@@ -15,6 +14,7 @@
 #include <stdbool.h>
 #include <errno.h>
 #include <signal.h>
+#include "debug.h"
 
 #define MAX_CLIENTS 20
 #define TIMEOUT 2  // 2 segundos de TIMEOUT
@@ -32,7 +32,6 @@ typedef struct Node {
     char tcp[6];
     int ring;
     int corda_socket_fd; // File descriptor do socket de comunicação com o nó(cliente)
-     // File descriptor do socket de comunicação com o nó que enviou a corda (servidor)
     int pred_socket_fd; // File descriptor do socket de comunicação com o predecessor
     int suc_socket_fd; // File descriptor do socket de comunicação com o sucessor
     struct Node* sucessor;
@@ -42,7 +41,7 @@ typedef struct Node {
 } Node;
 
 typedef struct {
-    int socket_fd;
+    int socket_fd; // File descriptor do socket de comunicação com o nó que enviou a corda (servidor)
     Node* node;
 } ClientInfo;
 
