@@ -62,13 +62,10 @@ Node* direct_join(int id, int succId, char* succIP, char* succTCP) {
                                             
                 // Imprime as informações do novo nó
                 printf("Informações do segundo sucessor: id=%02d, ip=%s, port=%s\n", new_id, new_ip, new_port);
+                printf("\n---Nó conectado ao segundo sucessor com sucesso!---\n");	
             }
         }
     }
-
-    // Iniciar o servidor/cliente TCP na porta escolhida pelo usuário
-    // serverclient(node, TCP_escolhido);
-
     return node;
 }
 
@@ -139,6 +136,5 @@ void show_topology(Node* node) {
     }
 
 }
-
 
 // Implementar as outras funções aqui

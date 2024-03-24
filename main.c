@@ -267,7 +267,10 @@ int main(int argc, char *argv[]) {
             // Mostra a tabela de expedicao
             imprimir_expedicao(tabela_expedicao);
         } else if (strncmp(command, "m", 1) == 0) {
-            // Implementação do comando 'm'
+            // Verifica se o nó existe
+            if (node == NULL) {
+                printf("Erro: Nó não inicializado.\n");
+            }
         } else if (strncmp(command, "NODES", 5) == 0) {
             sscanf(command, "NODES %03d", &ring);
             nodeslist(ring);
