@@ -25,7 +25,7 @@ int cliente_tcp(Node* node,char* j_ip,char* j_port) {
         return -1;  // Retorna -1 em caso de erro
     }
     // Conectado ao servidor.
-    printf("\n------Conectado ao servidor------\n");
+    printf("\n------Conectado ao anel------\n");
 
     freeaddrinfo(res);
     return fd;
@@ -56,13 +56,17 @@ void send_succ1(int fd, Node* node, char* mensagem){
     sprintf(buffer, "SUCC %02d %s %s\n", node->id, node->ip, node->tcp);
     strcat(buffer, mensagem);
     // Imprime a mensagem que será enviada
-    printf("Mensagem a ser enviada: %s\n", buffer);
+    if (DEBUG) {
+        printf("Mensagem a ser enviada: %s\n", buffer);
+    }
     int n = send(fd, buffer, strlen(buffer), 0);
     if (n == -1) {
         perror("send");
         exit(EXIT_FAILURE);
     }
-    printf("Mensagem enviada!\n");
+    if (DEBUG) {
+        printf("Mensagem enviada!\n");
+    }
 }
 
 void send_pred(int fd, Node* node){
@@ -85,18 +89,22 @@ void send_chord(int fd, Node* node){
     }
 }
 
-void send_pred1(char fd, Node* node, char* mensagem){
+void send_pred1(int fd, Node* node, char* mensagem){
     char buffer[1024];
     sprintf(buffer, "PRED %02d\n", node->id);
     strcat(buffer, mensagem);
     // Imprime a mensagem que será enviada
-    printf("Mensagem a ser enviada: %s\n", buffer);
+    if (DEBUG) {
+        printf("Mensagem a ser enviada: %s\n", buffer);
+    }
     int n = send(fd, buffer, strlen(buffer), 0);
     if (n == -1) {
         perror("send");
         exit(EXIT_FAILURE);
     }
-    printf("Mensagem enviada.\n");
+    if (DEBUG) {
+        printf("Mensagem enviada!\n");
+    }
 }
 
 void removeNode(Node** node_to_remove_ptr) {
