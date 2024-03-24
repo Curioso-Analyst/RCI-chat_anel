@@ -159,6 +159,8 @@ void imprimir_expedicao(char tabela_expedicao[101][2][5]){
     }
 }
 
+//Quando recebemos um entry
+//eliminamos apenas coluna na tabela de encaminhamento
 void elimina_vizinho(int fd, int id, Node* node,char tabela_encaminhamento[101][101][55], char tabela_curtos[101][2][55],char tabela_expedicao[101][2][5]){
     char nodeid[2], tempor[100], viz[2];
     int aux=0, vizinho=-1;
@@ -199,7 +201,7 @@ void elimina_vizinho(int fd, int id, Node* node,char tabela_encaminhamento[101][
                 strcpy(tabela_curtos[i-1][1],tempor);
 
                 //manda para os vizinhos exceto o que entrou agora
-                sprintf(buffer, "ROUTE %d %d %s", node->id, i-1, tempor);
+                sprintf(buffer, "ROUTE %d %d %s", id, i-1, tempor);
                 send_route(fd, buffer);
 
                 sprintf(viz, "%d", vizinho);
@@ -208,7 +210,7 @@ void elimina_vizinho(int fd, int id, Node* node,char tabela_encaminhamento[101][
                 strcpy(tabela_curtos[i-1][1],tempor);
 
                 //manda para os vizinhos exceto o que entrou agora
-                sprintf(buffer, "ROUTE %d %d %s", node->id, i-1, tempor);
+                sprintf(buffer, "ROUTE %d %d %s", id, i-1, tempor);
                 send_route(fd, buffer);
 
                 sprintf(viz, "%d", vizinho);
@@ -217,6 +219,99 @@ void elimina_vizinho(int fd, int id, Node* node,char tabela_encaminhamento[101][
         }   
     }
 }
+
+//Quando o vizinho sai do anel
+//elimina coluna e linha na tabela de encaminhamento
+void elimina_no(int socket_pred, int socket_suc, int meu_id, int id_saida,char tabela_encaminhamento[101][101][55], char tabela_curtos[101][2][55],char tabela_expedicao[101][2][5]){
+    char tempor[100], viz[2];
+    int aux=0, vizinho=-1;
+    int i,j;
+    char buffer[512];
+    
+    //elimina coluna e linha na tabela de encaminhamento
+    for(i=0; i<101; i++){
+        strcpy(tabela_encaminhamento[i][id_saida+1],"-1");
+        strcpy(tabela_encaminhamento[id_saida+1][i],"-1");
+    }
+    //elimina linha na tabela curtos e expedicao
+    for(i=0; i<2; i++){
+        strcpy(tabela_curtos[id_saida][i],"-1");
+        strcpy(tabela_expedicao[id_saida][i],"-1");
+    }
+    //atualiza tabela de caminho curtos e expedicao
+    for(i=1; i<101; i++){
+        aux=0;
+        vizinho=-1;
+        if(strcmp(tabela_encaminhamento[i][0],"-1")!=0){
+            
+            for(j=0; j<101; j++){
+                if(strcmp(tabela_encaminhamento[i][j],"-1")!=0){
+                    if(aux==0){
+                        strcpy(tempor,tabela_encaminhamento[i][j]);
+                        vizinho=j-1;
+                        aux=1;
+                    }else{
+                        if(strlen(tabela_encaminhamento[i][j]) < strlen(tempor)){
+                            strcpy(tempor,tabela_encaminhamento[i][j]);
+                            vizinho=j-1;
+                        }
+                    }
+                }
+            }
+
+            //acho que este if é redundante, a tabela nunca vai estar a -1
+            if(strcmp(tabela_curtos[i-1][1],"-1")==0){
+                strcpy(tabela_curtos[i-1][1],tempor);
+
+                //manda para os vizinhos exceto o que entrou agora
+                sprintf(buffer, "ROUTE %d %d %s", meu_id, i-1, tempor);
+                if(socket_pred!=-1){
+                    send_route(socket_pred, buffer);
+                }
+                if(socket_suc!=-1){
+                    send_route(socket_suc, buffer);
+                }
+
+                sprintf(viz, "%d", vizinho);
+                strcpy(tabela_expedicao[i-1][1],viz);
+            }else if((strcmp(tabela_curtos[i-1][1],"-1")!=0) && (strlen(tempor)<strlen(tabela_curtos[i-1][1]))){
+                strcpy(tabela_curtos[i-1][1],tempor);
+
+                //manda para os vizinhos exceto o que entrou agora
+                sprintf(buffer, "ROUTE %d %d %s", meu_id, i-1, tempor);
+                if(socket_pred!=-1){
+                    send_route(socket_pred, buffer);
+                }
+                if(socket_suc!=-1){
+                    send_route(socket_suc, buffer);
+                }
+
+                sprintf(viz, "%d", vizinho);
+                strcpy(tabela_expedicao[i-1][1],viz);
+            }
+        }   
+    }
+}
+
+
+//quando um no distante sai do anel
+//recebemos um ROUTE X Y 
+//mais tarde vamos receber os ROUTE com os caminhos mais curtos dos outros aneis logo basta-nos eliminar as linhas
+// void elimina_no_distante(int id,char tabela_encaminhamento[101][101][55], char tabela_curtos[101][2][55],char tabela_expedicao[101][2][5]){
+//     int i;
+
+//     //elimina linha na tabela de encaminhamento
+//     for(i=0; i<101; i++){
+//         //penso que esta primeria linha seja redundante pois como não era vizinho não existe coluna
+//         strcpy(tabela_encaminhamento[i][id+1],"-1");
+//         strcpy(tabela_encaminhamento[id+1][i],"-1");
+//     }
+//     //elimina linha na tabela curtos e expedicao
+//     for(i=0; i<2; i++){
+//         strcpy(tabela_curtos[id][i],"-1");
+//         strcpy(tabela_expedicao[id][i],"-1");
+//     }
+// }
 
 // void elimina_vizinho(Node* node,char tabela_encaminhamento[101][101][55], char tabela_curtos[101][2][55],char tabela_expedicao[101][2][5]){
 //     //elimina coluna na tabela de encaminhamento
