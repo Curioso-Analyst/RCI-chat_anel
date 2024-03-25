@@ -1,0 +1,114 @@
+<pre><center><font size="10" color="blue"> ----- NODE REPORT FOR GROUP 004 ------ </font></center><br><br><center><font size="5" color="blue"> EVENTS IN NODE WITH SERVER PORT: 58129 (request from 178.166.51.165) </font></center><br><br>Report date: Mon, 25 Mar 2024 19:53:25 GMT, Setup type: A<br><br><br><br> --COR--> jointo 004 50 10 at 25MAR2024 19:21:45
+  [INFO]: Contact node 10 to enter ring
+[ACTION]: Connect to 192.168.1.1:58128
+  [INFO]: Connect ok. I am client at desc: 6
+[ACTION]: Send to node 10 (desc 6): ENTRY 50 192.168.1.1 58129 [7,5ms]
+  [INFO]:   Resp from desc 6: SUCC 50 192.168.1.1 58129
+ [EVENT]: Accepted connect req - expect ingress PRED at desc: 7
+  [INFO]: From predecessor: PRED 10
+[ACTION]: Send to 192.168.1.1:58125: REG 004 50 192.168.1.1 58129
+  [INFO]: Registered (004.50)
+ 004.50 > show topology at 25MAR2024 19:21:45
+
+================================================================================
+  [INFO]: TOPOLOGY 25MAR2024 19:21:45, NS at: 192.168.1.1 / 58125
+================================================================================
+Net ID: 004, Node ID: 50, at 192.168.1.1 / 58129  Two nodes in ring
+--------------------------------------------------------------------------------
+
+      Unit                                         Descriptor
+
+  TCP listen channel                                   5
+  UDP server                                           3
+  Predecessor ID: 10                                   7 private
+           My ID: 50 IP: 192.168.1.1, port: 58129
+    Successor ID: 10 IP: 192.168.1.1, port: 58128     6
+2nd successor ID: 50 IP: 192.168.1.1, port: 58129
+--------------------------------------------------------------------------------
+
+ [EVENT]: Activity detected - successor (ch: 6) at 25MAR2024 19:40:26 [1121500,8ms]
+  [INFO]: 31 bytes read from socket
+  [INFO]: 1 message(s) at successor ID: 10, ch: 6
+  [INFO]: Recv msg from node 10 : ENTRY 30 193.136.128.103 55000 [1121500,9ms]
+[ACTION]: Connect to 193.136.128.103:55000
+  [INFO]: Connect ok. I am client at desc: 6
+[ACTION]: Send to desc 6: PRED 50 [1121502,2ms]
+[ACTION]: Send to node 10 (desc 7): SUCC 30 193.136.128.103 55000 [1121502,2ms]
+ 004.50 > st at 25MAR2024 19:41:21
+
+================================================================================
+  [INFO]: TOPOLOGY 25MAR2024 19:41:21, NS at: 192.168.1.1 / 58125
+================================================================================
+Net ID: 004, Node ID: 50, at 192.168.1.1 / 58129  Three nodes in ring
+--------------------------------------------------------------------------------
+
+      Unit                                         Descriptor
+
+  TCP listen channel                                   5
+  UDP server                                           3
+  Predecessor ID: 10                                   7 private
+           My ID: 50 IP: 192.168.1.1, port: 58129
+    Successor ID: 30 IP: 193.136.128.103, port: 55000     6
+2nd successor ID: 10 IP: 192.168.1.1, port: 58128
+--------------------------------------------------------------------------------
+ 004.50 > leave at 25MAR2024 19:44:16
+  [INFO]: Node 004.50 to leave
+[ACTION]: Send to 192.168.1.1:58125: UNREG 004 50
+  [INFO]: Leave ok
+ --COR--> jointo 30 at 25MAR2024 19:48:11
+ [VALIDATION]: Bad format in command
+ --COR--> jointo 004 30 at 25MAR2024 19:50:19
+ [VALIDATION]: Bad format in command
+ --COR--> jointo 004 50 30 at 25MAR2024 19:50:47
+  [INFO]: Contact node 30 to enter ring
+[ACTION]: Connect to 193.136.128.103:55000
+  [INFO]: Connect ok. I am client at desc: 6
+[ACTION]: Send to node 30 (desc 6): ENTRY 50 193.136.138.142 58129 [1742693,8ms]
+  [INFO]:   Resp from desc 6: SUCC 10 193.136.138.142 58128
+ [EVENT]: Accepted connect req - expect ingress PRED at desc: 7
+  [INFO]: From predecessor: PRED 10
+[ACTION]: Send to 192.168.1.1:58125: REG 004 50 192.168.1.1 58129
+  [INFO]: Registered (004.50)
+
+ [EVENT]: Activity detected - predecessor (ch: 7) at 25MAR2024 19:51:33 [1788207,8ms]
+  [INFO]: Predecessor node closed connection ch: 7
+ [EVENT]: Accepted connect req - expect recover PRED at desc: 7
+  [INFO]: Recv msg from desc 7: PRED 30
+[ACTION]: Send to node 30 (desc 7): SUCC 30 193.136.128.103 55000 [1788210,1ms]
+
+ [EVENT]: Activity detected - successor (ch: 6) at 25MAR2024 19:51:33 [1788210,2ms]
+  [INFO]: 30 bytes read from socket
+  [INFO]: 1 message(s) at successor ID: 30, ch: 6
+  [INFO]: Recv msg from node 30 : SUCC 50 193.136.138.142 58129 [1788210,2ms]
+ 004.50 > st at 25MAR2024 19:51:55
+
+================================================================================
+  [INFO]: TOPOLOGY 25MAR2024 19:51:55, NS at: 192.168.1.1 / 58125
+================================================================================
+Net ID: 004, Node ID: 50, at 192.168.1.1 / 58129  Two nodes in ring
+--------------------------------------------------------------------------------
+
+      Unit                                         Descriptor
+
+  TCP listen channel                                   5
+  UDP server                                           3
+  Predecessor ID: 30                                   7 public
+           My ID: 50 IP: 192.168.1.1, port: 58129
+    Successor ID: 30 IP: 193.136.128.103, port: 55000     6
+2nd successor ID: 50 IP: 192.168.1.1, port: 58129
+--------------------------------------------------------------------------------
+ 004.50 > leave at 25MAR2024 19:52:33
+  [INFO]: Node 004.50 to leave
+[ACTION]: Send to 192.168.1.1:58125: UNREG 004 50
+  [INFO]: Leave ok
+ --COR--> jointo 004 50 30 at 25MAR2024 19:53:04
+  [INFO]: Contact node 30 to enter ring
+[ACTION]: Connect to 193.136.128.103:55000
+  [INFO]: Connect ok. I am client at desc: 6
+[ACTION]: Send to node 30 (desc 6): ENTRY 50 193.136.138.142 58129 [1879260,7ms]
+  [INFO]:   Resp from desc 6: SUCC 30 193.136.128.103 55000
+ [ERROR]: Missing action from neighbor
+  [INFO]: pred action: (0/2) succ action: (1/1)
+  [INFO]: Join operation aborted
+  [EXEC]: Exec error
+</pre><br><br>

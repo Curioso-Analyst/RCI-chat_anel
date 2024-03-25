@@ -318,7 +318,7 @@ int main(int argc, char *argv[]) {
                     sscanf(buffer, "ENTRY %d %s %s", &new_id, new_ip, new_port);
                                             
                     //Se está a entrar o segundo nó
-                    if(node->sucessor==node){
+                    if(node->sucessor->id==node->id){
 
                         node->predecessor = createNode(new_id, new_ip, new_port);
                         node->sucessor = createNode(new_id, new_ip, new_port);
@@ -327,7 +327,7 @@ int main(int argc, char *argv[]) {
                         send_succ(new_socket, node->sucessor);
                         // Define como a socket com o predecessor a new_socket_tcp
                         new_socket_pred = new_socket;
-
+                        
                         // Conexão TCP com o novo nó de entrada na porta dele
                         int new_socket_tcp = cliente_tcp(node, new_ip, new_port);
 
