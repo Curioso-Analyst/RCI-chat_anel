@@ -1,5 +1,8 @@
 {
     "files.associations": {
-        "time.h": "c"
+        "time.h": "c",
+        "errno.h": "c",
+        "select.h": "c",
+        "camada_topologica.h": "c"
     }
 }

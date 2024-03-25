@@ -4,6 +4,22 @@
 #include "camada_topologica_tcp.h"
 
 
+void print_help() {
+    printf("Comandos disponíveis:\n");
+    printf("  join (j) ring id - Entrada de um nó com identificador id no anel ring.\n");
+    printf("  direct join (dj) id succid succIP succTCP - Entrada de um nó com identificador id diretamente num anel, sem consulta ao servidor de nós.\n");
+    printf("  chord (c) - Estabelecimento de uma corda para um nó do anel que não o sucessor ou o predecessor. Cada nó estabelece no máximo uma corda.\n");
+    printf("  remove chord (rc) - Eliminação da corda previamente estabelecida.\n"); 
+    printf("  show topology (st) - Mostra a topologia atual.\n");
+    printf("  show routing table (sr) dest - Mostra o caminho mais curto de um nó para o destino dest.\n");
+    printf("  show forwarding (sf) - Mostra a tabela de expedição de um nó.\n");
+    printf("  message (m) dest message - Envio da mensagem message ao nó dest.\n");
+    printf("  leave (l) - Saída do nó do anel.\n");
+    printf("  NODES ring - Um nó pede ao servidor de nós o identificador e respetivos contactos dos nós existentes no anel ring.\n");
+    printf("  exit (x) - Fecho da aplicação.\n");
+    // Adicionar mais comandos aqui
+}
+
 Node* join(int ring, int id, char* IP, char* TCP) {
     // Cria um novo nó
     Node* node = createNode(id, IP, TCP);

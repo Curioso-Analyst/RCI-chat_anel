@@ -4,6 +4,7 @@
 #include "camada_topologica.h"
 #include <stdio.h>
 
+void print_help();
 Node* join(int ring, int id, char* IP, char* TCP);
 Node* direct_join(int id, int succId, char* succIP, char* succTCP);
 void chord();

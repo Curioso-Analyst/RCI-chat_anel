@@ -102,11 +102,13 @@ int registerNode(Node* node, int ring, char* IP, char* TCP, char* user_input) {
         n=recvfrom(fd, nodes_list, 1024, 0, (struct sockaddr*) &addr, &addrlen);
         if(n==-1) {
             // Timeout, reenvia a mensagem
-            printf("Temporizador expirou! Reenviando mensagem...\n");
+            printf("O temporizador atingiu o limite! A tentar reenviar a mensagem ao servidor...\n");
             tries++;
         } else {
             // Confirmação recebida, sai do loop
+            if (PRINTS){
             printf("Mensagem confirmada!\n");
+            }
             break;
         }
     }
@@ -166,7 +168,9 @@ int registerNode(Node* node, int ring, char* IP, char* TCP, char* user_input) {
                 global_variable=porta_tcp;
                                             
                 // Imprime as informações do novo nó
+                if (PRINTS){
                 printf("Informações do segundo sucessor: id=%02d, ip=%s, port=%s\n", new_id, new_ip, new_port);
+                }
             }
         }
     }
@@ -181,18 +185,44 @@ void regservidornos(Node* node,int fd, char* user_input, char* nodes_list, struc
     ssize_t n;
     socklen_t addrlen;
     char buffer[128];
-
     char message[1024];
+
+    // Define um tempo limite para recepção
+    struct timeval timeout;
+    timeout.tv_sec = TIMEOUT;
+    timeout.tv_usec = 0;
+    if (setsockopt(fd, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout)) < 0) {
+        perror("Erro ao definir o tempo limite do socket");
+        return;
+    }
+    
     sprintf(message, "%s", user_input);
 
-    
-    n=sendto(fd, message, strlen(message), 0, server_info->ai_addr, server_info->ai_addrlen);
-    if (n==-1) /*error*/ exit(1);
-
-    // Recebe a resposta
+    // Temporizador UDP
     addrlen=sizeof(addr);
-    n=recvfrom(fd,buffer,128,0,(struct sockaddr*) &addr,&addrlen);
-    if(n==-1) /*error*/ exit(1);
+    int tries = 0;
+    while (tries < MAX_TRIES) {
+        // Envia a mensagem de registo
+        sendto(fd, message, strlen(message), 0, server_info->ai_addr, server_info->ai_addrlen);
+
+        // Recebe a resposta
+        n=recvfrom(fd,buffer,128,0,(struct sockaddr*) &addr,&addrlen);
+        if(n==-1) {
+            // Timeout, reenvia a mensagem
+            printf("O temporizador atingiu o limite! A tentar reenviar a mensagem ao servidor...\n");
+            tries++;
+        } else {
+            // Confirmação recebida, sai do loop
+            if (PRINTS){
+            printf("Mensagem confirmada!\n");
+            }
+            break;
+        }
+    }
+
+    if (tries == MAX_TRIES) {
+        printf("Mensagem não confirmada após %d tentativas.\n", MAX_TRIES);
+    }
 
     if (strncmp(buffer, "ERROR - node id not available", 29) == 0) {
         // Escolhe um novo identificador que não esteja na lista
@@ -227,22 +257,44 @@ void unregisterNode(Node* node, char* user_input) {
     errcode=getaddrinfo (SERVER_IP, PORT, &hints, &res);
     if(errcode!=0) /*error*/ exit(1);
 
+    // Define um tempo limite para recepção
+    struct timeval timeout;
+    timeout.tv_sec = TIMEOUT;
+    timeout.tv_usec = 0;
+    if (setsockopt(fd, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout)) < 0) {
+        perror("Erro ao definir o tempo limite do socket");
+        return;
+    }
+
     // Envia a mensagem de desregisto
     char message[1024];
     sprintf(message, "%s", user_input);
-   
-    n=sendto(fd, message, strlen(message), 0, res->ai_addr, res->ai_addrlen);
-    if (n == -1) {
-        perror("sendto"); // Exibe mensagem de erro se houver
-        exit(1);
+
+    // Temporizador UDP
+    addrlen=sizeof(addr);
+    int tries = 0;
+    while (tries < MAX_TRIES) {
+        sendto(fd, message, strlen(message), 0, res->ai_addr, res->ai_addrlen);
+
+        // Recebe a resposta
+        n=recvfrom(fd,buffer,128,0,(struct sockaddr*) &addr,&addrlen);
+        if(n==-1) {
+            // Timeout, reenvia a mensagem
+            printf("O temporizador atingiu o limite! A tentar reenviar a mensagem ao servidor...\n");
+            tries++;
+        } else {
+            // Confirmação recebida, sai do loop
+            if (PRINTS){
+            printf("Mensagem confirmada!\n");
+            }
+            break;
+        }
     }
 
-    // Recebe a resposta
-    addrlen=sizeof(addr);
-    n=recvfrom(fd,buffer,128,0,(struct sockaddr*) &addr,&addrlen);
-    if(n==-1) /*error*/ exit(1);
+    if (tries == MAX_TRIES) {
+        printf("Mensagem não confirmada após %d tentativas.\n", MAX_TRIES);
+    }
     
-
     // Escreve no ecra a resposta do servidor
     write(1, "Resposta do servidor: ", 22); write(1,buffer,n); write(1, "\n", 1);
 
@@ -268,20 +320,46 @@ void getNodes(int ring, char* user_input) {
     errcode=getaddrinfo (SERVER_IP, PORT, &hints, &res);
     if(errcode!=0) /*error*/ exit(1);
 
+    // Define um tempo limite para recepção
+    struct timeval timeout;
+    timeout.tv_sec = TIMEOUT;
+    timeout.tv_usec = 0;
+    if (setsockopt(fd, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout)) < 0) {
+        perror("Erro ao definir o tempo limite do socket");
+        return;
+    }
+
     // Envia a mensagem de pedido da lista de nós
     char message[1024];
     sprintf(message, "%s", user_input);
 
-    n=sendto(fd, message, strlen(message), 0, res->ai_addr, res->ai_addrlen);
-    if (n==-1) /*error*/ exit(1);
-
-    // Recebe a resposta
+    // Temporizador UDP
     addrlen=sizeof(addr);
-    n=recvfrom(fd,buffer,1024,0,(struct sockaddr*) &addr,&addrlen);
-    if(n==-1) /*error*/ exit(1);
+    int tries = 0;
+    while (tries < MAX_TRIES) {
+        n=sendto(fd, message, strlen(message), 0, res->ai_addr, res->ai_addrlen);
 
-    // Escreve no ecra a resposta do servidor
-    write(1, "Resposta do servidor: ", 22); write(1,buffer,n); write(1, "\n", 1);
+        // Recebe a resposta
+        n=recvfrom(fd,buffer,1024,0,(struct sockaddr*) &addr,&addrlen);
+        if(n==-1) {
+            // Timeout, reenvia a mensagem
+            printf("O temporizador atingiu o limite! A tentar reenviar a mensagem ao servidor...\n");
+            tries++;
+        } else {
+            // Confirmação recebida, sai do loop
+            if (PRINTS){
+            printf("Mensagem confirmada!\n");
+            }
+            break;
+        }
+    }
+
+    if (tries == MAX_TRIES) {
+        printf("Mensagem não confirmada após %d tentativas.\n", MAX_TRIES);
+    } else {
+        // Escreve no ecra a resposta do servidor
+        write(1, "Resposta do servidor: ", 22); write(1,buffer,n); write(1, "\n", 1);
+    }
 
     freeaddrinfo(res); //libertar a memoria alocada
     close(fd); //fechar o socket
@@ -304,16 +382,45 @@ void getNodescorda(Node* node, char* buffer) {
     errcode=getaddrinfo (SERVER_IP, PORT, &hints, &res);
     if(errcode!=0) /*error*/ exit(1);
 
+    // Define um tempo limite para recepção
+    struct timeval timeout;
+    timeout.tv_sec = TIMEOUT;
+    timeout.tv_usec = 0;
+    if (setsockopt(fd, SOL_SOCKET, SO_RCVTIMEO, &timeout, sizeof(timeout)) < 0) {
+        perror("Erro ao definir o tempo limite do socket");
+        return;
+    }
+
     // Envia a mensagem de pedido da lista de nós
     char message[1024];
     sprintf(message, "NODES %03d", node->ring);
-    n=sendto(fd, message, strlen(message), 0, res->ai_addr, res->ai_addrlen);
-    if (n==-1) /*error*/ exit(1);
 
-    // Recebe a resposta
+    // Temporizador UDP
     addrlen=sizeof(addr);
-    n=recvfrom(fd,buffer,1024,0,(struct sockaddr*) &addr,&addrlen);
-    if(n==-1) /*error*/ exit(1);
+    int tries = 0;
+    while (tries < MAX_TRIES) {
+        n=sendto(fd, message, strlen(message), 0, res->ai_addr, res->ai_addrlen);
+
+        // Recebe a resposta
+        n=recvfrom(fd,buffer,1024,0,(struct sockaddr*) &addr,&addrlen);
+        if(n==-1) {
+            // Timeout, reenvia a mensagem
+            printf("O temporizador atingiu o limite! A tentar reenviar a mensagem ao servidor...\n");
+            tries++;
+        } else {
+            // Confirmação recebida, sai do loop
+            if (PRINTS){
+            printf("Mensagem confirmada!\n");
+            }
+            break;
+        }
+    }
+
+    if (tries == MAX_TRIES) {
+        printf("Mensagem não confirmada após %d tentativas.\n", MAX_TRIES);
+    }
+
+
     freeaddrinfo(res); //libertar a memoria alocada
     close(fd); //fechar o socket
 }
