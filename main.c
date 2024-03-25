@@ -145,7 +145,6 @@ int main(int argc, char *argv[]) {
             global_variable=-1;
             temos_suc=1;
         }
-
         // Limpa o conjunto de sockets
         FD_ZERO(&readfds); 
         FD_ZERO(&writefds);
@@ -198,7 +197,6 @@ int main(int argc, char *argv[]) {
         if (FD_ISSET(STDIN_FILENO, &readfds)) {
         // Lê a entrada do teclado
         fgets(command, sizeof(command), stdin);
-
         // Verifica se o último caractere lido não é uma nova linha
         if (command[strlen(command) - 1] != '\n') {
             // Limpa o buffer de entrada
@@ -209,8 +207,9 @@ int main(int argc, char *argv[]) {
         printf("Keyboard input: %s", command);
 
         if (strncmp(command, "l", 1) == 0) {
+            sscanf(command, "l %d", &ring);
             if (node != NULL) {
-                leave(node, node->ring);
+                leave(node, ring);
                 if(temos_pred==1){
                     close(new_socket_pred);
                     new_socket_pred=-1;
@@ -222,10 +221,12 @@ int main(int argc, char *argv[]) {
                     temos_suc=-1;
                 }
                 if (node->corda != NULL) {
-                close(node->corda->corda_socket_fd);
-                free(node->corda);
-                node->corda = NULL;
-                temos_corda=0;
+                    // Fecha o socket
+                    close(node->corda->corda_socket_fd);
+                    // Libera a memória do nó da corda
+                    free(node->corda);
+                    node->corda = NULL;
+                    temos_corda=0;
                 }
                 free(node);
                 node = NULL;
@@ -235,13 +236,18 @@ int main(int argc, char *argv[]) {
         } else if (strncmp(command, "help", 4) == 0) {
             print_help();
         } else if (strncmp(command, "j", 1) == 0) {
-            int num_args = sscanf(command, "j %03d %02d", &ring, &id);
-
+            char ring_str[4], id_str[3];
+            int num_args = sscanf(command, "j %s %s", ring_str, id_str);
             // Verifica se ambos os parâmetros foram fornecidos
             if (num_args < 2) {
                 printf("Erro: Não foram fornecidos argumentos suficientes para o comando 'j'.\n");
                 printf("Uso: j <ring> <id>\n");
+            } else if (strlen(ring_str) > 3 || strlen(id_str) > 2) {
+                printf("Erro: Valores inválidos fornecidos para 'ring' ou 'id'.\n");
+                printf("'ring' deve estar entre 000 e 999, e 'id' deve estar entre 00 e 99.\n");
             } else {
+                ring = atoi(ring_str);
+                id = atoi(id_str);
                 node = join(ring, id, IP, TCP_escolhido);
                 if(node != NULL) {
                     node->ring = ring; // Para depois poder usar a corda
@@ -273,7 +279,7 @@ int main(int argc, char *argv[]) {
                 printf("O nó já tem uma corda ativa. Por favor, remova a corda existente antes de tentar estabelecer uma nova.\n");
             } else {
                 establishChord(node);
-                acumula_routes(node->corda->corda_socket_fd, node, tabela_curtos);
+                acumula_routes(node->corda_socket_fd, node, tabela_curtos);
             }
         } else if (strncmp(command, "rc", 2) == 0) {
             // Implementação do comando 'rc'
@@ -304,12 +310,29 @@ int main(int argc, char *argv[]) {
             if (node == NULL) {
                 printf("Erro: Nó não inicializado.\n");
             } else {
-                int dest;
+                int dest, porta, i;
                 char message[128];
                 // Extrai o destino e a mensagem do comando
                 sscanf(command, "m %02d %[^\n]", &dest, message);
+                
+                if(atoi(tabela_expedicao[dest][1])== node->sucessor->id){
+                    porta = new_socket_suc;
+                }
+
+                else if(atoi(tabela_expedicao[dest][1])== node->predecessor->id){
+                    porta = new_socket_pred;
+                }
+                else if(atoi(tabela_expedicao[dest][1])== node->corda->id){
+                    porta = node->corda_socket_fd;
+                }else{
+                    for(i=0; i<20;i++){
+                        if(atoi(tabela_expedicao[dest][1])==clients[i]->node->id){
+                            porta=clients[i]->socket_fd;
+                        }
+                    }
+                }
                 // Envia a mensagem
-                send_chat(new_socket_suc, node, dest, message);
+                send_chat(porta, node, atoi(tabela_expedicao[dest][1]), message);
             }
         } else if (strncmp(command, "NODES", 5) == 0) {
             sscanf(command, "NODES %03d", &ring);
@@ -353,25 +376,25 @@ int main(int argc, char *argv[]) {
                 }
 
 
-                  // Verifica se é uma mensagem de corda
-                    if (strncmp(buffer, "CHORD", 5) == 0) {
-                        int new_id;
-                        
-                        // Analisa a mensagem CHORD
-                        sscanf(buffer, "CHORD %d", &new_id);
-                                                    
-                        // Cria um novo nó para a corda
-                        Node* new_node = createNode(new_id, inet_ntoa(address.sin_addr), port_char);
+                // Verifica se é uma mensagem de corda
+                if (strncmp(buffer, "CHORD", 5) == 0) {
+                    int new_id;
+                    
+                    // Analisa a mensagem CHORD
+                    sscanf(buffer, "CHORD %d", &new_id);
+                                                
+                    // Cria um novo nó para a corda
+                    Node* new_node = createNode(new_id, inet_ntoa(address.sin_addr), port_char);
 
-                        // Adiciona o nó à lista de nós recebidos do servidor (cordas)
-                        add_client(new_socket, new_node);
-                        
-                        printf("O nó %02d conseguiu estabelecer uma corda consigo de forma bem-sucedida.\n", new_id);
+                    // Adiciona o nó à lista de nós recebidos do servidor (cordas)
+                    add_client(new_socket, new_node);
+                    
+                    printf("O nó %02d conseguiu estabelecer uma corda consigo de forma bem-sucedida.\n", new_id);
 
-                        acumula_routes(new_socket, node, tabela_curtos);
+                    acumula_routes(new_socket, node, tabela_curtos);
 
-                        temos_corda++;  // Incrementa o número de cordas
-                    }
+                    temos_corda++;  // Incrementa o número de cordas
+                }
                 
                 // Verifica se é uma mensagem de entrada
                 if (strncmp(buffer, "ENTRY", 5) == 0) {
@@ -383,7 +406,7 @@ int main(int argc, char *argv[]) {
                     sscanf(buffer, "ENTRY %d %s %s", &new_id, new_ip, new_port);
                                             
                     //Se está a entrar o segundo nó
-                    if(node->sucessor==node){
+                    if(node->sucessor->id==node->id){
 
                         node->predecessor = createNode(new_id, new_ip, new_port);
                         node->sucessor = createNode(new_id, new_ip, new_port);
@@ -597,10 +620,13 @@ int main(int argc, char *argv[]) {
 
                     
                     sprintf(buffer, "ROUTE %d %d\n", node->id, node->predecessor->id);
-                    send_route(new_socket_suc,buffer);
+                    if(temos_suc==1){  
+                        send_route(new_socket_suc,buffer);
 
-                    elimina_no(-1,new_socket_suc ,node->id, node->sucessor->id, tabela_encaminhamento,tabela_curtos,tabela_expedicao);
-
+                        elimina_no(-1,new_socket_suc ,node->id, node->predecessor->id, tabela_encaminhamento,tabela_curtos,tabela_expedicao);
+                    }else{
+                        elimina_no(-1,-1 ,node->id, node->predecessor->id, tabela_encaminhamento,tabela_curtos,tabela_expedicao);
+                    }
 
                     //ele aqui pode sempre definir o predecessor como ele propria porque caso havia 2 nós, fica certo
                     //caso havia mais que 2 nós ele há de receber um pred e atualizar
@@ -717,15 +743,21 @@ int main(int argc, char *argv[]) {
                     new_socket_suc=-1;
 
                     sprintf(buffer, "ROUTE %d %d\n", node->id, node->sucessor->id);
-                    send_route(new_socket_pred,buffer);
 
-                    elimina_no(new_socket_pred,-1 ,node->id, node->sucessor->id, tabela_encaminhamento,tabela_curtos,tabela_expedicao);
+                    if (temos_pred==1){
+                        send_route(new_socket_pred,buffer);
+                        elimina_no(new_socket_pred,-1 ,node->id, node->sucessor->id, tabela_encaminhamento,tabela_curtos,tabela_expedicao);
 
+                    }else{
+                        elimina_no(-1,-1 ,node->id, node->sucessor->id, tabela_encaminhamento,tabela_curtos,tabela_expedicao);
 
+                    }
+
+                    
                     //define o novo sucessor como o antigo segundo sucessor
                     node->sucessor=node->second_successor;
 
-                    if((node->id)!=(node->sucessor->id)){
+                    if(((node->id)!=(node->sucessor->id))&& new_socket_pred!=-1){
                         //envia SUCC para o predecessor
                         send_succ(new_socket_pred, node->sucessor);
 
