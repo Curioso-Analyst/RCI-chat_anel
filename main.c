@@ -211,21 +211,16 @@ int main(int argc, char *argv[]) {
         if (strncmp(command, "l", 1) == 0) {
             if (node != NULL) {
                 leave(node, node->ring);
-                close(new_socket_pred);
-                close(new_socket_suc);
-                if (node->corda != NULL) {
-                // Fecha o socket
-                close(node->corda->corda_socket_fd);
-                // Libera a memória do nó da corda
-                free(node->corda);
-                node->corda = NULL;
-                temos_corda=0;}
-                new_socket_pred=-1;
-                new_socket_suc=-1;
-                temos_pred=-1;
-                temos_suc=-1;
-                free(node);
-                node = NULL;
+                if(temos_pred==1){
+                    close(new_socket_pred);
+                    new_socket_pred=-1;
+                    temos_pred=-1;
+                }
+                if(temos_suc==1){
+                    close(new_socket_suc);
+                    new_socket_suc=-1;
+                    temos_suc=-1;
+                }
             } else {
                 printf("Nó não inicializado.\n");
             }
