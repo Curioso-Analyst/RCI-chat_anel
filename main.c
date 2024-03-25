@@ -145,6 +145,7 @@ int main(int argc, char *argv[]) {
             global_variable=-1;
             temos_suc=1;
         }
+
         // Limpa o conjunto de sockets
         FD_ZERO(&readfds); 
         FD_ZERO(&writefds);
@@ -197,6 +198,7 @@ int main(int argc, char *argv[]) {
         if (FD_ISSET(STDIN_FILENO, &readfds)) {
         // Lê a entrada do teclado
         fgets(command, sizeof(command), stdin);
+
         // Verifica se o último caractere lido não é uma nova linha
         if (command[strlen(command) - 1] != '\n') {
             // Limpa o buffer de entrada
@@ -207,9 +209,8 @@ int main(int argc, char *argv[]) {
         printf("Keyboard input: %s", command);
 
         if (strncmp(command, "l", 1) == 0) {
-            sscanf(command, "l %d", &ring);
             if (node != NULL) {
-                leave(node, ring);
+                leave(node, node->ring);
                 close(new_socket_pred);
                 close(new_socket_suc);
                 if (node->corda != NULL) {
