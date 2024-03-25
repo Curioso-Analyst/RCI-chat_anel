@@ -792,6 +792,31 @@ int main(int argc, char *argv[]) {
                         if (PRINTS){
                         printf("Mensagem recebida: %s\n", buffer);
                         }
+
+                        //Analisa mensagens ROUTE
+                        char route_type[6];
+                        int source, destination;
+                        char path[64]; // Adjust size as needed
+
+                        // Start reading from the buffer
+                        char* line = strtok(buffer, "\n");
+
+                        while (line != NULL) {
+                            if (strncmp(line, "ROUTE", 5) == 0) {
+                                numero=sscanf(line, "%s %d %d %s", route_type, &source, &destination, path);
+
+                                if (numero==3){
+                                    elimina_no(new_socket_pred,new_socket_suc ,node->id, destination, tabela_encaminhamento,tabela_curtos,tabela_expedicao);
+                                }else if (numero ==4){
+                                    update_tabelas(aux123,mensagens_guardadas,temos_pred,new_socket_pred, new_socket_suc, node, tabela_encaminhamento, tabela_curtos, tabela_expedicao, source, destination, path);
+                                }
+                            }
+
+                            // Get the next line from the buffer
+                            line = strtok(NULL, "\n");
+                        }
+
+
                     }
                 }
             }
