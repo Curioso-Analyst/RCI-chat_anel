@@ -262,7 +262,7 @@ int main(int argc, char *argv[]) {
                 printf("O nó já tem uma corda ativa. Por favor, remova a corda existente antes de tentar estabelecer uma nova.\n");
             } else {
                 establishChord(node);
-                acumula_routes(node->corda_socket_fd, node, tabela_curtos);
+                acumula_routes(node->corda->corda_socket_fd, node, tabela_curtos);
             }
         } else if (strncmp(command, "rc", 2) == 0) {
             // Implementação do comando 'rc'
@@ -577,6 +577,33 @@ int main(int argc, char *argv[]) {
                         }
                     }
 
+                 if (strncmp(buffer, "ROUTE", 5) == 0){
+                        //Analisa mensagens ROUTE
+                        char route_type[6];
+                        int source, destination;
+                        char path[64]; // Adjust size as needed
+
+                        // Start reading from the buffer
+                        char* line = strtok(buffer, "\n");
+
+                        while (line != NULL) {
+                            if (strncmp(line, "ROUTE", 5) == 0) {
+                                numero=sscanf(line, "%s %d %d %s", route_type, &source, &destination, path);
+
+                                if (numero==3){
+                                    elimina_no(new_socket_pred,new_socket_suc ,node->id, destination, tabela_encaminhamento,tabela_curtos,tabela_expedicao);
+                                }else if (numero ==4){
+                                    int auxiliar =0;
+                                    update_tabelas(auxiliar,mensagens_guardadas,temos_pred,new_socket_pred, new_socket_suc, node, tabela_encaminhamento, tabela_curtos, tabela_expedicao, source, destination, path);
+                                }
+                            }
+
+                            // Get the next line from the buffer
+                            line = strtok(NULL, "\n");
+                        }
+
+                    }   
+
                 }else{
                     if (PRINTS){
                         printf("\nO meu predecessor saiu\n");
@@ -671,7 +698,6 @@ int main(int argc, char *argv[]) {
                         printf("Informações do segundo sucessor: id=%02d, ip=%s, port=%s\n", new_id, new_ip, new_port);
                         }
                         
-
                         //Criar um novo nó
                         node->second_successor = createNode(new_id, new_ip, new_port);
 
@@ -721,7 +747,6 @@ int main(int argc, char *argv[]) {
 
                     }
 
-                    
                     //define o novo sucessor como o antigo segundo sucessor
                     node->sucessor=node->second_successor;
 
