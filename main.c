@@ -1,6 +1,7 @@
 #include "camada_topologica.h"
 #include "interface_utilizador.h"
-#include "camada_topologica_tcp.h"  
+#include "camada_topologica_tcp.h"
+#include "camada_chat.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -244,7 +245,17 @@ int main(int argc, char *argv[]) {
         } else if (strncmp(command, "sf", 2) == 0) {
             // Implementação do comando 'sf'
         } else if (strncmp(command, "m", 1) == 0) {
-            // Implementação do comando 'm'
+            // Verifica se o nó existe
+            if (node == NULL) {
+                printf("Erro: Nó não inicializado.\n");
+            } else {
+                int dest;
+                char message[128];
+                // Extrai o destino e a mensagem do comando
+                sscanf(command, "m %02d %[^\n]", &dest, message);
+                // Envia a mensagem
+                send_chat(new_socket_suc, node, dest, message);
+            }
         } else if (strncmp(command, "NODES", 5) == 0) {
             sscanf(command, "NODES %03d", &ring);
             nodeslist(ring);
@@ -405,6 +416,29 @@ int main(int argc, char *argv[]) {
                 if ((valread = read(new_socket_pred, buffer,1024 - 1)) > 0) {
                     buffer[valread] = '\0';
                     printf("Mensagem recebida: %s\n", buffer);  // Imprime a mensagem recebida
+
+                    // Verfica se é uma mensagem de chat
+                    if (strncmp(buffer, "CHAT", 4) == 0) {
+                        // Verificar se a mensagem é para o meu nó.
+                        int orig;
+                        int dest;
+                        char message[512];
+                        sscanf(buffer, "CHAT %02d %02d %s", &orig, &dest, message);
+
+                        // Para conseguir ler a mensagem mesmo com espaços
+                        char* message_start = strchr(buffer + 9, ' ');
+                        if (message_start != NULL) {
+                            strncpy(message, message_start + 1, 512);
+                            message[511] = '\0';  // Garante que a mensagem é null-terminated
+                        }
+
+                        if (dest == node->id) {
+                            printf("Mensagem recebida do nó %02d: %s\n", orig, message);
+                        } else {
+                            // Encaminhar a mensagem
+                            
+                        }
+                    }
 
                 }else{
                     printf("\nO meu predecessor saiu\n");
