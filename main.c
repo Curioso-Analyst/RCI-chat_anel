@@ -167,19 +167,26 @@ int main(int argc, char *argv[]) {
         printf("Keyboard input: %s", command);
 
         if (strncmp(command, "l", 1) == 0) {
-            sscanf(command, "l %d", &ring);
             if (node != NULL) {
-                leave(node, ring);
-                close(new_socket_pred);
-                close(new_socket_suc);
-                new_socket_pred=-1;
-                new_socket_suc=-1;
-                temos_pred=-1;
-                temos_suc=-1;
+                leave(node, node->ring);
+                if(temos_pred==1){
+                    close(new_socket_pred);
+                    new_socket_pred=-1;
+                    temos_pred=-1;
+                }
+                if(temos_suc==1){
+                    close(new_socket_suc);
+                    new_socket_suc=-1;
+                    temos_suc=-1;
+                }
+                if (node->corda != NULL) {
+                close(node->corda->corda_socket_fd);
+                free(node->corda);
+                node->corda = NULL;
+                temos_corda=0;
+                }
                 free(node);
                 node = NULL;
-            } else {
-                printf("Nó não inicializado.\n");
             }
         } else if (strncmp(command, "help", 4) == 0) {
             print_help();
