@@ -1,5 +1,6 @@
 #include "camada_topologica.h"
 #include "camada_topologica_tcp.h"
+#include "camada_encaminhamento.h"
 
 int global_variable=-1;
 
@@ -152,6 +153,7 @@ int registerNode(Node* node, int ring, char* IP, char* TCP, char* user_input) {
 
         // Lê uma mensagem do socket
         char buffer[1024];
+        char buffer1[1024];
         int valread;
         if ((valread = recv(porta_tcp, buffer, sizeof(buffer), 0)) > 0) {
             buffer[valread] = '\0';
@@ -167,6 +169,9 @@ int registerNode(Node* node, int ring, char* IP, char* TCP, char* user_input) {
                 node->second_successor=createNode(new_id, new_ip, new_port);
 
                 global_variable=porta_tcp;
+
+                sprintf(buffer1, "ROUTE %d %d %d\n", node->id, node->id, node->id);
+                send_route(porta_tcp,buffer1);
                                             
                 // Imprime as informações do novo nó
                 if (PRINTS){
@@ -236,7 +241,9 @@ void regservidornos(Node* node,int fd, char* user_input, char* nodes_list, struc
         regservidornos(node, fd, user_input,nodes_list, server_info, addr, ring, IP, TCP);
     } else {
         // Escreve no ecra a resposta do servidor
-        write(1, "Resposta do servidor: ", 22); write(1,buffer,n); write(1, "\n", 1);
+        write(1, "Resposta do servidor de nós: ", strlen("Resposta do servidor de nós: "));
+        write(1, buffer, n);
+        write(1, "\n", 1);
     }
 }
 
@@ -447,7 +454,7 @@ void establishChord(Node* node) {
 
         int id = atoi(id_str);  // Converte a string do ID para um inteiro
 
-        // Verifica se o nó já está na lista de clientes antes de tentar estabelecer uma conexão
+        // Verifica se o nó já está na lista de clientes antes de tentar estabelecer uma conexão(evita conexões duplicadas)
         bool already_connected = false;
         for (int i = 0; i < MAX_CLIENTS; i++) {
             if (clients[i] && clients[i]->node->id == id) {

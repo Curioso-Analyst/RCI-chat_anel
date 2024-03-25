@@ -25,7 +25,7 @@ int cliente_tcp(Node* node,char* j_ip,char* j_port) {
         return -1;  // Retorna -1 em caso de erro
     }
     // Conectado ao servidor.
-    printf("\n------Conectado ao servidor------\n");
+    printf("\n------Conectado ao anel------\n");
 
     freeaddrinfo(res);
     return fd;
@@ -70,6 +70,7 @@ void send_chord(int fd, Node* node){
         exit(EXIT_FAILURE);
     }
 }
+
 
 void removeNode(Node** node_to_remove_ptr) {
     Node* node_to_remove = *node_to_remove_ptr;

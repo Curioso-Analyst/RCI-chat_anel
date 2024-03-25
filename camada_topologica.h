@@ -14,6 +14,7 @@
 #include <stdbool.h>
 #include <errno.h>
 #include <signal.h>
+#include "debug.h"
 
 #define MAX_CLIENTS 20
 #define TIMEOUT 3  // 3 segundos de TIMEOUT
@@ -41,7 +42,7 @@ typedef struct Node {
 } Node;
 
 typedef struct {
-    int socket_fd;
+    int socket_fd; // File descriptor do socket de comunicação com o nó que enviou a corda (servidor)
     Node* node;
 } ClientInfo;
 

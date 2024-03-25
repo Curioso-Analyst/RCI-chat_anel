@@ -32,6 +32,8 @@ Node* join(int ring, int id, char* IP, char* TCP) {
     // Se o registo falhar, liberta a memória alocada para o nó e retorna NULL
     if (status == -1) {
         printf("Erro ao registar o nó\n");
+        sprintf(user_input, "UNREG %03d %02d", ring, node->id);
+        unregisterNode(node, user_input);
         free(node);
         return NULL;
     }
@@ -49,7 +51,10 @@ Node* direct_join(int id, int succId, char* succIP, char* succTCP) {
     } else {
          // Conecta-se ao nó sucessor e informa-o sobre a entrada do novo nó no anel
         int porta_tcp = cliente_tcp(node, succIP, succTCP);
+        if (DEBUG) {
         printf("Olá cliente, o meu fd é: %d\n", porta_tcp);
+        }
+
         send_entry(porta_tcp, node);
 
         node->sucessor=createNode(succId, succIP, succTCP);
@@ -59,7 +64,9 @@ Node* direct_join(int id, int succId, char* succIP, char* succTCP) {
         int valread;
         if ((valread = recv(porta_tcp, buffer, sizeof(buffer), 0)) > 0) {
             buffer[valread] = '\0';
-            printf("Mensagem recebida: %s\n", buffer);  // Imprime a mensagem recebida
+            if (DEBUG) {
+                printf("Mensagem recebida: %s\n", buffer);  // Imprime a mensagem recebida
+            }
                 
             // Verifica se é uma mensagem de entrada
             if (strncmp(buffer, "SUCC", 4) == 0) {
@@ -75,14 +82,13 @@ Node* direct_join(int id, int succId, char* succIP, char* succTCP) {
                 global_variable=porta_tcp;
                                             
                 // Imprime as informações do novo nó
-                printf("Informações do segundo sucessor: id=%02d, ip=%s, port=%s\n", new_id, new_ip, new_port);
+                if (DEBUG) {
+                    printf("Informações do segundo sucessor: id=%02d, ip=%s, port=%s\n", new_id, new_ip, new_port);
+                }
+                printf("\n---Nó conectado ao escolhido com sucesso!---\n");	
             }
         }
     }
-
-    // Iniciar o servidor/cliente TCP na porta escolhida pelo usuário
-    // serverclient(node, TCP_escolhido);
-
     return node;
 }
 
@@ -153,6 +159,5 @@ void show_topology(Node* node) {
     }
 
 }
-
 
 // Implementar as outras funções aqui
