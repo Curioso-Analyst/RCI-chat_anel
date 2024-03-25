@@ -435,8 +435,9 @@ int main(int argc, char *argv[]) {
                         if (dest == node->id) {
                             printf("Mensagem recebida do nó %02d: %s\n", orig, message);
                         } else {
-                            // Encaminhar a mensagem
-                            
+                            // Encaminhar a mensagem se eu não for o destino
+                            send_chat(new_socket_suc, node, dest, message);
+                            printf("Mensagem encaminhada para o nó: %02d!\n", node->sucessor->id);
                         }
                     }
 
