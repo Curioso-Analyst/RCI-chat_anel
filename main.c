@@ -242,6 +242,10 @@ int main(int argc, char *argv[]) {
                 if(node != NULL) {
                     node->ring = ring; // Para depois poder usar a corda
                 }
+                char nodeid[3];
+                sprintf(nodeid, "%d", node->id);
+                strcpy(tabela_curtos[node->id][0],nodeid);
+                strcpy(tabela_curtos[node->id][1],nodeid);
             }
         }else if (strncmp(command, "dj", 2) == 0) {
             int id, succid;
@@ -253,6 +257,10 @@ int main(int argc, char *argv[]) {
                 printf("Uso: dj <id> <succid> <succIP> <succTCP>\n");
             } else {
                 node = direct_join(id, succid, succIP, succTCP);
+                char nodeid[3];
+                sprintf(nodeid, "%d", node->id);
+                strcpy(tabela_curtos[node->id][0],nodeid);
+                strcpy(tabela_curtos[node->id][1],nodeid);
             }
         } else if (strncmp(command, "c", 1) == 0) {
             if (node == NULL) {
