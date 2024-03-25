@@ -661,7 +661,9 @@ int main(int argc, char *argv[]) {
                         printf("Informações de um novo cliente: id=%02d, ip=%s, port=%s\n", new_id, new_ip, new_port);
                         }
 
-                        elimina_vizinho(new_socket_pred, node->id, node->sucessor, tabela_encaminhamento,tabela_curtos,tabela_expedicao);
+                        if(node->sucessor->id!=node->predecessor->id){
+                            elimina_vizinho(new_socket_pred, node->id, node->sucessor, tabela_encaminhamento,tabela_curtos,tabela_expedicao);
+                        }
                         
                         //Criar um novo nó
                         node->sucessor = createNode(new_id, new_ip, new_port);
