@@ -70,7 +70,6 @@ ClientInfo* clients[MAX_CLIENTS] = {0};
 
 
 
-
 int main(int argc, char *argv[]) {
     if(argc != 5) {
         printf("Uso: %s IP TCP regIP regUDP\n", argv[0]);
@@ -304,7 +303,7 @@ int main(int argc, char *argv[]) {
                         // Adiciona o nó à lista de nós recebidos do servidor (cordas)
                         add_client(new_socket, new_node);
                         
-                        printf("Corda estabelecida com sucesso no socket. Nó de ID %d adicionado.\n", new_id);
+                        printf("Corda estabelecida com sucesso no socket. Nó com o ID %d adicionado.\n", new_id);
                         temos_corda++;  // Incrementa o número de cordas
                     }
                 

@@ -461,9 +461,11 @@ void establishChord(Node* node) {
             other_node = createNode(id, ip, tcp);
             int porta_tcp = cliente_tcp(other_node, ip, tcp);
             if (porta_tcp != -1) {
+                if (PRINTS){
                 printf("Olá cliente, o meu fd é: %d\n", porta_tcp);
+                }
                 send_chord(porta_tcp, node);
-                printf("Corda estabelecida com sucesso.\n");
+                printf("Corda estabelecida com sucesso com o nó %d\n", other_node->id);
 
                 node->corda = other_node;
                 node->corda->corda_socket_fd = porta_tcp;

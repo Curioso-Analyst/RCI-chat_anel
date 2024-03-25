@@ -18,7 +18,7 @@
 #define MAX_CLIENTS 20
 #define TIMEOUT 3  // 3 segundos de TIMEOUT
 #define MAX_TRIES 3  // Número máximo de tentativas de envio de mensagem UDP
-#define PRINTS 0  // 1 para ativar prints de debug, 0 para desativar
+#define PRINTS 1  // 1 para ativar prints de debug, 0 para desativar
 
 extern int global_variable;
 
