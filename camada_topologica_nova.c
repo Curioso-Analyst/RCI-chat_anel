@@ -1,5 +1,6 @@
 #include "camada_topologica.h"
 #include "camada_topologica_tcp.h"
+#include "camada_encaminhamento.h"
 
 int global_variable=-1;
 
@@ -110,6 +111,7 @@ void registerNode(Node* node, int ring, char* IP, char* TCP, char* user_input) {
 
         // Lê uma mensagem do socket
         char buffer[1024];
+        char buffer1[1024];
         int valread;
         if ((valread = recv(porta_tcp, buffer, sizeof(buffer), 0)) > 0) {
             buffer[valread] = '\0';
@@ -130,6 +132,9 @@ void registerNode(Node* node, int ring, char* IP, char* TCP, char* user_input) {
                                             
                 // Imprime as informações do novo nó
                 printf("Informações do segundo sucessor: id=%02d, ip=%s, port=%s\n", new_id, new_ip, new_port);
+
+                sprintf(buffer1, "ROUTE %d %d %d\n", node->id, node->id, node->id);
+                send_route(porta_tcp,buffer1);
 
                 //Depois passa para o main, parte servidor, para aceitar a nova conexão e receber o PRED.
             }

@@ -99,6 +99,7 @@ int main(int argc, char *argv[]) {
     struct sockaddr_in address;
     fd_set readfds, writefds;
     int numero;
+    int aux123=0;
 
     char tabela_encaminhamento[101][101][55], tabela_curtos[101][2][55], tabela_expedicao[101][2][5];
 
@@ -192,6 +193,10 @@ int main(int argc, char *argv[]) {
             char succIP[16], succTCP[6];
             sscanf(command, "dj %d %d %s %s", &id, &succid, succIP, succTCP);
             node = direct_join(id, succid, succIP, succTCP);
+            char nodeid[3];
+            sprintf(nodeid, "%d", node->id);
+            strcpy(tabela_curtos[node->id][0],nodeid);
+            strcpy(tabela_curtos[node->id][1],nodeid);
         } else if (strncmp(command, "c", 1) == 0) {
         // Implementação do comando 'c'
         } else if (strncmp(command, "rc", 2) == 0) {
@@ -289,6 +294,8 @@ int main(int argc, char *argv[]) {
                         // Envia uma mensagem PRED para a nova porta tcp estabelecida
                         send_pred(new_socket_tcp, node);
 
+                        acumula_routes(new_socket_tcp, node, tabela_curtos);
+
                         // Atualizar o show topology
                         //node->sucessor = createNode(new_id, new_ip, new_port);
 
@@ -364,6 +371,10 @@ int main(int argc, char *argv[]) {
 
                     //atualiza o socket do predecessor
                     new_socket_pred = new_socket;
+
+                    sprintf(buffer, "ROUTE %d %d %d\n", node->id, node->id, node->id);
+                    send_route(new_socket_pred,buffer);
+
                     for(i=0;i<20;i++){
                         if(strcmp(mensagens_guardadas[i],"-1")!=0){
                             send_route(new_socket_pred,mensagens_guardadas[i]);
@@ -387,7 +398,7 @@ int main(int argc, char *argv[]) {
                             if (numero==3){
                                 elimina_no(new_socket_pred,new_socket_suc ,node->id, destination, tabela_encaminhamento,tabela_curtos,tabela_expedicao);
                             }else if (numero ==4){
-                                update_tabelas(mensagens_guardadas,temos_pred,new_socket_pred, new_socket_suc, node, tabela_encaminhamento, tabela_curtos, tabela_expedicao, source, destination, path);
+                                update_tabelas(-1,mensagens_guardadas,temos_pred,new_socket_pred, new_socket_suc, node, tabela_encaminhamento, tabela_curtos, tabela_expedicao, source, destination, path);
                             }
                         }
 
@@ -430,7 +441,8 @@ int main(int argc, char *argv[]) {
                                 if (numero==3){
                                     elimina_no(new_socket_pred,new_socket_suc ,node->id, destination, tabela_encaminhamento,tabela_curtos,tabela_expedicao);
                                 }else if (numero ==4){
-                                    update_tabelas(mensagens_guardadas,temos_pred,new_socket_pred, new_socket_suc, node, tabela_encaminhamento, tabela_curtos, tabela_expedicao, source, destination, path);
+                                    int auxiliar =0;
+                                    update_tabelas(auxiliar,mensagens_guardadas,temos_pred,new_socket_pred, new_socket_suc, node, tabela_encaminhamento, tabela_curtos, tabela_expedicao, source, destination, path);
                                 }
                             }
                             // Get the next line from the buffer
@@ -447,10 +459,13 @@ int main(int argc, char *argv[]) {
                     new_socket_pred=-1;
 
                     sprintf(buffer, "ROUTE %d %d\n", node->id, node->predecessor->id);
-                    send_route(new_socket_suc,buffer);
+                    if(temos_suc==1){  
+                        send_route(new_socket_suc,buffer);
 
-                    elimina_no(-1,new_socket_suc ,node->id, node->sucessor->id, tabela_encaminhamento,tabela_curtos,tabela_expedicao);
-
+                        elimina_no(-1,new_socket_suc ,node->id, node->sucessor->id, tabela_encaminhamento,tabela_curtos,tabela_expedicao);
+                    }else{
+                        elimina_no(-1,-1 ,node->id, node->sucessor->id, tabela_encaminhamento,tabela_curtos,tabela_expedicao);
+                    }
                     //ele aqui pode sempre definir o predecessor como ele propria porque caso havia 2 nós, fica certo
                     //caso havia mais que 2 nós ele há de receber um pred e atualizar
                     node->predecessor=node;
@@ -542,7 +557,7 @@ int main(int argc, char *argv[]) {
                                 if (numero==3){
                                     elimina_no(new_socket_pred,new_socket_suc ,node->id, destination, tabela_encaminhamento,tabela_curtos,tabela_expedicao);
                                 }else if (numero ==4){
-                                    update_tabelas(mensagens_guardadas,temos_pred,new_socket_pred, new_socket_suc, node, tabela_encaminhamento, tabela_curtos, tabela_expedicao, source, destination, path);
+                                    update_tabelas(aux123,mensagens_guardadas,temos_pred,new_socket_pred, new_socket_suc, node, tabela_encaminhamento, tabela_curtos, tabela_expedicao, source, destination, path);
                                 }
                             }
 
@@ -559,10 +574,15 @@ int main(int argc, char *argv[]) {
                     new_socket_suc=-1;
 
                     sprintf(buffer, "ROUTE %d %d\n", node->id, node->sucessor->id);
-                    send_route(new_socket_pred,buffer);
 
-                    elimina_no(new_socket_pred,-1 ,node->id, node->sucessor->id, tabela_encaminhamento,tabela_curtos,tabela_expedicao);
+                    if(temos_pred==1){    
+                        send_route(new_socket_pred,buffer);
 
+                        elimina_no(new_socket_pred,-1 ,node->id, node->sucessor->id, tabela_encaminhamento,tabela_curtos,tabela_expedicao);
+                    }else{
+                        elimina_no(-1,-1 ,node->id, node->sucessor->id, tabela_encaminhamento,tabela_curtos,tabela_expedicao);
+
+                    }
                     //define o novo sucessor como o antigo segundo sucessor
                     node->sucessor=node->second_successor;
 
