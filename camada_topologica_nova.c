@@ -93,7 +93,8 @@ int registerNode(Node* node, int ring, char* IP, char* TCP, char* user_input) {
     // Pede a lista de nós
     char nodes_command[1024];
     sprintf(nodes_command, "NODES %03d", ring);
-
+    
+    addrlen=sizeof(addr);
     int tries = 0;
     while (tries < MAX_TRIES) {
         // Envia a mensagem de pedido da lista de nós
