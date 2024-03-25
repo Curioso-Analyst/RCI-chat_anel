@@ -231,13 +231,18 @@ int main(int argc, char *argv[]) {
         } else if (strncmp(command, "help", 4) == 0) {
             print_help();
         } else if (strncmp(command, "j", 1) == 0) {
-            int num_args = sscanf(command, "j %03d %02d", &ring, &id);
-
+            char ring_str[4], id_str[3];
+            int num_args = sscanf(command, "j %s %s", ring_str, id_str);
             // Verifica se ambos os parâmetros foram fornecidos
             if (num_args < 2) {
                 printf("Erro: Não foram fornecidos argumentos suficientes para o comando 'j'.\n");
                 printf("Uso: j <ring> <id>\n");
+            } else if (strlen(ring_str) > 3 || strlen(id_str) > 2) {
+                printf("Erro: Valores inválidos fornecidos para 'ring' ou 'id'.\n");
+                printf("'ring' deve estar entre 000 e 999, e 'id' deve estar entre 00 e 99.\n");
             } else {
+                ring = atoi(ring_str);
+                id = atoi(id_str);
                 node = join(ring, id, IP, TCP_escolhido);
                 if(node != NULL) {
                     node->ring = ring; // Para depois poder usar a corda
@@ -261,6 +266,7 @@ int main(int argc, char *argv[]) {
                 printf("O nó já tem uma corda ativa. Por favor, remova a corda existente antes de tentar estabelecer uma nova.\n");
             } else {
                 establishChord(node);
+                acumula_routes(node->corda_socket_fd, node, tabela_curtos);
             }
         } else if (strncmp(command, "rc", 2) == 0) {
             // Implementação do comando 'rc'
