@@ -153,6 +153,8 @@ int main(int argc, char *argv[]) {
         if(new_socket_suc > max_sd)
             max_sd = new_socket_suc;
 
+        printf("CHega aqui!\n");
+
         // Espera por uma atividade em um dos sockets, o timeout é NULL, então espera indefinidamente
         activity = select(max_sd + 1, &readfds, &writefds, NULL, NULL);
 
@@ -170,12 +172,16 @@ int main(int argc, char *argv[]) {
             sscanf(command, "l %d", &ring);
             if (node != NULL) {
                 leave(node, ring);
-                close(new_socket_pred);
-                close(new_socket_suc);
-                new_socket_pred=-1;
-                new_socket_suc=-1;
-                temos_pred=-1;
-                temos_suc=-1;
+                if(temos_pred==1){
+                    close(new_socket_pred);
+                    new_socket_pred=-1;
+                    temos_pred=-1;
+                }
+                if(temos_suc==1){
+                    close(new_socket_suc);
+                    new_socket_suc=-1;
+                    temos_suc=-1;
+                }
             } else {
                 printf("Nó não inicializado.\n");
             }
