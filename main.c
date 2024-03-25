@@ -221,6 +221,16 @@ int main(int argc, char *argv[]) {
                     new_socket_suc=-1;
                     temos_suc=-1;
                 }
+                if (node->corda != NULL) {
+                // Fecha o socket
+                close(node->corda->corda_socket_fd);
+                // Libera a memória do nó da corda
+                free(node->corda);
+                node->corda = NULL;
+                temos_corda=0;
+                }
+                free(node);
+                node = NULL;
             } else {
                 printf("Nó não inicializado.\n");
             }
