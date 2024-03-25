@@ -782,6 +782,8 @@ int main(int argc, char *argv[]) {
                         if (PRINTS){
                         printf("Host disconnected, ip %s, port %s\n", clients[i]->node->ip, clients[i]->node->tcp);
                         }
+                        sprintf(buffer, "ROUTE %d %d\n", node->id, clients[i]->node->id);
+                        send_route(new_socket_pred,buffer);
                         elimina_no(new_socket_pred,new_socket_suc ,node->id, clients[i]->node->id, tabela_encaminhamento,tabela_curtos,tabela_expedicao);
                         int temp_socket_fd = clients[i]->socket_fd;
                         close(temp_socket_fd);  // Feche o socket antes de chamar remove_client
@@ -792,6 +794,7 @@ int main(int argc, char *argv[]) {
                         if (PRINTS){
                         printf("Mensagem recebida: %s\n", buffer);
                         }
+
 
                         //Analisa mensagens ROUTE
                         char route_type[6];
