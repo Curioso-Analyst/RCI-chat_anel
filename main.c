@@ -254,7 +254,7 @@ int main(int argc, char *argv[]) {
                 // Extrai o destino e a mensagem do comando
                 sscanf(command, "m %02d %[^\n]", &dest, message);
                 // Envia a mensagem
-                send_chat(new_socket_suc, node, dest, message);
+                send_chat(new_socket_suc, node, node->id, dest, message);
             }
         } else if (strncmp(command, "NODES", 5) == 0) {
             sscanf(command, "NODES %03d", &ring);
@@ -415,9 +415,10 @@ int main(int argc, char *argv[]) {
                 int valread;
                 if ((valread = read(new_socket_pred, buffer,1024 - 1)) > 0) {
                     buffer[valread] = '\0';
-                    printf("Mensagem recebida: %s\n", buffer);  // Imprime a mensagem recebida
+                    printf("Mensagem recebida do chat: %s\n", buffer);  // Imprime a mensagem recebida
 
-                    // Verfica se é uma mensagem de chat
+
+                    // Verifica se é uma mensagem de chat
                     if (strncmp(buffer, "CHAT", 4) == 0) {
                         // Verificar se a mensagem é para o meu nó.
                         int orig;
@@ -436,7 +437,7 @@ int main(int argc, char *argv[]) {
                             printf("Mensagem recebida do nó %02d: %s\n", orig, message);
                         } else {
                             // Encaminhar a mensagem se eu não for o destino
-                            send_chat(new_socket_suc, node, dest, message);
+                            send_chat(new_socket_suc, node, orig, dest, message);
                             printf("Mensagem encaminhada para o nó: %02d!\n", node->sucessor->id);
                         }
                     }
