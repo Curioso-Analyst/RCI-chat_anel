@@ -11,8 +11,6 @@
 int cliente_tcp(Node* node,char* j_ip,char* j_port);
 void send_entry(int fd, Node* node);
 void send_succ(int fd, Node* node);
-void send_succ1(int fd, Node* node, char* mensagem);
-void send_pred1(int fd, Node* node, char* mensagem);
 void send_pred(int fd, Node* node);
 void send_chord(int fd, Node* node);
 void removeNode(Node** node_to_remove_ptr);
