@@ -106,7 +106,7 @@ void update_tabelas(int aux123,char mensagens_guardadas[20][512], int temos_pred
 }
 
 //envia um route especifico
-void send_route(int fd, char buffer[1024]){
+void send_route(int fd, char* buffer){
     // Imprime a mensagem que será enviada
     printf("Mensagem a ser enviada: %s\n", buffer);
     int n = write(fd, buffer, strlen(buffer));

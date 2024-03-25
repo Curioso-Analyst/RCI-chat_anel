@@ -261,12 +261,12 @@ int main(int argc, char *argv[]) {
                 printf("O nó já tem uma corda ativa. Por favor, remova a corda existente antes de tentar estabelecer uma nova.\n");
             } else {
                 establishChord(node);
-                acumula_routes(node->corda_socket_fd, node, tabela_curtos);
+                acumula_routes(node->corda->corda_socket_fd, node, tabela_curtos);
             }
         } else if (strncmp(command, "rc", 2) == 0) {
             // Implementação do comando 'rc'
             if (node != NULL) { 
-                elimina_no(new_socket_pred,new_socket_suc ,node->id, clients[i]->node->id, tabela_encaminhamento,tabela_curtos,tabela_expedicao);
+                elimina_no(new_socket_pred,new_socket_suc ,node->id, node->corda->id, tabela_encaminhamento,tabela_curtos,tabela_expedicao);
                 removeChord(node);
             } else {
                 printf("Nenhum nó para remover a corda.\n");
