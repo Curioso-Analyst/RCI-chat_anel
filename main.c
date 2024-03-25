@@ -527,7 +527,7 @@ int main(int argc, char *argv[]) {
                     //define o novo sucessor como o antigo segundo sucessor
                     node->sucessor=node->second_successor;
 
-                    if(node!=node->sucessor){
+                    if((node->id)!=(node->sucessor->id)){
                         //envia SUCC para o predecessor
                         send_succ(new_socket_pred, node->sucessor);
 
