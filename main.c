@@ -222,9 +222,7 @@ int main(int argc, char *argv[]) {
                     temos_suc=-1;
                 }
                 if (node->corda != NULL) {
-                // Fecha o socket
                 close(node->corda->corda_socket_fd);
-                // Libera a memória do nó da corda
                 free(node->corda);
                 node->corda = NULL;
                 temos_corda=0;
